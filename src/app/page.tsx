@@ -1,128 +1,290 @@
+// ─── Artecks Academy — Linkou Parent Booking Catalog ─────────────────────────
+// Server Component. Fetches upcoming open sessions and renders the parent-
+// facing landing page. An admin seed button is shown only when ?admin=true
+// is present in the URL (or when no sessions exist yet, tucked in the footer).
+
 import { createServerClient } from "@/lib/supabase";
 import type { Session } from "@/lib/types";
 import { SeedButton } from "./SeedButton";
-import { BookOpen, ShieldCheck, Clock, MapPin } from "lucide-react";
+import { BookOpen, MapPin, Clock, Users } from "lucide-react";
 
-function formatTime(iso: string) {
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function formatDateTW(iso: string) {
   return new Date(iso).toLocaleString("zh-TW", {
     timeZone: "Asia/Taipei",
-    month:    "short",
-    day:      "numeric",
-    weekday:  "short",
-    hour:     "2-digit",
-    minute:   "2-digit",
+    month: "short",
+    day: "numeric",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
-function SessionCard({ session }: { session: Session }) {
+function formatDateEN(iso: string) {
+  return new Date(iso).toLocaleString("en-US", {
+    timeZone: "Asia/Taipei",
+    month: "short",
+    day: "numeric",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+// ── Session Card ──────────────────────────────────────────────────────────────
+
+async function SessionCatalogCard({
+  session,
+}: {
+  session: Session & { bookedCount: number };
+}) {
+  const spotsLeft = Math.max(0, session.max_seats - session.bookedCount);
+  const isFull = spotsLeft === 0;
+  const isOpen = session.status === "open" && session.booking_open && !isFull;
+
   return (
-    <div className="rounded-2xl border border-slate-700 bg-slate-800 p-5 flex flex-col gap-4">
-      <div>
-        <div className="flex items-center gap-2 mb-1">
+    <div className="rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
+      {/* Colour band */}
+      <div className="h-1.5 bg-gradient-to-r from-indigo-500 to-violet-500" />
+
+      <div className="p-5 flex flex-col gap-4 flex-1">
+        {/* Badges row */}
+        <div className="flex flex-wrap items-center gap-1.5">
           <span
             className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-              session.status === "open"
-                ? "bg-emerald-900 text-emerald-300"
-                : session.status === "full"
-                ? "bg-amber-900 text-amber-300"
-                : "bg-slate-700 text-slate-400"
+              isFull
+                ? "bg-red-50 text-red-600 border border-red-200"
+                : isOpen
+                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                : "bg-gray-100 text-gray-500"
             }`}
           >
-            {session.status === "open" ? "開放報名" : session.status === "full" ? "已額滿" : "已結束"}
+            {isFull ? "額滿 · Full" : isOpen ? "開放報名 · Open" : "已結束 · Closed"}
           </span>
-          <span className="text-xs text-slate-500">{session.age_group}</span>
+          {session.age_group && (
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+              {session.age_group}
+            </span>
+          )}
         </div>
-        <h2 className="text-base font-bold text-slate-100 leading-snug">{session.title}</h2>
-        <p className="text-sm text-slate-400 mt-0.5">{session.topic}</p>
-      </div>
 
-      <div className="flex flex-col gap-1.5 text-xs text-slate-500">
-        <div className="flex items-center gap-1.5">
-          <Clock size={12} />
-          <span>{formatTime(session.start_time)}</span>
+        {/* Title & topic */}
+        <div>
+          <h2 className="text-base font-black text-gray-900 leading-snug">
+            {session.title}
+          </h2>
+          {session.topic && (
+            <p className="text-sm text-gray-500 mt-0.5">{session.topic}</p>
+          )}
         </div>
-        <div className="flex items-center gap-1.5">
-          <MapPin size={12} />
-          <span>{session.location_name}</span>
-        </div>
-      </div>
 
-      <div className="flex gap-2">
-        <a
-          href={`/session/${session.id}`}
-          className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-3 py-2.5 text-sm font-semibold text-white transition-colors"
-        >
-          <BookOpen size={14} />
-          公開報名頁
-        </a>
-        <a
-          href={`/coach/session/${session.id}`}
-          className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 px-3 py-2.5 text-sm font-semibold text-slate-200 transition-colors"
-        >
-          <ShieldCheck size={14} />
-          教練後台
-        </a>
+        {/* Meta info */}
+        <div className="flex flex-col gap-1.5 text-xs text-gray-500">
+          <div className="flex items-start gap-1.5">
+            <Clock size={12} className="mt-0.5 shrink-0 text-indigo-400" />
+            <div>
+              <span className="block">{formatDateTW(session.start_time)}</span>
+              <span className="block text-gray-400">{formatDateEN(session.start_time)}</span>
+            </div>
+          </div>
+          {session.location_name && (
+            <div className="flex items-center gap-1.5">
+              <MapPin size={12} className="shrink-0 text-indigo-400" />
+              <span>{session.location_name}</span>
+            </div>
+          )}
+          {session.location_address && (
+            <div className="flex items-center gap-1.5">
+              <span className="text-gray-400 pl-[17px]">{session.location_address}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Price + spots row */}
+        <div className="flex items-center justify-between">
+          <span className="text-base font-black text-gray-900">
+            NT$ {(session.price_twd ?? 0).toLocaleString()}
+          </span>
+          <div className="flex items-center gap-1 text-xs font-semibold">
+            <Users size={12} className={isFull ? "text-red-400" : "text-emerald-500"} />
+            <span className={isFull ? "text-red-500" : "text-emerald-600"}>
+              {isFull ? "名額已滿" : `剩 ${spotsLeft} 席`}
+            </span>
+          </div>
+        </div>
+
+        {/* CTA */}
+        {isOpen ? (
+          <a
+            href={`/session/${session.id}`}
+            className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-3 text-sm font-bold text-white transition-colors"
+          >
+            <BookOpen size={14} />
+            立即報名 · Book Now
+          </a>
+        ) : (
+          <div className="flex items-center justify-center rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-400 cursor-not-allowed">
+            {isFull ? "名額已滿" : "報名未開放"}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default async function DevIndexPage() {
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+interface PageProps {
+  searchParams: Promise<{ admin?: string }>;
+}
+
+export default async function LinkoaCatalogPage({ searchParams }: PageProps) {
+  const { admin } = await searchParams;
+  const isAdmin = admin === "true";
+
   const supabase = createServerClient();
+
+  // Fetch upcoming open sessions (next 30 days) ordered by start time
+  const upcoming = new Date();
   const { data: sessions } = await supabase
     .from("sessions")
     .select("*")
-    .order("start_time", { ascending: false })
-    .limit(5);
+    .gte("start_time", upcoming.toISOString())
+    .order("start_time", { ascending: true })
+    .limit(20);
 
-  const hasSessions = sessions && sessions.length > 0;
+  // For each session, count confirmed bookings
+  const sessionsWithCount: Array<Session & { bookedCount: number }> = [];
+  if (sessions && sessions.length > 0) {
+    for (const session of sessions) {
+      const { count } = await supabase
+        .from("bookings")
+        .select("id", { count: "exact", head: true })
+        .eq("session_id", session.id)
+        .neq("status", "cancelled");
+      sessionsWithCount.push({ ...session, bookedCount: count ?? 0 });
+    }
+  }
+
+  const hasSessions = sessionsWithCount.length > 0;
 
   return (
-    <div className="min-h-screen bg-slate-950 py-12 px-4">
-      <div className="max-w-lg mx-auto flex flex-col gap-6">
-        {/* Header */}
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <span className="text-white text-xs font-black">A</span>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* ── Header ── */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
+              <span className="text-white text-sm font-black">A</span>
             </div>
-            <span className="text-sm font-bold text-slate-300">Artecks Academy</span>
+            <div>
+              <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
+              <p className="text-xs text-indigo-600 font-semibold leading-none mt-0.5">林口青少年棋藝充實課程</p>
+            </div>
           </div>
-          <h1 className="text-2xl font-black text-white">Dev Launcher</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            academy.artecks.com ·{" "}
-            {hasSessions
-              ? `${sessions.length} 筆課程`
-              : "尚無課程資料"}
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+            <MapPin size={11} className="text-indigo-500" />
+            <span className="font-semibold text-indigo-700">林口區 · Linkou</span>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Hero ── */}
+      <section className="max-w-2xl mx-auto px-4 pt-8 pb-6">
+        <div className="rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-700 p-6 text-white shadow-lg shadow-indigo-200">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="text-xs font-bold uppercase tracking-widest text-indigo-200">
+              Artecks Academy · 林口
+            </div>
+          </div>
+          <h1 className="text-2xl font-black leading-tight mb-1">
+            林口青少年
+            <br />
+            西洋棋 · 充實課程
+          </h1>
+          <p className="text-sm text-indigo-200 leading-relaxed mt-2">
+            Youth Chess &amp; Enrichment — Linkou District
           </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs">
+            <span className="bg-white/15 rounded-full px-3 py-1">♟ 西洋棋戰術</span>
+            <span className="bg-white/15 rounded-full px-3 py-1">🎯 小班制教學</span>
+            <span className="bg-white/15 rounded-full px-3 py-1">📍 林口在地場地</span>
+            <span className="bg-white/15 rounded-full px-3 py-1">🏆 Artecks 生態獎勵</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Location strip ── */}
+      <section className="max-w-2xl mx-auto px-4 mb-6">
+        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          <MapPin size={15} className="text-amber-600 shrink-0" />
+          <p className="text-xs text-amber-800 font-medium">
+            <strong>所有課程皆位於新北市林口區</strong>，詳細場地地址請見各課程頁面。
+            All sessions are held in Linkou District, New Taipei City.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Catalog ── */}
+      <main className="max-w-2xl mx-auto px-4 pb-12">
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-lg font-black text-gray-900">
+            近期課程 <span className="text-gray-400 font-normal text-sm">Upcoming Sessions</span>
+          </h2>
+          {hasSessions && (
+            <span className="text-xs text-gray-400">{sessionsWithCount.length} 堂</span>
+          )}
         </div>
 
         {hasSessions ? (
-          <>
-            <div className="flex flex-col gap-3">
-              {sessions.map((s) => (
-                <SessionCard key={s.id} session={s} />
-              ))}
-            </div>
-            <SeedButton label="再建立一筆測試課程" />
-          </>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {sessionsWithCount.map((session) => (
+              <SessionCatalogCard key={session.id} session={session} />
+            ))}
+          </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900 p-8 flex flex-col items-center gap-4 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center text-3xl">
-              🏫
-            </div>
-            <div>
-              <p className="font-bold text-slate-200">還沒有課程</p>
-              <p className="text-sm text-slate-500 mt-1">建立一筆測試資料來預覽所有頁面</p>
-            </div>
-            <SeedButton label="建立測試課程 (Linkou)" />
+          <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-10 text-center">
+            <div className="text-4xl mb-3">♟</div>
+            <p className="font-bold text-gray-700">近期尚無開放課程</p>
+            <p className="text-sm text-gray-400 mt-1">
+              No sessions available right now — check back soon!
+            </p>
+            {isAdmin && (
+              <div className="mt-6">
+                <SeedButton label="新增測試課程 (Linkou)" />
+              </div>
+            )}
           </div>
         )}
+      </main>
 
-        <p className="text-center text-xs text-slate-700">
-          僅限開發環境使用 · 請勿部署至正式環境
+      {/* ── Ecosystem callout ── */}
+      <section className="max-w-2xl mx-auto px-4 pb-8">
+        <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-indigo-50 p-5">
+          <p className="text-sm font-black text-violet-700 mb-1">🎮 Artecks 生態系獎勵</p>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            連結 Artecks 帳號後，課程結束自動獲得 <strong className="text-violet-700">XP 經驗值</strong>{" "}
+            及 <strong className="text-violet-700">金幣</strong>，可在 Artecks 商城消費及遊戲兌換。
+            <span className="text-gray-400 ml-1">Link your Artecks account for automatic XP &amp; coin rewards.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="max-w-2xl mx-auto px-4 py-6 border-t border-gray-100 flex items-center justify-between">
+        <p className="text-xs text-gray-400">
+          © {new Date().getFullYear()} Artecks · academy.artecks.com
         </p>
-      </div>
+        {isAdmin && hasSessions && (
+          <SeedButton label="新增測試課程" />
+        )}
+        {!isAdmin && (
+          <a href="?admin=true" className="text-xs text-gray-300 hover:text-gray-400 transition-colors">
+            Admin
+          </a>
+        )}
+      </footer>
     </div>
   );
 }

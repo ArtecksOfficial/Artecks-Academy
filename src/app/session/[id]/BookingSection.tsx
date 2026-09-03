@@ -14,7 +14,7 @@ interface Session {
   start_time: string;
   end_time: string | null;
   location_name: string | null;
-  capacity: number | null;
+  max_seats: number;
   price_twd: number | null;
   booking_open: boolean;
 }
@@ -50,7 +50,8 @@ export default function BookingSection({
   const [state, formAction, isPending] = useActionState(bookSession, initialState);
   const [contactMethod, setContactMethod] = useState<ContactMethod>("whatsapp");
 
-  const spotsLeft = Math.max(0, (session.capacity ?? 0) - confirmedCount);
+  // Use max_seats (always set) rather than the nullable capacity column
+  const spotsLeft = Math.max(0, session.max_seats - confirmedCount);
   const isFull = spotsLeft === 0;
   const canBook = session.booking_open && !isFull;
 

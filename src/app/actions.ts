@@ -21,11 +21,11 @@ export async function seedTestSession(): Promise<{ error?: string }> {
     end_time:             end.toISOString(),
     price_twd:            500,
     max_seats:            4,
+    booking_open:         true,
     status:               "open",
   });
 
   if (error) {
-    // Return the raw Supabase error so the client can display it
     return { error: `${error.code ?? ""} ${error.message}`.trim() };
   }
 
