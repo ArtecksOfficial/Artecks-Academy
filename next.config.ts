@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // output: "standalone" — removed: incompatible with `next start` on Railway
   // academy.artecks.com is a standalone subdomain micro-app
   // No image domains needed for v1 (all assets are inline/Tailwind)
   images: {
