@@ -12,6 +12,25 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// ── Coach data — update bios and photo URLs when ready ───────────────────────
+const COACHES = [
+  {
+    name: "Issac Chang",
+    initials: "IC",
+    credentials: "Artecks Founder & Head Chess Coach",
+    // bio: replace with your own when ready
+    bio: "Bio coming soon.",
+    // photoUrl: "/coaches/issac.jpg",  ← uncomment and add photo later
+  },
+  {
+    name: "Michael Ladror",
+    initials: "ML",
+    credentials: "Chess Instructor",
+    bio: "Bio coming soon.",
+    // photoUrl: "/coaches/michael.jpg",
+  },
+];
+
 // ── Dynamic OG metadata ───────────────────────────────────────────────────────
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
@@ -39,7 +58,6 @@ export default async function SessionPage({ params }: PageProps) {
     notFound();
   }
 
-  // confirmed count = max_seats - available_spots
   const confirmedCount = session.max_seats - session.available_spots;
 
   return (
@@ -51,14 +69,9 @@ export default async function SessionPage({ params }: PageProps) {
             <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
               <span className="text-white text-xs font-black">A</span>
             </div>
-            <span className="text-sm font-bold text-gray-900">Artecks</span>
+            <span className="text-sm font-bold text-gray-900">Artecks Academy</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-400 font-medium">
-              Powered by Artecks
-            </span>
-            <LanguageToggle className="text-gray-400 border-gray-300" />
-          </div>
+          <LanguageToggle className="text-gray-400 border-gray-300" />
         </div>
       </header>
 
@@ -70,13 +83,44 @@ export default async function SessionPage({ params }: PageProps) {
         <h1 className="text-2xl font-black text-gray-900 leading-tight">
           {session.title}
         </h1>
+        {session.topic && (
+          <p className="text-sm text-gray-500 mt-1">{session.topic}</p>
+        )}
       </div>
 
-      {/* Booking card */}
       <main className="max-w-lg mx-auto px-4 py-4 flex flex-col gap-4">
+        {/* Booking card */}
         <BookingSection session={session as any} confirmedCount={confirmedCount} />
 
-        {/* Ecosystem callout */}
+        {/* Coaches */}
+        <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+          <div className="px-5 pt-5 pb-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              Your Coaches · 您的教練
+            </p>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {COACHES.map((coach) => (
+              <div key={coach.name} className="flex items-start gap-4 px-5 py-4">
+                {/* Avatar — swap for <img> once photoUrl is set */}
+                <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
+                  <span className="text-lg font-black text-indigo-600">
+                    {coach.initials}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-gray-900">{coach.name}</p>
+                  <p className="text-xs text-indigo-500 font-medium mb-1">
+                    {coach.credentials}
+                  </p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{coach.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Artecks ecosystem callout */}
         <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-indigo-50 p-4">
           <p className="text-xs font-bold text-violet-700 mb-1">
             🎮 Artecks 生態系獎勵
@@ -85,7 +129,7 @@ export default async function SessionPage({ params }: PageProps) {
             連結您的 Artecks 帳號，上完課後將自動獲得{" "}
             <strong className="text-violet-700">XP 經驗值</strong> 及{" "}
             <strong className="text-violet-700">金幣</strong>，可用於 Artecks
-            商城消費及遊戲內兌換。
+            商城折扣及遊戲內兌換。
           </p>
         </div>
       </main>

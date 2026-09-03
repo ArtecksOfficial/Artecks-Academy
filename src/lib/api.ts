@@ -37,8 +37,9 @@ export interface BookingPayload {
   student_age: number;
   contact_method: string;
   contact_value: string;
+  chess_experience_level?: string;
+  special_notes?: string;
   artecks_account_id?: string;
-  payment_last5?: string;
 }
 
 export interface BookingResult {

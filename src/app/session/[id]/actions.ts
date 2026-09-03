@@ -22,10 +22,11 @@ export async function bookSession(
   const parentPhone = formData.get("parent_phone") as string;
   const studentName = formData.get("student_name") as string;
   const studentAge = parseInt(formData.get("student_age") as string, 10);
-  const artecksAccountId = (formData.get("artecks_account_id") as string) || "";
-  const paymentLast5 = (formData.get("payment_last5") as string) || "";
   const contactMethod = formData.get("contact_method") as ContactMethod;
   const contactValue = formData.get("contact_value") as string;
+  const chessExperienceLevel = (formData.get("chess_experience_level") as string) || "";
+  const specialNotes = (formData.get("special_notes") as string) || "";
+  const artecksAccountId = (formData.get("artecks_account_id") as string) || "";
 
   if (!sessionId || !parentName || !parentPhone || !studentName || !studentAge || !contactMethod || !contactValue) {
     return { status: "error", message: "請填寫所有必填欄位。" };
@@ -38,8 +39,9 @@ export async function bookSession(
     student_age: studentAge,
     contact_method: contactMethod,
     contact_value: contactValue,
+    chess_experience_level: chessExperienceLevel,
+    special_notes: specialNotes,
     artecks_account_id: artecksAccountId,
-    payment_last5: paymentLast5,
   });
 
   if (!result.success) {

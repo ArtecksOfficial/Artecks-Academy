@@ -22,9 +22,19 @@ const zh = {
   studentName: "學生姓名",
   studentAge: "學生年齡",
   artecksId: "Artecks 帳號 ID（選填）",
-  artecksIdHint: "填入後課後自動獲得 XP 及金幣",
+  artecksIdHint: "填入後課後自動獲得 XP 及金幣，並享有 Artecks 商城折扣回饋",
   paymentLast5: "繳費末 5 碼（選填）",
   paymentLast5Hint: "線上轉帳後填入帳號末 5 碼以利核對",
+
+  // Chess experience
+  chessExperience: "棋力程度",
+  chessExpBeginner: "完全初學（從未下過棋）",
+  chessExpKnowsRules: "了解基本規則",
+  chessExpExperienced: "有比賽或進階訓練經驗",
+
+  // Special notes
+  specialNotes: "備註或問題（選填）",
+  specialNotesPlaceholder: "孩子的學習目標、特殊需求、想請教教練的問題…",
 
   // Contact channel selector
   contactMethod: "聯絡方式",
@@ -42,10 +52,20 @@ const zh = {
   submitting: "送出中…",
   submitBooking: "確認報名",
   bookingSuccess: "報名成功！",
-  bookingSuccessMsg: "我們將透過您選擇的管道與您聯絡確認。",
+  bookingSuccessMsg: "以下是您的報名資訊，請截圖保存。",
   bookingError: "報名失敗，請稍後再試。",
   sessionFull: "很抱歉，名額已滿。",
   alreadyBooked: "此電話號碼已報名本堂課。",
+
+  // Confirmation screen
+  bookingRef: "報名編號",
+  whatToBring: "上課準備",
+  whatToBringItems: "棋盤棋子（教室有備用）、筆記本、水",
+  paymentTitle: "繳費方式",
+  paymentBankTransfer: "銀行轉帳 / 現金",
+  paymentBankNote: "可於第一堂課前或當天繳費，轉帳或現金均可。",
+  contactCoachLine: "透過 LINE 聯絡教練",
+  viewParentCard: "查看完整報告卡",
 
   // Coach cockpit
   reportBtn: "報告",
@@ -67,7 +87,6 @@ const zh = {
   saving: "儲存中…",
   saveReport: "儲存報告",
   reportSaved: "報告已儲存！",
-  viewParentCard: "查看家長報告卡",
   cancelBtn: "取消",
   closeBtn: "關閉",
 
@@ -112,9 +131,19 @@ const en: typeof zh = {
   studentName: "Student Name",
   studentAge: "Student Age",
   artecksId: "Artecks Account ID (optional)",
-  artecksIdHint: "Earn XP & Coins automatically after class",
+  artecksIdHint: "Earn XP & Coins after class and unlock discounts on the Artecks store",
   paymentLast5: "Last 5 digits of transfer (optional)",
   paymentLast5Hint: "Enter the last 5 digits of your bank transfer for verification",
+
+  // Chess experience
+  chessExperience: "Chess Experience",
+  chessExpBeginner: "Complete Beginner (never played)",
+  chessExpKnowsRules: "Knows the Rules",
+  chessExpExperienced: "Has Tournament / Advanced Training Experience",
+
+  // Special notes
+  specialNotes: "Notes or Questions (optional)",
+  specialNotesPlaceholder: "Child's goals, special needs, questions for the coach…",
 
   // Contact channel selector
   contactMethod: "Contact Method",
@@ -132,10 +161,20 @@ const en: typeof zh = {
   submitting: "Submitting…",
   submitBooking: "Confirm Booking",
   bookingSuccess: "Booking Confirmed!",
-  bookingSuccessMsg: "We'll reach out via your selected contact method.",
+  bookingSuccessMsg: "Here are your booking details — take a screenshot to save them.",
   bookingError: "Booking failed. Please try again.",
   sessionFull: "Sorry, this session is fully booked.",
   alreadyBooked: "This phone number is already registered for this session.",
+
+  // Confirmation screen
+  bookingRef: "Booking Reference",
+  whatToBring: "What to Bring",
+  whatToBringItems: "Chess set (loaner available), notebook, water",
+  paymentTitle: "Payment",
+  paymentBankTransfer: "Bank Transfer / Cash",
+  paymentBankNote: "Payment can be made before or at the first session. Transfer or cash accepted.",
+  contactCoachLine: "Contact Coach via LINE",
+  viewParentCard: "View Full Report Card",
 
   // Coach cockpit
   reportBtn: "Report",
@@ -157,7 +196,6 @@ const en: typeof zh = {
   saving: "Saving…",
   saveReport: "Save Report",
   reportSaved: "Report Saved!",
-  viewParentCard: "View Parent Report Card",
   cancelBtn: "Cancel",
   closeBtn: "Close",
 

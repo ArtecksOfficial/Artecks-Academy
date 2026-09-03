@@ -3,17 +3,24 @@
 // Handles the interactive booking form with multi-channel contact selector.
 
 import { useActionState, useState } from "react";
-import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, CheckCircle, AlertCircle, MapPin, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { bookSession, type BookingState, type ContactMethod } from "./actions";
 
+// ─── Update YOUR details here ────────────────────────────────────────────────
+const COACH_LINE_ID = "@artecks";           // replace with your LINE ID
+const BANK_CODE    = "XXX";                 // replace with your bank code
+const BANK_ACCOUNT = "XXXX-XXX-XXXXXX";    // replace with your account number
+// ─────────────────────────────────────────────────────────────────────────────
+
 interface Session {
-  id: string;
+  id: string | number;
   title: string;
   topic: string | null;
   start_time: string;
   end_time: string | null;
   location_name: string | null;
+  location_address: string | null;
   max_seats: number;
   price_twd: number | null;
   booking_open: boolean;
@@ -24,6 +31,12 @@ const CONTACT_METHODS: { key: ContactMethod; emoji: string }[] = [
   { key: "line", emoji: "🟢" },
   { key: "sms", emoji: "📱" },
   { key: "email", emoji: "✉️" },
+];
+
+const EXPERIENCE_OPTIONS = [
+  { key: "beginner",    labelKey: "chessExpBeginner"    as const },
+  { key: "knows_rules", labelKey: "chessExpKnowsRules"  as const },
+  { key: "experienced", labelKey: "chessExpExperienced" as const },
 ];
 
 function formatDateTW(iso: string, locale: string) {
@@ -38,6 +51,115 @@ function formatDateTW(iso: string, locale: string) {
   });
 }
 
+// ── Confirmation screen ───────────────────────────────────────────────────────
+function ConfirmationScreen({
+  session,
+  bookingId,
+}: {
+  session: Session;
+  bookingId: string;
+}) {
+  const { t, locale } = useLanguage();
+  const mapsUrl = session.location_address
+    ? `https://maps.google.com/?q=${encodeURIComponent(session.location_address)}`
+    : `https://maps.google.com/?q=${encodeURIComponent(session.location_name ?? "")}`;
+  const lineUrl = `https://line.me/ti/p/~${COACH_LINE_ID.replace("@", "")}`;
+
+  return (
+    <div className="rounded-3xl bg-white shadow-lg border border-gray-100 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-6 text-white text-center">
+        <CheckCircle size={44} className="mx-auto mb-2" />
+        <h2 className="text-xl font-black">{t("bookingSuccess")}</h2>
+        <p className="text-sm text-emerald-100 mt-1">{t("bookingSuccessMsg")}</p>
+      </div>
+
+      <div className="divide-y divide-gray-100">
+        {/* Session info */}
+        <div className="px-6 py-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+            {t("sessionDetails")}
+          </p>
+          <p className="font-bold text-gray-900">{session.title}</p>
+          <p className="text-sm text-gray-600 mt-1">
+            🕐 {formatDateTW(session.start_time, locale)}
+          </p>
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-sm text-indigo-600 mt-1 hover:underline"
+          >
+            <MapPin size={13} />
+            {session.location_name}
+            {session.location_address && (
+              <span className="text-gray-500 text-xs">— {session.location_address}</span>
+            )}
+            <ChevronRight size={13} className="ml-auto" />
+          </a>
+        </div>
+
+        {/* What to bring */}
+        <div className="px-6 py-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
+            {t("whatToBring")}
+          </p>
+          <p className="text-sm text-gray-700">{t("whatToBringItems")}</p>
+        </div>
+
+        {/* Payment */}
+        <div className="px-6 py-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+            {t("paymentTitle")}
+          </p>
+          <p className="text-sm font-semibold text-gray-800">
+            NT$ {(session.price_twd ?? 0).toLocaleString()} · {t("paymentBankTransfer")}
+          </p>
+          <div className="mt-2 rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 font-mono text-sm">
+            <span className="text-gray-500 text-xs block mb-0.5">
+              {locale === "zh" ? "銀行代碼" : "Bank Code"}
+            </span>
+            <span className="font-bold text-gray-900">{BANK_CODE}</span>
+            <span className="text-gray-500 text-xs block mt-2 mb-0.5">
+              {locale === "zh" ? "帳號" : "Account"}
+            </span>
+            <span className="font-bold text-gray-900 tracking-widest">{BANK_ACCOUNT}</span>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">{t("paymentBankNote")}</p>
+        </div>
+
+        {/* Contact coach */}
+        <div className="px-6 py-4">
+          <a
+            href={lineUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full rounded-2xl bg-[#06C755] py-3.5 text-sm font-bold text-white shadow-md shadow-green-200 active:scale-95 transition-all"
+          >
+            <span className="text-lg">🟢</span>
+            {t("contactCoachLine")}
+          </a>
+        </div>
+
+        {/* Booking ref + report link */}
+        <div className="px-6 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-400">{t("bookingRef")}</p>
+            <p className="text-sm font-mono font-bold text-gray-700">#{bookingId}</p>
+          </div>
+          <a
+            href={`/report/${bookingId}`}
+            className="text-xs text-indigo-600 underline"
+          >
+            {t("viewParentCard")}
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main booking form ─────────────────────────────────────────────────────────
 export default function BookingSection({
   session,
   confirmedCount,
@@ -48,9 +170,9 @@ export default function BookingSection({
   const { t, locale } = useLanguage();
   const initialState: BookingState = { status: "idle" };
   const [state, formAction, isPending] = useActionState(bookSession, initialState);
-  const [contactMethod, setContactMethod] = useState<ContactMethod>("whatsapp");
+  const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
+  const [experience, setExperience] = useState<string>("beginner");
 
-  // Use max_seats (always set) rather than the nullable capacity column
   const spotsLeft = Math.max(0, session.max_seats - confirmedCount);
   const isFull = spotsLeft === 0;
   const canBook = session.booking_open && !isFull;
@@ -63,23 +185,7 @@ export default function BookingSection({
   }[contactMethod] as Parameters<typeof t>[0];
 
   if (state.status === "success" && state.bookingId) {
-    return (
-      <div className="rounded-3xl bg-white shadow-lg border border-gray-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-5 text-white text-center">
-          <CheckCircle size={40} className="mx-auto mb-2" />
-          <h2 className="text-xl font-black">{t("bookingSuccess")}</h2>
-          <p className="text-sm text-emerald-100 mt-1">{t("bookingSuccessMsg")}</p>
-        </div>
-        <div className="px-6 py-5 text-center">
-          <a
-            href={`/report/${state.bookingId}`}
-            className="text-sm text-indigo-600 underline"
-          >
-            {t("viewParentCard")}
-          </a>
-        </div>
-      </div>
-    );
+    return <ConfirmationScreen session={session} bookingId={state.bookingId} />;
   }
 
   return (
@@ -119,14 +225,14 @@ export default function BookingSection({
             </p>
           </div>
         ) : (
-          <form action={formAction} className="flex flex-col gap-4">
+          <form action={formAction} className="flex flex-col gap-5">
             <input type="hidden" name="session_id" value={session.id} />
 
-            {/* Parent info */}
+            {/* ── Parent info ──────────────────────────────────────────── */}
             <div className="grid grid-cols-2 gap-3">
               <label className="flex flex-col gap-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  {t("parentName")}
+                  {t("parentName")} *
                 </span>
                 <input
                   name="parent_name"
@@ -136,7 +242,7 @@ export default function BookingSection({
               </label>
               <label className="flex flex-col gap-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  {t("parentPhone")}
+                  {t("parentPhone")} *
                 </span>
                 <input
                   name="parent_phone"
@@ -147,11 +253,11 @@ export default function BookingSection({
               </label>
             </div>
 
-            {/* Student info */}
+            {/* ── Student info ─────────────────────────────────────────── */}
             <div className="grid grid-cols-2 gap-3">
               <label className="flex flex-col gap-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  {t("studentName")}
+                  {t("studentName")} *
                 </span>
                 <input
                   name="student_name"
@@ -161,7 +267,7 @@ export default function BookingSection({
               </label>
               <label className="flex flex-col gap-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  {t("studentAge")}
+                  {t("studentAge")} *
                 </span>
                 <input
                   name="student_age"
@@ -174,10 +280,34 @@ export default function BookingSection({
               </label>
             </div>
 
-            {/* Contact method selector */}
+            {/* ── Chess experience ─────────────────────────────────────── */}
             <div className="flex flex-col gap-2">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                {t("contactMethod")}
+                {t("chessExperience")} *
+              </span>
+              <input type="hidden" name="chess_experience_level" value={experience} />
+              <div className="flex flex-col gap-2">
+                {EXPERIENCE_OPTIONS.map(({ key, labelKey }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setExperience(key)}
+                    className={`rounded-xl px-4 py-3 text-sm font-medium text-left transition-all border ${
+                      experience === key
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                        : "bg-gray-50 text-gray-700 border-gray-200 hover:border-indigo-300"
+                    }`}
+                  >
+                    {experience === key ? "● " : "○ "}{t(labelKey)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Contact method ───────────────────────────────────────── */}
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                {t("contactMethod")} *
               </span>
               <div className="grid grid-cols-4 gap-2">
                 {CONTACT_METHODS.map(({ key, emoji }) => (
@@ -207,7 +337,7 @@ export default function BookingSection({
               <input type="hidden" name="contact_method" value={contactMethod} />
               <label className="flex flex-col gap-1">
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  {t("contactValue")}
+                  {t("contactValue")} *
                 </span>
                 <input
                   name="contact_value"
@@ -219,7 +349,20 @@ export default function BookingSection({
               </label>
             </div>
 
-            {/* Optional fields */}
+            {/* ── Special notes ────────────────────────────────────────── */}
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                {t("specialNotes")}
+              </span>
+              <textarea
+                name="special_notes"
+                rows={3}
+                placeholder={t("specialNotesPlaceholder")}
+                className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-indigo-400 focus:bg-white"
+              />
+            </label>
+
+            {/* ── Artecks ID ───────────────────────────────────────────── */}
             <label className="flex flex-col gap-1">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 {t("artecksId")}
@@ -230,19 +373,6 @@ export default function BookingSection({
                 className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
               />
               <span className="text-xs text-violet-600">{t("artecksIdHint")}</span>
-            </label>
-
-            <label className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                {t("paymentLast5")}
-              </span>
-              <input
-                name="payment_last5"
-                maxLength={5}
-                placeholder="12345"
-                className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-indigo-400 focus:bg-white"
-              />
-              <span className="text-xs text-gray-400">{t("paymentLast5Hint")}</span>
             </label>
 
             {state.status === "error" && (
