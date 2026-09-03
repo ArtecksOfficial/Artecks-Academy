@@ -1,40 +1,14 @@
-// ─── Artecks Academy — Supabase Client ───────────────────────────────────────
-// Imports Database from the Supabase-generated types file.
-// Server-only clients. Never import from "use client" components.
+// Supabase is removed. All data comes from the Django API via @/lib/api.
+// This file is kept as a stub so any stale imports don't break the build.
 
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "../src/lib/database.types";
-
-const supabaseUrl      = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const supabaseAnonKey  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-const supabaseAdminKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
-
-/**
- * Anon-key client — respects RLS. Use for public reads.
- */
-export function createServerClient() {
-  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+export function createServerClient(): never {
+  throw new Error("Supabase is deprecated. Use the Django API via @/lib/api instead.");
 }
 
-/**
- * Service-role client — bypasses RLS. Use in Server Actions that need
- * to read or write any row (coach cockpit, reward crediting).
- */
-export function createAdminClient() {
-  return createClient<Database>(supabaseUrl, supabaseAdminKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+export function createAdminClient(): never {
+  throw new Error("Supabase is deprecated. Use the Django API via @/lib/api instead.");
 }
 
-/**
- * Browser-side singleton for Client Components.
- */
-let _browserClient: ReturnType<typeof createClient<Database>> | null = null;
-export function createBrowserClient() {
-  if (!_browserClient) {
-    _browserClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
-  }
-  return _browserClient;
+export function createBrowserClient(): never {
+  throw new Error("Supabase is deprecated. Use the Django API via @/lib/api instead.");
 }
