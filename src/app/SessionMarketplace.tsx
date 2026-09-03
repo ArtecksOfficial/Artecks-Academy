@@ -392,6 +392,19 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
           </p>
         </div>
 
+        {/* ── Artecks login nudge */}
+        <div className="flex items-start gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 mb-5">
+          <span className="text-lg leading-none mt-0.5">🎮</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-indigo-800">
+              Booking is open to everyone — no login required.
+            </p>
+            <p className="text-xs text-indigo-600 mt-0.5 leading-relaxed">
+              Have an Artecks account? Add your account ID when you book and earn <strong>XP &amp; coins</strong> automatically after each session.
+            </p>
+          </div>
+        </div>
+
         {/* ── Date strip ── */}
         <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-5 shadow-sm">
           <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">
