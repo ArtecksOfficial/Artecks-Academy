@@ -1,11 +1,9 @@
 // ─── Artecks Academy — Linkou Parent Booking Catalog ─────────────────────────
-// Server Component. Fetches upcoming open sessions and renders the parent-
-// facing landing page. An admin seed button is shown only when ?admin=true
-// is present in the URL (or when no sessions exist yet, tucked in the footer).
+// Server Component. Fetches upcoming open sessions from Django API and renders
+// the parent-facing landing page.
 
-import { createServerClient } from "@/lib/supabase";
-import type { Session } from "@/lib/types";
-import { SeedButton } from "./SeedButton";
+import { fetchSessions } from "@/lib/api";
+import type { AcademySession } from "@/lib/types";
 import { BookOpen, MapPin, Clock, Users } from "lucide-react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -34,13 +32,9 @@ function formatDateEN(iso: string) {
 
 // ── Session Card ──────────────────────────────────────────────────────────────
 
-async function SessionCatalogCard({
-  session,
-}: {
-  session: Session & { bookedCount: number };
-}) {
-  const spotsLeft = Math.max(0, session.max_seats - session.bookedCount);
-  const isFull = spotsLeft === 0;
+function SessionCatalogCard({ session }: { session: AcademySession }) {
+  const spotsLeft = session.available_spots;
+  const isFull = session.is_full;
   const isOpen = session.status === "open" && session.booking_open && !isFull;
 
   return (
@@ -135,39 +129,9 @@ async function SessionCatalogCard({
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-interface PageProps {
-  searchParams: Promise<{ admin?: string }>;
-}
-
-export default async function LinkoaCatalogPage({ searchParams }: PageProps) {
-  const { admin } = await searchParams;
-  const isAdmin = admin === "true";
-
-  const supabase = createServerClient();
-
-  // Fetch upcoming open sessions (next 30 days) ordered by start time
-  const upcoming = new Date();
-  const { data: sessions } = await supabase
-    .from("sessions")
-    .select("*")
-    .gte("start_time", upcoming.toISOString())
-    .order("start_time", { ascending: true })
-    .limit(20);
-
-  // For each session, count confirmed bookings
-  const sessionsWithCount: Array<Session & { bookedCount: number }> = [];
-  if (sessions && sessions.length > 0) {
-    for (const session of sessions) {
-      const { count } = await supabase
-        .from("bookings")
-        .select("id", { count: "exact", head: true })
-        .eq("session_id", session.id)
-        .neq("status", "cancelled");
-      sessionsWithCount.push({ ...session, bookedCount: count ?? 0 });
-    }
-  }
-
-  const hasSessions = sessionsWithCount.length > 0;
+export default async function LinkoaCatalogPage() {
+  const sessions = await fetchSessions();
+  const hasSessions = sessions.length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -233,13 +197,13 @@ export default async function LinkoaCatalogPage({ searchParams }: PageProps) {
             近期課程 <span className="text-gray-400 font-normal text-sm">Upcoming Sessions</span>
           </h2>
           {hasSessions && (
-            <span className="text-xs text-gray-400">{sessionsWithCount.length} 堂</span>
+            <span className="text-xs text-gray-400">{sessions.length} 堂</span>
           )}
         </div>
 
         {hasSessions ? (
           <div className="grid gap-4 sm:grid-cols-2">
-            {sessionsWithCount.map((session) => (
+            {sessions.map((session) => (
               <SessionCatalogCard key={session.id} session={session} />
             ))}
           </div>
@@ -250,11 +214,6 @@ export default async function LinkoaCatalogPage({ searchParams }: PageProps) {
             <p className="text-sm text-gray-400 mt-1">
               No sessions available right now — check back soon!
             </p>
-            {isAdmin && (
-              <div className="mt-6">
-                <SeedButton label="新增測試課程 (Linkou)" />
-              </div>
-            )}
           </div>
         )}
       </main>
@@ -276,14 +235,14 @@ export default async function LinkoaCatalogPage({ searchParams }: PageProps) {
         <p className="text-xs text-gray-400">
           © {new Date().getFullYear()} Artecks · academy.artecks.com
         </p>
-        {isAdmin && hasSessions && (
-          <SeedButton label="新增測試課程" />
-        )}
-        {!isAdmin && (
-          <a href="?admin=true" className="text-xs text-gray-300 hover:text-gray-400 transition-colors">
-            Admin
-          </a>
-        )}
+        <a
+          href="https://artecks.com/admin/academy/"
+          className="text-xs text-gray-300 hover:text-gray-400 transition-colors"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Admin
+        </a>
       </footer>
     </div>
   );

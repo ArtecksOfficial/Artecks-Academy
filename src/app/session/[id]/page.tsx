@@ -1,9 +1,9 @@
 // ─── Public Session Landing Page ──────────────────────────────────────────────
-// Server Component. Fetches session + confirmed booking count, then renders
-// the static shell + hands off interactivity to <BookingSection />.
+// Server Component. Fetches session from Django API, then renders the static
+// shell + hands off interactivity to <BookingSection />.
 
 import { notFound } from "next/navigation";
-import { createServerClient } from "@/lib/supabase";
+import { fetchSession } from "@/lib/api";
 import BookingSection from "./BookingSection";
 import { LanguageToggle } from "@/lib/i18n/LanguageContext";
 import type { Metadata } from "next";
@@ -15,21 +15,16 @@ interface PageProps {
 // ── Dynamic OG metadata ───────────────────────────────────────────────────────
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const supabase = createServerClient();
-  const { data } = await supabase
-    .from("sessions")
-    .select("title, topic, start_time")
-    .eq("id", id)
-    .single();
+  const session = await fetchSession(id);
 
-  if (!data) return { title: "Artecks Academy" };
+  if (!session) return { title: "Artecks Academy" };
 
   return {
-    title: `${data.title} — Artecks Academy`,
-    description: data.topic ?? undefined,
+    title: `${session.title} — Artecks Academy`,
+    description: session.topic || undefined,
     openGraph: {
-      title: data.title,
-      description: data.topic ?? undefined,
+      title: session.title,
+      description: session.topic || undefined,
       siteName: "Artecks Academy",
     },
   };
@@ -38,27 +33,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default async function SessionPage({ params }: PageProps) {
   const { id } = await params;
-  const supabase = createServerClient();
+  const session = await fetchSession(id);
 
-  // Fetch session
-  const { data: session, error } = await supabase
-    .from("sessions")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !session) {
+  if (!session) {
     notFound();
   }
 
-  // Count confirmed bookings (non-cancelled)
-  const { count: confirmedCount } = await supabase
-    .from("bookings")
-    .select("id", { count: "exact", head: true })
-    .eq("session_id", id)
-    .neq("status", "cancelled");
-
-  const seated = confirmedCount ?? 0;
+  // confirmed count = max_seats - available_spots
+  const confirmedCount = session.max_seats - session.available_spots;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-white">
@@ -92,7 +74,7 @@ export default async function SessionPage({ params }: PageProps) {
 
       {/* Booking card */}
       <main className="max-w-lg mx-auto px-4 py-4 flex flex-col gap-4">
-        <BookingSection session={session} confirmedCount={seated} />
+        <BookingSection session={session} confirmedCount={confirmedCount} />
 
         {/* Ecosystem callout */}
         <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-indigo-50 p-4">
