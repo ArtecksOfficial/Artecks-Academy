@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
+import UserBookingsDrawer from "./UserBookingsDrawer";
+
 import type { AcademySession } from "@/lib/types";
 import { MapPin, Clock, Users, Star, ChevronRight, Filter } from "lucide-react";
 
@@ -296,6 +298,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [experienceFilter, setExperienceFilter] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Build 28-day strip starting today (Taipei time)
   const today = toTaipei(new Date().toISOString());
@@ -365,13 +368,19 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
               <span className="font-semibold" style={{ color: "#4F46E5" }}>Linkou, New Taipei</span>
             </div>
             <button
+              onClick={() => setDrawerOpen(true)}
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors"
+            >
+              My Bookings
+            </button>
+            <button
               onClick={() => setShowFilters((v) => !v)}
               className="sm:hidden flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-200 bg-white text-gray-600"
             >
               <Filter size={11} />
               Filters
             </button>
-          </div>
+        </div>
         </div>
       </header>
 
@@ -561,6 +570,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
           </a>
         </footer>
       </div>
+      <UserBookingsDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </div>
   );
 }

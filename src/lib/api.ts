@@ -75,3 +75,30 @@ export async function fetchBookingReport(
   if (!res.ok) return null;
   return res.json();
 }
+
+// ── My Bookings ───────────────────────────────────────────────────────────────
+
+export interface MyBooking {
+  id: number;
+  session_title: string;
+  session_start: string;
+  session_end: string | null;
+  location_name: string;
+  price_twd: number;
+  student_name: string;
+  status: string;
+  payment_status: string;
+  xp_awarded: number;
+  coins_awarded: number;
+  artecks_account_id: string | null;
+  created_at: string;
+}
+
+export async function fetchMyBookings(phone: string): Promise<MyBooking[]> {
+  const res = await fetch(
+    `${BASE}/bookings/mine/?phone=${encodeURIComponent(phone)}`,
+    { cache: "no-store" }
+  );
+  if (!res.ok) return [];
+  return res.json();
+}
