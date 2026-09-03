@@ -1,0 +1,1 @@
+-- superseded by 20260903000000_initial_schema.sql — safe to delete manually
