@@ -74,7 +74,7 @@ export default async function SessionPage({ params }: PageProps) {
 
       {/* Booking card */}
       <main className="max-w-lg mx-auto px-4 py-4 flex flex-col gap-4">
-        <BookingSection session={session} confirmedCount={confirmedCount} />
+        <BookingSection session={session as any} confirmedCount={confirmedCount} />
 
         {/* Ecosystem callout */}
         <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-indigo-50 p-4">

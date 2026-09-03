@@ -49,7 +49,7 @@ export default async function ReportPage({ params }: PageProps) {
               title: report.session_title,
               topic: null,
               start_time: report.session_start,
-              end_time: null,
+              
               location_name: report.location_name,
             }
           : null
