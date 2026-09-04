@@ -363,8 +363,9 @@ function SuccessScreen({ session, bookingId }: { session: AcademySession; bookin
 
 // ── Info panel (left) ─────────────────────────────────────────────────────────
 
-function InfoPanel({ session }: { session: AcademySession | null }) {
+function InfoPanel({ session, sessions }: { session: AcademySession | null; sessions: AcademySession[] }) {
   const mins = session ? durationMins(session.start_time, session.end_time) : 60;
+  const minPrice = session?.price_twd ?? (sessions.length ? Math.min(...sessions.map(s => s.price_twd ?? 0)) : null);
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
@@ -390,12 +391,13 @@ function InfoPanel({ session }: { session: AcademySession | null }) {
           <span>Small group · max {session?.max_seats ?? 10} students</span>
         </div>
       </div>
-      {session && (
-        <div className="rounded-2xl bg-indigo-50 border border-indigo-100 px-4 py-3">
-          <p className="text-xs text-indigo-400 font-semibold">Per session</p>
-          <p className="text-2xl font-black text-indigo-700">NT${(session.price_twd ?? 0).toLocaleString()}</p>
-        </div>
-      )}
+      <div className="rounded-2xl bg-indigo-50 border border-indigo-100 px-4 py-3">
+        <p className="text-xs text-indigo-400 font-semibold">{session ? "Per session" : "Starting from"}</p>
+        {minPrice != null
+          ? <p className="text-2xl font-black text-indigo-700">NT${minPrice.toLocaleString()} <span className="text-sm font-normal text-indigo-400">TWD</span></p>
+          : <p className="text-sm text-indigo-400 font-medium">Pricing TBD</p>
+        }
+      </div>
       {session?.coach && (
         <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black flex-shrink-0"
@@ -412,6 +414,15 @@ function InfoPanel({ session }: { session: AcademySession | null }) {
         <p className="text-xs font-bold text-violet-700 mb-1">🎮 Artecks Rewards</p>
         <p className="text-xs text-violet-600">Add your account ID to earn XP &amp; coins after each session.</p>
       </div>
+      <a
+        href="https://artecks.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-indigo-300 hover:text-indigo-600 transition-all"
+      >
+        🛍 Visit Artecks Store
+        <span className="text-gray-400 text-xs">→</span>
+      </a>
     </div>
   );
 }
