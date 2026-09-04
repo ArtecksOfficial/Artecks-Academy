@@ -562,7 +562,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
 
             {/* Left info panel */}
             <aside className="sm:w-64 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 p-6">
-              <InfoPanel session={selectedSession} />
+              <InfoPanel session={selectedSession} sessions={sessions} />
             </aside>
 
             {/* Right step panel */}
