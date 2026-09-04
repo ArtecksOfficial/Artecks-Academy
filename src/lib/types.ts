@@ -2,6 +2,19 @@
 // Source of truth: Django AcademySession / AcademyBooking models.
 // No Supabase types used.
 
+export interface Coach {
+  id: number;
+  name: string;
+  name_zh: string;
+  title: string;
+  bio: string;
+  avatar_initials: string;
+  line_id: string;
+  bank_name: string;
+  bank_code: string;
+  bank_account: string;
+}
+
 export type SessionStatus = "open" | "closed" | "cancelled";
 export type ContactMethod = "whatsapp" | "line" | "sms" | "email";
 
@@ -21,6 +34,7 @@ export interface AcademySession {
   status: SessionStatus;
   booking_open: boolean;
   is_active: boolean;
+  coach: Coach | null;
 }
 
 export interface BookingReport {

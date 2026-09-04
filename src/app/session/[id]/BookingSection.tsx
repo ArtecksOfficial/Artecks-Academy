@@ -7,11 +7,6 @@ import { Loader2, CheckCircle, AlertCircle, MapPin, ChevronRight } from "lucide-
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { bookSession, type BookingState, type ContactMethod } from "./actions";
 
-// ─── Update YOUR details here ────────────────────────────────────────────────
-const COACH_LINE_ID = "@artecks";           // replace with your LINE ID
-const BANK_CODE    = "XXX";                 // replace with your bank code
-const BANK_ACCOUNT = "XXXX-XXX-XXXXXX";    // replace with your account number
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface Session {
   id: string | number;
@@ -24,6 +19,14 @@ interface Session {
   max_seats: number;
   price_twd: number | null;
   booking_open: boolean;
+  available_spots: number;
+  coach: {
+    name: string;
+    line_id: string;
+    bank_name: string;
+    bank_code: string;
+    bank_account: string;
+  } | null;
 }
 
 const CONTACT_METHODS: { key: ContactMethod; emoji: string }[] = [
@@ -63,7 +66,8 @@ function ConfirmationScreen({
   const mapsUrl = session.location_address
     ? `https://maps.google.com/?q=${encodeURIComponent(session.location_address)}`
     : `https://maps.google.com/?q=${encodeURIComponent(session.location_name ?? "")}`;
-  const lineUrl = `https://line.me/ti/p/~${COACH_LINE_ID.replace("@", "")}`;
+  const coachLineId = session.coach?.line_id ?? "";
+  const lineUrl = coachLineId ? `https://line.me/ti/p/~${coachLineId.replace("@", "")}` : "#";
 
   return (
     <div className="rounded-3xl bg-white shadow-lg border border-gray-100 overflow-hidden">
@@ -119,11 +123,11 @@ function ConfirmationScreen({
             <span className="text-gray-500 text-xs block mb-0.5">
               {locale === "zh" ? "銀行代碼" : "Bank Code"}
             </span>
-            <span className="font-bold text-gray-900">{BANK_CODE}</span>
+            <span className="font-bold text-gray-900">{session.coach?.bank_code || "—"}</span>
             <span className="text-gray-500 text-xs block mt-2 mb-0.5">
               {locale === "zh" ? "帳號" : "Account"}
             </span>
-            <span className="font-bold text-gray-900 tracking-widest">{BANK_ACCOUNT}</span>
+            <span className="font-bold text-gray-900 tracking-widest">{session.coach?.bank_account || "—"}</span>
           </div>
           <p className="text-xs text-gray-500 mt-2">{t("paymentBankNote")}</p>
         </div>
@@ -134,7 +138,7 @@ function ConfirmationScreen({
             href={lineUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full rounded-2xl bg-[#06C755] py-3.5 text-sm font-bold text-white shadow-md shadow-green-200 active:scale-95 transition-all"
+            className={`flex items-center justify-center gap-2 w-full rounded-2xl ${coachLineId ? "bg-[#06C755]" : "bg-gray-300 cursor-not-allowed pointer-events-none"} py-3.5 text-sm font-bold text-white shadow-md shadow-green-200 active:scale-95 transition-all`}
           >
             <span className="text-lg">🟢</span>
             {t("contactCoachLine")}
@@ -162,10 +166,9 @@ function ConfirmationScreen({
 // ── Main booking form ─────────────────────────────────────────────────────────
 export default function BookingSection({
   session,
-  confirmedCount,
+
 }: {
   session: Session;
-  confirmedCount: number;
 }) {
   const { t, locale } = useLanguage();
   const initialState: BookingState = { status: "idle" };
@@ -173,7 +176,7 @@ export default function BookingSection({
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [experience, setExperience] = useState<string>("beginner");
 
-  const spotsLeft = Math.max(0, session.max_seats - confirmedCount);
+  const spotsLeft = session.available_spots;
   const isFull = spotsLeft === 0;
   const canBook = session.booking_open && !isFull;
 
