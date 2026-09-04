@@ -11,14 +11,14 @@ export async function GET(
     return NextResponse.json({ error: "Invalid booking ID." }, { status: 400 });
   }
 
-  // Build the return URL — after ECPay payment, parent lands on /payment/result
   const origin = new URL(request.url).origin;
-  const returnUrl = `${origin}/payment/result?booking_id=${bookingId}`;
+  const successUrl = `${origin}/payment/result?booking_id=${bookingId}&success=true`;
+  const cancelUrl = `${origin}/payment/result?booking_id=${bookingId}&success=false`;
 
   const djangoUrl =
     `${BACKEND}/api/academy/bookings/${bookingId}/pay/` +
-    `?return_url=${encodeURIComponent(returnUrl)}` +
-    `&client_back_url=${encodeURIComponent(origin + "/")}`;
+    `?success_url=${encodeURIComponent(successUrl)}` +
+    `&cancel_url=${encodeURIComponent(cancelUrl)}`;
 
   let djangoRes: Response;
   try {
@@ -39,39 +39,11 @@ export async function GET(
     );
   }
 
-  const data: { form_html?: string; error?: string } = await djangoRes.json();
-  if (!data.form_html) {
-    return NextResponse.json({ error: "No payment form returned." }, { status: 500 });
+  const data: { checkout_url?: string; error?: string } = await djangoRes.json();
+  if (!data.checkout_url) {
+    return NextResponse.json({ error: "No checkout URL returned." }, { status: 500 });
   }
 
-  // Return a minimal HTML page that wraps the auto-submitting ECPay form
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Redirecting to payment…</title>
-  <style>
-    body { margin: 0; display: flex; align-items: center; justify-content: center;
-           min-height: 100vh; font-family: system-ui, sans-serif; background: #f6f7fb; }
-    .card { text-align: center; color: #4b5563; }
-    .spinner { width: 40px; height: 40px; border: 3px solid #e0e7ff;
-               border-top-color: #4f46e5; border-radius: 50%;
-               animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <div class="spinner"></div>
-    <p>Redirecting to payment gateway…</p>
-  </div>
-  ${data.form_html}
-</body>
-</html>`;
-
-  return new NextResponse(html, {
-    status: 200,
-    headers: { "Content-Type": "text/html; charset=utf-8" },
-  });
+  // Redirect the browser directly to Stripe Checkout
+  return NextResponse.redirect(data.checkout_url, { status: 303 });
 }

@@ -4,12 +4,12 @@ import { CheckCircle, XCircle } from "lucide-react";
 export default async function PaymentResultPage({
   searchParams,
 }: {
-  searchParams: Promise<{ booking_id?: string; RtnCode?: string; RtnMsg?: string }>;
+  searchParams: Promise<{ booking_id?: string; success?: string }>;
 }) {
   const params = await searchParams;
   const bookingId = params.booking_id ?? "";
-  // ECPay appends RtnCode=1 on success when using OrderResultURL
-  const success = !params.RtnCode || params.RtnCode === "1";
+  // Stripe appends ?success=true on success, ?success=false on cancel
+  const success = params.success === "true";
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4"
