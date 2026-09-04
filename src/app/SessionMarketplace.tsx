@@ -351,26 +351,8 @@ function BookingForm({
 // ── Success + Pay ─────────────────────────────────────────────────────────────
 
 function SuccessScreen({ session, bookingId }: { session: AcademySession; bookingId: string }) {
-  const [paying, setPaying] = useState(false);
-  const [error, setError] = useState("");
-
-  async function handlePay() {
-    setPaying(true);
-    setError("");
-    try {
-      const res = await fetch(`/api/pay/${bookingId}`);
-      if (!res.ok) {
-        const d = await res.json().catch(() => ({}));
-        setError(d.error ?? "Payment gateway unavailable. Please contact us.");
-        setPaying(false);
-        return;
-      }
-      const html = await res.text();
-      document.open(); document.write(html); document.close();
-    } catch {
-      setError("Something went wrong. Please try again.");
-      setPaying(false);
-    }
+  function handlePay() {
+    window.location.href = `/api/pay/${bookingId}`;
   }
 
   return (
@@ -386,17 +368,11 @@ function SuccessScreen({ session, bookingId }: { session: AcademySession; bookin
       <div className="w-full rounded-2xl bg-gray-50 border border-gray-200 px-5 py-4 text-left">
         <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Complete Your Payment</p>
         <p className="text-sm text-gray-700 mb-1"><span className="font-bold">NT${(session.price_twd ?? 0).toLocaleString()}</span> · {session.title}</p>
-        <p className="text-xs text-gray-400">Pay via ECPay — credit card, ATM transfer, or convenience store.</p>
+        <p className="text-xs text-gray-400">Pay securely via Stripe — credit or debit card accepted.</p>
       </div>
-      {error && (
-        <div className="w-full flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 p-3">
-          <AlertCircle size={14} className="text-red-500 shrink-0" />
-          <p className="text-sm text-red-700">{error}</p>
-        </div>
-      )}
-      <button onClick={handlePay} disabled={paying}
-        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200 disabled:opacity-50 active:scale-[0.98] transition-all">
-        {paying ? <><Loader2 size={16} className="animate-spin" /> Redirecting…</> : "Pay Now →"}
+      <button onClick={handlePay}
+        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all">
+        Pay Now →
       </button>
       <a href={`/report/${bookingId}`} className="text-xs text-indigo-500 hover:underline">View booking details</a>
     </div>
