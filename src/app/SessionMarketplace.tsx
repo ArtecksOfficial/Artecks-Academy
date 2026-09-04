@@ -5,13 +5,13 @@
  * Below the picker: coach cards, rewards callout, footer
  */
 
-import { useActionState, useState, useMemo } from "react";
+import { useActionState, useState, useMemo, useEffect, useTransition } from "react";
 import {
   ChevronLeft, ChevronRight, MapPin, Clock, Users,
   CheckCircle, AlertCircle, Loader2, Star,
 } from "lucide-react";
 import type { AcademySession, PriceVariant } from "@/lib/types";
-import { bookSession, type BookingState, type ContactMethod } from "./session/[id]/actions";
+import { bookSession, checkMembership, type BookingState, type ContactMethod } from "./session/[id]/actions";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
 
@@ -201,9 +201,22 @@ const EXPERIENCE_OPTS = [
   { key: "experienced", label: "Tournament Exp."   },
 ];
 
-function BookingForm({ session, onSuccess, selectedVariant }: { session: AcademySession; onSuccess: (id: string) => void; selectedVariant: PriceVariant | null }) {
+function BookingForm({
+  session,
+  onSuccess,
+  selectedVariant,
+  onMembershipChange,
+}: {
+  session: AcademySession;
+  onSuccess: (id: string) => void;
+  selectedVariant: PriceVariant | null;
+  onMembershipChange: (isMember: boolean) => void;
+}) {
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [experience, setExperience] = useState("beginner");
+  const [accountId, setAccountId] = useState("");
+  const [memberChecking, setMemberChecking] = useState(false);
+  const [, startTransition] = useTransition();
 
   const initialState: BookingState = { status: "idle" };
   const [state, formAction, isPending] = useActionState(
@@ -214,6 +227,27 @@ function BookingForm({ session, onSuccess, selectedVariant }: { session: Academy
     },
     initialState,
   );
+
+  // Debounced membership check whenever accountId changes
+  useEffect(() => {
+    if (!accountId || !accountId.toUpperCase().startsWith("ACT-")) {
+      onMembershipChange(false);
+      return;
+    }
+    setMemberChecking(true);
+    const timer = setTimeout(() => {
+      startTransition(async () => {
+        const result = await checkMembership(accountId);
+        onMembershipChange(result.is_member);
+        setMemberChecking(false);
+      });
+    }, 600);
+    return () => {
+      clearTimeout(timer);
+      setMemberChecking(false);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountId]);
 
   const placeholders: Record<ContactMethod, string> = {
     line: "@your-line-id", whatsapp: "+886 9xx-xxx-xxx",
@@ -286,10 +320,17 @@ function BookingForm({ session, onSuccess, selectedVariant }: { session: Academy
 
       <label className="flex flex-col gap-1">
         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          Artecks Account ID <span className="text-violet-500 normal-case font-normal">optional · earn XP</span>
+          Artecks Account ID{" "}
+          <span className="text-violet-500 normal-case font-normal">optional · earn XP</span>
+          {memberChecking && <span className="text-indigo-400 normal-case font-normal ml-1">checking…</span>}
         </span>
-        <input name="artecks_account_id" placeholder="ACT-XXXX"
-          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white" />
+        <input
+          name="artecks_account_id"
+          placeholder="ACT-XXXX"
+          value={accountId}
+          onChange={(e) => setAccountId(e.target.value)}
+          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+        />
       </label>
 
       {state.status === "error" && (
@@ -365,23 +406,28 @@ function SuccessScreen({ session, bookingId }: { session: AcademySession; bookin
 // ── Info panel (left) ─────────────────────────────────────────────────────────
 
 function InfoPanel({
-  session, sessions, step, selectedVariant, onVariantChange,
+  session, sessions, step, selectedVariant, onVariantChange, isMember,
 }: {
   session: AcademySession | null;
   sessions: AcademySession[];
   step: string;
   selectedVariant: PriceVariant | null;
   onVariantChange: (v: PriceVariant) => void;
+  isMember: boolean;
 }) {
   const mins = session ? durationMins(session.start_time, session.end_time) : 60;
   const variants = session?.price_variants ?? [];
   const hasVariants = variants.length > 0;
+
   // Price display: use selected variant when on form step, else fall back to price_twd / min
   const displayPrice: number | null = (() => {
-    if (step === "form" && hasVariants && selectedVariant) return selectedVariant.price;
-    if (hasVariants) return Math.min(...variants.map(v => v.price));
+    if (step === "form" && hasVariants && selectedVariant) {
+      return isMember ? selectedVariant.member_price : selectedVariant.price;
+    }
+    if (hasVariants) return Math.min(...variants.map(v => isMember ? v.member_price : v.price));
     return session?.price_twd ?? (sessions.length ? Math.min(...sessions.map(s => Number(s.price_twd ?? 0))) : null);
   })();
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
@@ -407,6 +453,7 @@ function InfoPanel({
           <span>Small group · max {session?.max_seats ?? 10} students</span>
         </div>
       </div>
+
       {/* ── Pricing variants (Shopee-style chips) ── */}
       {hasVariants && (
         <div className="flex flex-col gap-2">
@@ -414,6 +461,7 @@ function InfoPanel({
           <div className="flex flex-col gap-1.5">
             {variants.map((v) => {
               const active = step === "form" && selectedVariant?.label === v.label;
+              const showPrice = isMember ? v.member_price : v.price;
               return (
                 <button
                   key={v.label}
@@ -427,13 +475,25 @@ function InfoPanel({
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-bold">{v.label}</span>
-                    <span className={`text-xs font-semibold ${active ? "text-indigo-200" : "text-indigo-600"}`}>
-                      NT${v.price.toLocaleString()}/pp
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {isMember && v.member_price < v.price && (
+                        <span className={`text-[10px] line-through ${active ? "text-indigo-300" : "text-gray-400"}`}>
+                          NT${v.price.toLocaleString()}
+                        </span>
+                      )}
+                      <span className={`text-xs font-semibold ${active ? "text-indigo-200" : "text-indigo-600"}`}>
+                        NT${showPrice.toLocaleString()}/pp
+                      </span>
+                    </div>
                   </div>
-                  {v.member_price < v.price && (
+                  {!isMember && v.member_price < v.price && (
                     <p className={`text-[10px] mt-0.5 ${active ? "text-indigo-200" : "text-gray-400"}`}>
                       Members: NT${v.member_price.toLocaleString()}/pp
+                    </p>
+                  )}
+                  {isMember && (
+                    <p className={`text-[10px] mt-0.5 font-semibold ${active ? "text-emerald-200" : "text-emerald-600"}`}>
+                      ✓ Member rate applied
                     </p>
                   )}
                 </button>
@@ -443,10 +503,18 @@ function InfoPanel({
         </div>
       )}
 
+      {/* ── Member badge ── */}
+      {isMember && (
+        <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2">
+          <p className="text-xs font-bold text-emerald-700">✓ Artecks Member</p>
+          <p className="text-[10px] text-emerald-600 mt-0.5">Member pricing applied to all tiers.</p>
+        </div>
+      )}
+
       <div className="rounded-2xl bg-indigo-50 border border-indigo-100 px-4 py-3">
         <p className="text-xs text-indigo-400 font-semibold">
           {step === "form" && hasVariants && selectedVariant
-            ? `Per student · ${selectedVariant.label}`
+            ? `Per student · ${selectedVariant.label}${isMember ? " · Member rate" : ""}`
             : (hasVariants ? "Starting from" : (session ? "Per session" : "Starting from"))}
         </p>
         {displayPrice != null
@@ -526,6 +594,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<AcademySession | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<PriceVariant | null>(null);
+  const [isMember, setIsMember] = useState(false);
   const [step, setStep] = useState<Step>("calendar");
   const [bookingId, setBookingId] = useState<string | null>(null);
 
@@ -559,7 +628,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   function handleSuccess(id: string) { setBookingId(id); setStep("success"); }
 
   function goBack() {
-    if (step === "form")    { setStep("slots"); setSelectedSession(null); }
+    if (step === "form")    { setStep("slots"); setSelectedSession(null); setIsMember(false); }
     else if (step === "slots") { setStep("calendar"); setSelectedDate(null); }
     else if (step === "success") { setStep("calendar"); setSelectedDate(null); setSelectedSession(null); }
   }
@@ -623,7 +692,14 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
 
             {/* Left info panel */}
             <aside className="sm:w-64 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 p-6">
-              <InfoPanel session={selectedSession} sessions={sessions} step={step} selectedVariant={selectedVariant} onVariantChange={setSelectedVariant} />
+              <InfoPanel
+                session={selectedSession}
+                sessions={sessions}
+                step={step}
+                selectedVariant={selectedVariant}
+                onVariantChange={setSelectedVariant}
+                isMember={isMember}
+              />
             </aside>
 
             {/* Right step panel */}
@@ -679,7 +755,12 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
 
               {/* Form */}
               {step === "form" && selectedSession && (
-                <BookingForm session={selectedSession} onSuccess={handleSuccess} selectedVariant={selectedVariant} />
+                <BookingForm
+                  session={selectedSession}
+                  onSuccess={handleSuccess}
+                  selectedVariant={selectedVariant}
+                  onMembershipChange={setIsMember}
+                />
               )}
 
               {/* Success */}

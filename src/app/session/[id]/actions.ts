@@ -61,3 +61,21 @@ export async function bookSession(
   revalidatePath(`/session/${sessionId}`);
   return { status: "success", bookingId: String(result.booking_id) };
 }
+
+export async function checkMembership(
+  accountId: string
+): Promise<{ is_member: boolean }> {
+  const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
+  try {
+    const res = await fetch(`${BACKEND}/api/academy/check-membership/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ account_id: accountId.trim().toUpperCase() }),
+      cache: "no-store",
+    });
+    if (!res.ok) return { is_member: false };
+    return res.json();
+  } catch {
+    return { is_member: false };
+  }
+}
