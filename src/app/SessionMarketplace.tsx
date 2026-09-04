@@ -10,7 +10,7 @@ import {
   ChevronLeft, ChevronRight, MapPin, Clock, Users,
   CheckCircle, AlertCircle, Loader2, Star,
 } from "lucide-react";
-import type { AcademySession } from "@/lib/types";
+import type { AcademySession, PriceVariant } from "@/lib/types";
 import { bookSession, type BookingState, type ContactMethod } from "./session/[id]/actions";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
@@ -201,7 +201,7 @@ const EXPERIENCE_OPTS = [
   { key: "experienced", label: "Tournament Exp."   },
 ];
 
-function BookingForm({ session, onSuccess }: { session: AcademySession; onSuccess: (id: string) => void }) {
+function BookingForm({ session, onSuccess, selectedVariant }: { session: AcademySession; onSuccess: (id: string) => void; selectedVariant: PriceVariant | null }) {
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [experience, setExperience] = useState("beginner");
 
@@ -223,6 +223,7 @@ function BookingForm({ session, onSuccess }: { session: AcademySession; onSucces
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <input type="hidden" name="session_id" value={session.id} />
+      <input type="hidden" name="price_variant_label" value={selectedVariant?.label ?? ""} />
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
@@ -363,9 +364,24 @@ function SuccessScreen({ session, bookingId }: { session: AcademySession; bookin
 
 // ── Info panel (left) ─────────────────────────────────────────────────────────
 
-function InfoPanel({ session, sessions }: { session: AcademySession | null; sessions: AcademySession[] }) {
+function InfoPanel({
+  session, sessions, step, selectedVariant, onVariantChange,
+}: {
+  session: AcademySession | null;
+  sessions: AcademySession[];
+  step: string;
+  selectedVariant: PriceVariant | null;
+  onVariantChange: (v: PriceVariant) => void;
+}) {
   const mins = session ? durationMins(session.start_time, session.end_time) : 60;
-  const minPrice = session?.price_twd ?? (sessions.length ? Math.min(...sessions.map(s => s.price_twd ?? 0)) : null);
+  const variants = session?.price_variants ?? [];
+  const hasVariants = variants.length > 0;
+  // Price display: use selected variant when on form step, else fall back to price_twd / min
+  const displayPrice: number | null = (() => {
+    if (step === "form" && hasVariants && selectedVariant) return selectedVariant.price;
+    if (hasVariants) return Math.min(...variants.map(v => v.price));
+    return session?.price_twd ?? (sessions.length ? Math.min(...sessions.map(s => Number(s.price_twd ?? 0))) : null);
+  })();
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
@@ -391,10 +407,50 @@ function InfoPanel({ session, sessions }: { session: AcademySession | null; sess
           <span>Small group · max {session?.max_seats ?? 10} students</span>
         </div>
       </div>
+      {/* ── Pricing variants (Shopee-style chips) ── */}
+      {hasVariants && (
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Session Type</p>
+          <div className="flex flex-col gap-1.5">
+            {variants.map((v) => {
+              const active = step === "form" && selectedVariant?.label === v.label;
+              return (
+                <button
+                  key={v.label}
+                  type="button"
+                  onClick={() => onVariantChange(v)}
+                  className={`rounded-xl border px-3 py-2 text-left transition-all ${
+                    active
+                      ? "bg-indigo-600 border-indigo-600 text-white"
+                      : "border-gray-200 bg-gray-50 text-gray-700 hover:border-indigo-300 hover:bg-indigo-50"
+                  } ${step !== "form" ? "cursor-default" : "cursor-pointer"}`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold">{v.label}</span>
+                    <span className={`text-xs font-semibold ${active ? "text-indigo-200" : "text-indigo-600"}`}>
+                      NT${v.price.toLocaleString()}/pp
+                    </span>
+                  </div>
+                  {v.member_price < v.price && (
+                    <p className={`text-[10px] mt-0.5 ${active ? "text-indigo-200" : "text-gray-400"}`}>
+                      Members: NT${v.member_price.toLocaleString()}/pp
+                    </p>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="rounded-2xl bg-indigo-50 border border-indigo-100 px-4 py-3">
-        <p className="text-xs text-indigo-400 font-semibold">{session ? "Per session" : "Starting from"}</p>
-        {minPrice != null
-          ? <p className="text-2xl font-black text-indigo-700">NT${minPrice.toLocaleString()} <span className="text-sm font-normal text-indigo-400">TWD</span></p>
+        <p className="text-xs text-indigo-400 font-semibold">
+          {step === "form" && hasVariants && selectedVariant
+            ? `Per student · ${selectedVariant.label}`
+            : (hasVariants ? "Starting from" : (session ? "Per session" : "Starting from"))}
+        </p>
+        {displayPrice != null
+          ? <p className="text-2xl font-black text-indigo-700">NT${displayPrice.toLocaleString()} <span className="text-sm font-normal text-indigo-400">TWD</span></p>
           : <p className="text-sm text-indigo-400 font-medium">Pricing TBD</p>
         }
       </div>
@@ -469,6 +525,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   const [calMonth, setCalMonth] = useState(twToday.getMonth());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<AcademySession | null>(null);
+  const [selectedVariant, setSelectedVariant] = useState<PriceVariant | null>(null);
   const [step, setStep] = useState<Step>("calendar");
   const [bookingId, setBookingId] = useState<string | null>(null);
 
@@ -494,7 +551,11 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   }
 
   function handleDateSelect(date: string) { setSelectedDate(date); setStep("slots"); }
-  function handleSlotSelect(s: AcademySession) { setSelectedSession(s); setStep("form"); }
+  function handleSlotSelect(s: AcademySession) {
+    setSelectedSession(s);
+    setSelectedVariant(s.price_variants?.[0] ?? null);
+    setStep("form");
+  }
   function handleSuccess(id: string) { setBookingId(id); setStep("success"); }
 
   function goBack() {
@@ -562,7 +623,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
 
             {/* Left info panel */}
             <aside className="sm:w-64 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 p-6">
-              <InfoPanel session={selectedSession} sessions={sessions} />
+              <InfoPanel session={selectedSession} sessions={sessions} step={step} selectedVariant={selectedVariant} onVariantChange={setSelectedVariant} />
             </aside>
 
             {/* Right step panel */}
@@ -618,7 +679,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
 
               {/* Form */}
               {step === "form" && selectedSession && (
-                <BookingForm session={selectedSession} onSuccess={handleSuccess} />
+                <BookingForm session={selectedSession} onSuccess={handleSuccess} selectedVariant={selectedVariant} />
               )}
 
               {/* Success */}

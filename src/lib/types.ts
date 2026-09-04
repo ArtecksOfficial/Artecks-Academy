@@ -15,6 +15,13 @@ export interface Coach {
   bank_account: string;
 }
 
+export interface PriceVariant {
+  label: string;           // "1-on-1" | "1-on-2" | "1-on-3+"
+  max_students: number | null;  // null = no cap
+  price: number;           // regular price per student (TWD)
+  member_price: number;    // member price per student (TWD)
+}
+
 export type SessionStatus = "open" | "closed" | "cancelled";
 export type ContactMethod = "whatsapp" | "line" | "sms" | "email";
 
@@ -28,6 +35,7 @@ export interface AcademySession {
   location_name: string;
   location_address: string;
   price_twd: number;
+  price_variants: PriceVariant[] | null;
   max_seats: number;
   available_spots: number;
   is_full: boolean;
