@@ -5,6 +5,7 @@
 import { fetchSessions, fetchProviderPlans } from "@/lib/api";
 import type { AcademySession, Coach, Provider } from "@/lib/types";
 import { MapPin, Clock, Users, Crown, ArrowRight, Star, ChevronRight } from "lucide-react";
+import HomeSubscribeButton from "@/app/components/HomeSubscribeButton";
 
 const TZ = "Asia/Taipei";
 
