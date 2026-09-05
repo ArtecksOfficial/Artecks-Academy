@@ -184,24 +184,19 @@ export default async function HomePage() {
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to bottom, rgba(15,13,42,0.55) 0%, rgba(15,13,42,0.4) 60%, rgba(15,13,42,0.65) 100%)",
+            background: "linear-gradient(to bottom, rgba(15,13,42,0.35) 0%, rgba(15,13,42,0.25) 50%, rgba(15,13,42,0.45) 100%)",
           }}
         />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col gap-8">
-          <div className="flex flex-col gap-5 max-w-2xl">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-3 py-1 rounded-full tracking-wide uppercase">
-                林口 · Linkou · New Taipei
-              </span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-black text-white leading-[1.1] tracking-tight" style={{ textShadow: "0 2px 16px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.9)" }}>
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-24 sm:py-36 flex flex-col gap-6">
+          <div className="flex flex-col gap-5 max-w-xl">
+            <span className="text-xs font-bold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-3 py-1 rounded-full tracking-wide uppercase w-fit">
+              林口 · Linkou · New Taipei
+            </span>
+            <h1 className="text-4xl sm:text-6xl font-black text-white leading-[1.05] tracking-tight" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8)" }}>
               Chess Lessons<br />
               <span style={{ color: "#818CF8" }}>Kids Actually Love.</span>
             </h1>
-            <p className="text-indigo-200 text-base sm:text-lg leading-relaxed max-w-lg" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}>
-              Small groups, expert coaches, and a rewards system that keeps kids motivated — every session earns XP and gems on the Artecks platform.
-            </p>
-            <div className="flex flex-wrap items-center gap-3 mt-1">
+            <div className="flex flex-wrap items-center gap-3 mt-2">
               <a
                 href="/sessions"
                 className="inline-flex items-center gap-2 bg-white text-indigo-700 hover:bg-indigo-50 text-sm font-black px-6 py-3 rounded-xl transition-colors shadow-lg"
@@ -213,25 +208,25 @@ export default async function HomePage() {
               )}
             </div>
           </div>
-
-          {/* Trust pills */}
-          <div className="flex flex-wrap gap-3">
-            {[
-              { icon: "♟", label: "Expert Coaches" },
-              { icon: "👶", label: "Ages 5 and up" },
-              { icon: "👥", label: "Small Groups" },
-              { icon: "⭐", label: "XP & Gem Rewards" },
-            ].map(({ icon, label }) => (
-              <div key={label} className="flex items-center gap-2 bg-white/10 border border-white/15 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                <span>{icon}</span>
-                <span>{label}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-16">
+
+        {/* ── Trust pills ── */}
+        <div className="flex flex-wrap justify-center gap-3 -mt-4">
+          {[
+            { icon: "♟", label: "Expert Coaches" },
+            { icon: "👶", label: "Ages 5 and up" },
+            { icon: "👥", label: "Small Groups" },
+            { icon: "⭐", label: "XP & Gem Rewards" },
+          ].map(({ icon, label }) => (
+            <div key={label} className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
+              <span>{icon}</span>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
 
         {/* ── How it works ── */}
         <section>
