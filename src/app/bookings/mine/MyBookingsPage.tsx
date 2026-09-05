@@ -35,12 +35,12 @@ function BookingCard({ booking }: { booking: MyBooking }) {
             <p className="font-black text-sm text-gray-900 leading-tight truncate">{booking.session_title}</p>
             <div className="flex items-center gap-1.5 mt-1">
               <Clock size={11} className="text-gray-400 flex-shrink-0" />
-              <p className="text-xs text-gray-500">{fmtDateTime(booking.session_datetime)}</p>
+              <p className="text-xs text-gray-500">{fmtDateTime(booking.session_start)}</p>
             </div>
-            {booking.location && (
+            {(booking.location_name) && (
               <div className="flex items-center gap-1.5 mt-0.5">
                 <MapPin size={11} className="text-gray-400 flex-shrink-0" />
-                <p className="text-xs text-gray-500 truncate">{booking.location}</p>
+                <p className="text-xs text-gray-500 truncate">{booking.location_name}</p>
               </div>
             )}
           </div>
@@ -49,10 +49,10 @@ function BookingCard({ booking }: { booking: MyBooking }) {
             <ChevronRight size={14} className="text-gray-300" />
           </div>
         </div>
-        {booking.price_paid != null && (
+        {booking.price_twd != null && (
           <p className="text-xs font-bold text-gray-700">
-            NT${Number(booking.price_paid).toLocaleString()}
-            {booking.discount_applied ? (
+            NT${Number(booking.price_twd).toLocaleString()}
+            {booking.applied_discount_amount > 0 ? (
               <span className="ml-1.5 text-emerald-600 font-semibold">(member discount applied)</span>
             ) : null}
           </p>
