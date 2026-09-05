@@ -174,7 +174,7 @@ export default async function HomePage() {
             inset: 0,
             backgroundImage: `url(https://images.pexels.com/photos/39191114/pexels-photo-39191114.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
             backgroundSize: "cover",
-            backgroundPosition: "center 30%",
+            backgroundPosition: "center 75%",
             opacity: 1,
           }}
         />
