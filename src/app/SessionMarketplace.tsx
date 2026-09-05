@@ -673,12 +673,12 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
               Home
             </a>
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm flex-shrink-0">
-              <span className="text-white text-sm font-black">♟</span>
-            </div>
-            <div>
-              <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
-              <p className="text-[11px] font-semibold mt-0.5" style={{ color: "#4F46E5" }}>林口 · Chess &amp; Enrichment</p>
+            <div className="flex items-center gap-2.5">
+              <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
+              <div>
+                <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
+                <p className="text-[11px] font-semibold mt-0.5" style={{ color: "#4F46E5" }}>林口 · Chess &amp; Enrichment</p>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">

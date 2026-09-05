@@ -140,12 +140,12 @@ export default async function HomePage() {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm flex-shrink-0">
-              <span className="text-white text-sm font-black">♟</span>
-            </div>
-            <div>
-              <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
-              <p className="text-[11px] font-semibold mt-0.5" style={{ color: "#4F46E5" }}>林口 · Chess &amp; Enrichment</p>
+            <div className="flex items-center gap-2.5">
+              <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
+              <div>
+                <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
+                <p className="text-[11px] font-semibold mt-0.5" style={{ color: "#4F46E5" }}>林口 · Chess &amp; Enrichment</p>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
