@@ -13,7 +13,7 @@ import {
 import type { AcademySession, PriceVariant, Provider, MembershipCheckResult } from "@/lib/types";
 import { bookSession, checkMembership, type BookingState, type ContactMethod } from "./session/[id]/actions";
 import MemberBanner from "./components/MemberBanner";
-import { fetchProviderPlans, createSubscriptionCheckout } from "@/lib/api";
+import { createSubscriptionCheckout } from "@/lib/api";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
 
@@ -596,7 +596,7 @@ function CoachCard({ coach }: { coach: typeof COACHES[0] }) {
 
 type Step = "calendar" | "slots" | "form" | "success";
 
-export default function SessionMarketplace({ sessions }: { sessions: AcademySession[] }) {
+export default function SessionMarketplace({ sessions, provider: initialProvider }: { sessions: AcademySession[]; provider: Provider | null }) {
   const twToday = toTW(new Date().toISOString());
   twToday.setHours(0, 0, 0, 0);
   const todayStr = ymd(twToday);
@@ -611,7 +611,7 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [bookingIsMember, setBookingIsMember] = useState(false);
-  const [providerWithPlans, setProviderWithPlans] = useState<Provider | null>(null);
+  const [providerWithPlans, setProviderWithPlans] = useState<Provider | null>(initialProvider);
   const [membershipResult, setMembershipResult] = useState<MembershipCheckResult | null>(null);
 
   const sessionsByDate = useMemo(() => {
@@ -625,13 +625,6 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   }, [sessions]);
 
   const sessionDates = useMemo(() => new Set(sessionsByDate.keys()), [sessionsByDate]);
-
-  // Fetch provider plans on mount so the subscribe banner is always visible
-  useEffect(() => {
-    fetchProviderPlans("issac").then((p) => {
-      if (p) setProviderWithPlans(p);
-    });
-  }, []);
 
   function prevMonth() {
     if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11); }
