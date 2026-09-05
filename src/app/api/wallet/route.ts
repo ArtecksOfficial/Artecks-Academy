@@ -1,21 +1,21 @@
-// GET /api/wallet?account_id=ACT-XXXX
-// Proxies to Django /api/wallet/me/ — keeps backend URL server-side.
+// GET /api/wallet
+// Proxies to Django /api/wallet/me/ using the caller's JWT token.
 
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
 
 export async function GET(req: NextRequest) {
-  const accountId = req.nextUrl.searchParams.get("account_id") ?? "";
-  if (!accountId) {
-    return NextResponse.json({ detail: "account_id required" }, { status: 400 });
+  const authorization = req.headers.get("authorization") ?? "";
+  if (!authorization) {
+    return NextResponse.json({ detail: "No token provided" }, { status: 401 });
   }
 
   try {
-    const res = await fetch(
-      `${BACKEND}/api/wallet/me/?account_id=${encodeURIComponent(accountId)}`,
-      { cache: "no-store" }
-    );
+    const res = await fetch(`${BACKEND}/api/wallet/me/`, {
+      headers: { Authorization: authorization },
+      cache: "no-store",
+    });
     if (!res.ok) {
       return NextResponse.json({ detail: "upstream error" }, { status: res.status });
     }

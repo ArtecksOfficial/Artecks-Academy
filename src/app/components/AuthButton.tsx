@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthContext";
+import { getAccessToken } from "@/lib/auth-client";
 
 interface WalletData {
   xp: number;
@@ -25,8 +26,12 @@ export default function AuthButton({ variant = "light" }: Props) {
 
   // Fetch wallet when user is logged in
   useEffect(() => {
-    if (!user?.account_id) return;
-    fetch(`/api/wallet?account_id=${encodeURIComponent(user.account_id)}`)
+    if (!user) return;
+    const token = getAccessToken();
+    if (!token) return;
+    fetch("/api/wallet", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data && typeof data.xp === "number") {
@@ -34,7 +39,7 @@ export default function AuthButton({ variant = "light" }: Props) {
         }
       })
       .catch(() => {});
-  }, [user?.account_id]);
+  }, [user]);
 
   // Close menu on outside click
   useEffect(() => {
