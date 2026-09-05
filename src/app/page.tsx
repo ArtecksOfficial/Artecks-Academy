@@ -6,6 +6,7 @@ import { fetchSessions, fetchProviderPlans } from "@/lib/api";
 import type { AcademySession, Coach, Provider } from "@/lib/types";
 import { MapPin, Clock, Users, Crown, ArrowRight, Star, ChevronRight } from "lucide-react";
 import HomeSubscribeButton from "@/app/components/HomeSubscribeButton";
+import ArtecksBalance from "@/app/components/ArtecksBalance";
 
 const TZ = "Asia/Taipei";
 
@@ -186,6 +187,7 @@ export default async function HomePage() {
               <MapPin size={11} className="text-indigo-500" />
               <span className="font-semibold text-indigo-600">Linkou, New Taipei</span>
             </div>
+            <ArtecksBalance />
             <a href="/bookings/mine" className="hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors">
               My Bookings
             </a>

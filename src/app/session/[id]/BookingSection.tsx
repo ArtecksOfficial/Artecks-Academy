@@ -2,7 +2,7 @@
 // ─── Booking Section — Client Component ───────────────────────────────────────
 // Handles the interactive booking form with multi-channel contact selector.
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { Loader2, CheckCircle, AlertCircle, MapPin, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { bookSession, type BookingState, type ContactMethod } from "./actions";
@@ -175,6 +175,14 @@ export default function BookingSection({
   const [state, formAction, isPending] = useActionState(bookSession, initialState);
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [experience, setExperience] = useState<string>("beginner");
+  const [artecksAccountId, setArtecksAccountId] = useState<string>("");
+
+  // Persist Artecks ID to localStorage on successful booking
+  useEffect(() => {
+    if (state.status === "success" && artecksAccountId.trim()) {
+      try { localStorage.setItem("artecks_account_id", artecksAccountId.trim().toUpperCase()); } catch {}
+    }
+  }, [state.status, artecksAccountId]);
 
   const spotsLeft = session.available_spots;
   const isFull = spotsLeft === 0;
@@ -373,6 +381,8 @@ export default function BookingSection({
               <input
                 name="artecks_account_id"
                 placeholder="ACT-XXXX"
+                value={artecksAccountId}
+                onChange={e => setArtecksAccountId(e.target.value)}
                 className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
               />
               <span className="text-xs text-violet-600">{t("artecksIdHint")}</span>
