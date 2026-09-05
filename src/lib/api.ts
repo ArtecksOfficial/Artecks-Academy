@@ -1,7 +1,7 @@
 // ─── Artecks Academy — Django API client ─────────────────────────────────────
 // All server-side fetches go through here. Never import from "use client" code.
 
-import type { AcademySession, BookingReport } from "./types";
+import type { AcademySession, BookingReport, MembershipCheckResult } from "./types";
 
 const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
 const BASE = `${BACKEND}/api/academy`;
@@ -46,6 +46,8 @@ export interface BookingResult {
   success: boolean;
   booking_id?: number;
   private_access_notes?: string;
+  applied_discount_amount?: number;
+  is_member?: boolean;
   error?: string;
 }
 
@@ -61,6 +63,65 @@ export async function postBooking(
   });
   const data = await res.json();
   return data;
+}
+
+// ── Membership ────────────────────────────────────────────────────────────────
+
+export interface MembershipCheckParams {
+  provider_id?: string;
+  provider_slug?: string;
+  email?: string;
+  phone?: string;
+  account_id?: string;
+}
+
+export async function checkProviderMembership(
+  params: MembershipCheckParams
+): Promise<MembershipCheckResult> {
+  const qs = new URLSearchParams();
+  if (params.provider_id)   qs.set("provider_id",   params.provider_id);
+  if (params.provider_slug) qs.set("provider_slug", params.provider_slug);
+  if (params.email)         qs.set("email",          params.email);
+  if (params.phone)         qs.set("phone",          params.phone);
+  if (params.account_id)   qs.set("account_id",     params.account_id);
+
+  try {
+    const res = await fetch(`${BASE}/memberships/check/?${qs.toString()}`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return { is_member: false };
+    return res.json();
+  } catch {
+    return { is_member: false };
+  }
+}
+
+// ── Subscription checkout ─────────────────────────────────────────────────────
+
+export interface SubscriptionCheckoutPayload {
+  plan_id: string;
+  customer_email?: string;
+  customer_phone?: string;
+  artecks_account_id?: string;
+  success_url: string;
+  cancel_url: string;
+}
+
+export async function createSubscriptionCheckout(
+  payload: SubscriptionCheckoutPayload
+): Promise<{ checkout_url: string } | null> {
+  try {
+    const res = await fetch(`${BASE}/subscriptions/checkout/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
 // ── Report ────────────────────────────────────────────────────────────────────
@@ -90,6 +151,7 @@ export interface MyBooking {
   payment_status: string;
   xp_awarded: number;
   coins_awarded: number;
+  applied_discount_amount: number;
   artecks_account_id: string | null;
   created_at: string;
 }

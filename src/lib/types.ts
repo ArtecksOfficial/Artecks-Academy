@@ -22,6 +22,35 @@ export interface PriceVariant {
   member_price: number;    // member price per student (TWD)
 }
 
+// ── Provider & Membership ──────────────────────────────────────────────────────
+
+export interface ProviderPlan {
+  id: string;
+  name: string;
+  slug: string;
+  discount_percent: string;   // Decimal serialised as string from Django
+  stripe_price_id: string;
+}
+
+export interface Provider {
+  id: string;
+  name: string;
+  slug: string;
+  is_active: boolean;
+  plans: ProviderPlan[];
+}
+
+export interface MembershipCheckResult {
+  is_member: boolean;
+  provider_id?: string;
+  provider_name?: string;
+  plan_name?: string;
+  discount_percent?: string;
+  current_period_end?: string;
+}
+
+// ── Sessions ──────────────────────────────────────────────────────────────────
+
 export type SessionStatus = "open" | "closed" | "cancelled";
 export type ContactMethod = "whatsapp" | "line" | "sms" | "email";
 
@@ -43,6 +72,7 @@ export interface AcademySession {
   booking_open: boolean;
   is_active: boolean;
   coach: Coach | null;
+  provider?: Provider | null;
 }
 
 export interface BookingReport {
@@ -59,7 +89,7 @@ export interface BookingReport {
   created_at: string;
 }
 
-// ── Legacy compat — used by CoachClient (coach page now redirects to admin) ──
+// ── Legacy compat ─────────────────────────────────────────────────────────────
 export interface Session {
   id: number;
   title: string;
@@ -88,6 +118,8 @@ export interface Booking {
   status: string;
   attended: boolean;
   rewards_credited: boolean;
+  applied_discount_amount?: number;
+  is_member?: boolean;
   created_at: string;
 }
 

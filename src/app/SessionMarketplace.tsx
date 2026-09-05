@@ -8,7 +8,7 @@
 import { useActionState, useState, useMemo, useEffect, useTransition } from "react";
 import {
   ChevronLeft, ChevronRight, MapPin, Clock, Users,
-  CheckCircle, AlertCircle, Loader2, Star,
+  CheckCircle, AlertCircle, Loader2, Star, Crown,
 } from "lucide-react";
 import type { AcademySession, PriceVariant } from "@/lib/types";
 import { bookSession, checkMembership, type BookingState, type ContactMethod } from "./session/[id]/actions";
@@ -206,11 +206,13 @@ function BookingForm({
   onSuccess,
   selectedVariant,
   onMembershipChange,
+  providerSlug,
 }: {
   session: AcademySession;
-  onSuccess: (id: string) => void;
+  onSuccess: (id: string, appliedDiscount: number, isMember: boolean) => void;
   selectedVariant: PriceVariant | null;
   onMembershipChange: (isMember: boolean) => void;
+  providerSlug?: string;
 }) {
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [experience, setExperience] = useState("beginner");
@@ -222,7 +224,13 @@ function BookingForm({
   const [state, formAction, isPending] = useActionState(
     async (prev: BookingState, fd: FormData) => {
       const result = await bookSession(prev, fd);
-      if (result.status === "success" && result.bookingId) onSuccess(result.bookingId);
+      if (result.status === "success" && result.bookingId) {
+        onSuccess(
+          result.bookingId,
+          result.appliedDiscountAmount ?? 0,
+          result.isMember ?? false
+        );
+      }
       return result;
     },
     initialState,
@@ -237,7 +245,7 @@ function BookingForm({
     setMemberChecking(true);
     const timer = setTimeout(() => {
       startTransition(async () => {
-        const result = await checkMembership(accountId);
+        const result = await checkMembership(accountId, providerSlug);
         onMembershipChange(result.is_member);
         setMemberChecking(false);
       });
@@ -350,10 +358,24 @@ function BookingForm({
 
 // ── Success + Pay ─────────────────────────────────────────────────────────────
 
-function SuccessScreen({ session, bookingId }: { session: AcademySession; bookingId: string }) {
+function SuccessScreen({
+  session,
+  bookingId,
+  appliedDiscount = 0,
+  isMember = false,
+}: {
+  session: AcademySession;
+  bookingId: string;
+  appliedDiscount?: number;
+  isMember?: boolean;
+}) {
   function handlePay() {
     window.location.href = `/api/pay/${bookingId}`;
   }
+
+  const basePrice = session.price_twd ?? 0;
+  const finalPrice = Math.max(0, basePrice - appliedDiscount);
+  const hasDiscount = appliedDiscount > 0;
 
   return (
     <div className="flex flex-col items-center text-center gap-5 py-4">
@@ -365,9 +387,21 @@ function SuccessScreen({ session, bookingId }: { session: AcademySession; bookin
         <p className="text-sm text-gray-500 mt-1">{fmtDateLong(session.start_time)} · {fmtTime(session.start_time)}</p>
         <p className="text-xs text-gray-400 mt-1">Booking #{bookingId}</p>
       </div>
+      {isMember && (
+        <div className="w-full rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-2 flex items-center gap-2">
+          <Crown size={13} className="text-emerald-600 flex-shrink-0" />
+          <p className="text-xs font-semibold text-emerald-700">Member discount applied — NT${appliedDiscount.toLocaleString()} off</p>
+        </div>
+      )}
       <div className="w-full rounded-2xl bg-gray-50 border border-gray-200 px-5 py-4 text-left">
         <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Complete Your Payment</p>
-        <p className="text-sm text-gray-700 mb-1"><span className="font-bold">NT${(session.price_twd ?? 0).toLocaleString()}</span> · {session.title}</p>
+        <div className="flex items-baseline gap-2 mb-1">
+          {hasDiscount && (
+            <span className="text-sm text-gray-400 line-through">NT${basePrice.toLocaleString()}</span>
+          )}
+          <span className="text-sm font-bold text-gray-700">NT${finalPrice.toLocaleString()}</span>
+          <span className="text-xs text-gray-500">· {session.title}</span>
+        </div>
         <p className="text-xs text-gray-400">Pay securely via Stripe — credit or debit card accepted.</p>
       </div>
       <button onClick={handlePay}
@@ -573,6 +607,8 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   const [isMember, setIsMember] = useState(false);
   const [step, setStep] = useState<Step>("calendar");
   const [bookingId, setBookingId] = useState<string | null>(null);
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [bookingIsMember, setBookingIsMember] = useState(false);
 
   const sessionsByDate = useMemo(() => {
     const map = new Map<string, AcademySession[]>();
@@ -601,12 +637,12 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
     setSelectedVariant(s.price_variants?.[0] ?? null);
     setStep("form");
   }
-  function handleSuccess(id: string) { setBookingId(id); setStep("success"); }
+  function handleSuccess(id: string, discount: number, memberUsed: boolean) { setBookingId(id); setAppliedDiscount(discount); setBookingIsMember(memberUsed); setStep("success"); }
 
   function goBack() {
     if (step === "form")    { setStep("slots"); setSelectedSession(null); setIsMember(false); }
     else if (step === "slots") { setStep("calendar"); setSelectedDate(null); }
-    else if (step === "success") { setStep("calendar"); setSelectedDate(null); setSelectedSession(null); }
+    else if (step === "success") { setStep("calendar"); setSelectedDate(null); setSelectedSession(null); setAppliedDiscount(0); setBookingIsMember(false); }
   }
 
   const slotsForDate = selectedDate ? (sessionsByDate.get(selectedDate) ?? []) : [];
@@ -736,12 +772,18 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
                   onSuccess={handleSuccess}
                   selectedVariant={selectedVariant}
                   onMembershipChange={setIsMember}
+                  providerSlug={selectedSession.provider?.slug ?? undefined}
                 />
               )}
 
               {/* Success */}
               {step === "success" && selectedSession && bookingId && (
-                <SuccessScreen session={selectedSession} bookingId={bookingId} />
+                <SuccessScreen
+                  session={selectedSession}
+                  bookingId={bookingId}
+                  appliedDiscount={appliedDiscount}
+                  isMember={bookingIsMember}
+                />
               )}
             </main>
           </div>

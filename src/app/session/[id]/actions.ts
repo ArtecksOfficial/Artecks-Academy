@@ -11,6 +11,8 @@ export interface BookingState {
   status: "idle" | "success" | "error";
   message?: string;
   bookingId?: string;
+  appliedDiscountAmount?: number;
+  isMember?: boolean;
 }
 
 export async function bookSession(
@@ -59,14 +61,40 @@ export async function bookSession(
   }
 
   revalidatePath(`/session/${sessionId}`);
-  return { status: "success", bookingId: String(result.booking_id) };
+  return {
+    status: "success",
+    bookingId: String(result.booking_id),
+    appliedDiscountAmount: result.applied_discount_amount ?? 0,
+    isMember: result.is_member ?? false,
+  };
 }
 
+/**
+ * Check membership status using the provider-aware endpoint.
+ * Accepts either providerSlug (for session-level context) or falls back to
+ * the legacy endpoint when no provider context is available.
+ */
 export async function checkMembership(
-  accountId: string
-): Promise<{ is_member: boolean }> {
+  accountId: string,
+  providerSlug?: string
+): Promise<{ is_member: boolean; discount_percent?: string; plan_name?: string }> {
   const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
   try {
+    if (providerSlug) {
+      // New provider-aware GET endpoint
+      const params = new URLSearchParams({
+        provider_slug: providerSlug,
+        account_id: accountId.trim().toUpperCase(),
+      });
+      const res = await fetch(
+        `${BACKEND}/api/academy/memberships/check/?${params.toString()}`,
+        { cache: "no-store" }
+      );
+      if (!res.ok) return { is_member: false };
+      return res.json();
+    }
+
+    // Legacy fallback (no provider context)
     const res = await fetch(`${BACKEND}/api/academy/check-membership/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
