@@ -687,9 +687,6 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
               <span className="font-semibold text-indigo-600">Linkou, New Taipei</span>
             </div>
             <AuthButton />
-            <a href="/bookings/mine" className="hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors">
-              My Bookings
-            </a>
           </div>
         </div>
       </header>

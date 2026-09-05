@@ -132,6 +132,13 @@ export default function AuthButton({ variant = "light" }: Props) {
                 <span className="text-xs font-bold text-violet-600">💎 {wallet.gems.toLocaleString()}</span>
               </div>
             )}
+            <a
+              href="/bookings/mine"
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 transition-colors"
+            >
+              My Bookings
+            </a>
             <button
               onClick={async () => {
                 setMenuOpen(false);
