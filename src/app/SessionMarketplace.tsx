@@ -14,7 +14,7 @@ import type { AcademySession, PriceVariant, Provider, MembershipCheckResult } fr
 import { bookSession, checkMembership, type BookingState, type ContactMethod } from "./session/[id]/actions";
 import MemberBanner from "./components/MemberBanner";
 import { createSubscriptionCheckoutAction } from "./session/[id]/actions";
-import ArtecksBalance from "./components/ArtecksBalance";
+import AuthButton from "./components/AuthButton";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
 
@@ -686,7 +686,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
               <MapPin size={11} className="text-indigo-500" />
               <span className="font-semibold text-indigo-600">Linkou, New Taipei</span>
             </div>
-            <ArtecksBalance />
+            <AuthButton />
             <a href="/bookings/mine" className="hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors">
               My Bookings
             </a>
