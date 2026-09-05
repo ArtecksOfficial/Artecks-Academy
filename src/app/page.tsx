@@ -174,7 +174,7 @@ export default async function HomePage() {
             inset: 0,
             backgroundImage: `url(https://images.pexels.com/photos/39191114/pexels-photo-39191114.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
             backgroundSize: "cover",
-            backgroundPosition: "center center",
+            backgroundPosition: "center 30%",
             opacity: 1,
           }}
         />
@@ -184,7 +184,7 @@ export default async function HomePage() {
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to right, #0f0d2a 0%, #0f0d2a 30%, rgba(15,13,42,0.85) 45%, rgba(15,13,42,0.3) 60%, rgba(15,13,42,0.0) 75%)",
+            background: "linear-gradient(to bottom, rgba(15,13,42,0.55) 0%, rgba(15,13,42,0.4) 60%, rgba(15,13,42,0.65) 100%)",
           }}
         />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col gap-8">
@@ -194,11 +194,11 @@ export default async function HomePage() {
                 林口 · Linkou · New Taipei
               </span>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-black text-white leading-[1.1] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-black text-white leading-[1.1] tracking-tight" style={{ textShadow: "0 2px 16px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.9)" }}>
               Chess Lessons<br />
               <span style={{ color: "#818CF8" }}>Kids Actually Love.</span>
             </h1>
-            <p className="text-indigo-200 text-base sm:text-lg leading-relaxed max-w-lg">
+            <p className="text-indigo-200 text-base sm:text-lg leading-relaxed max-w-lg" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}>
               Small groups, expert coaches, and a rewards system that keeps kids motivated — every session earns XP and gems on the Artecks platform.
             </p>
             <div className="flex flex-wrap items-center gap-3 mt-1">
