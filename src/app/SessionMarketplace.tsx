@@ -10,8 +10,10 @@ import {
   ChevronLeft, ChevronRight, MapPin, Clock, Users,
   CheckCircle, AlertCircle, Loader2, Star, Crown,
 } from "lucide-react";
-import type { AcademySession, PriceVariant } from "@/lib/types";
+import type { AcademySession, PriceVariant, Provider, MembershipCheckResult } from "@/lib/types";
 import { bookSession, checkMembership, type BookingState, type ContactMethod } from "./session/[id]/actions";
+import MemberBanner from "./components/MemberBanner";
+import { fetchProviderPlans, createSubscriptionCheckout } from "@/lib/api";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
 
@@ -609,6 +611,8 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [bookingIsMember, setBookingIsMember] = useState(false);
+  const [providerWithPlans, setProviderWithPlans] = useState<Provider | null>(null);
+  const [membershipResult, setMembershipResult] = useState<MembershipCheckResult | null>(null);
 
   const sessionsByDate = useMemo(() => {
     const map = new Map<string, AcademySession[]>();
@@ -621,6 +625,13 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
   }, [sessions]);
 
   const sessionDates = useMemo(() => new Set(sessionsByDate.keys()), [sessionsByDate]);
+
+  // Fetch provider plans on mount so the subscribe banner is always visible
+  useEffect(() => {
+    fetchProviderPlans("issac").then((p) => {
+      if (p) setProviderWithPlans(p);
+    });
+  }, []);
 
   function prevMonth() {
     if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11); }
@@ -697,6 +708,25 @@ export default function SessionMarketplace({ sessions }: { sessions: AcademySess
               : "New sessions launching soon — add your email to be notified!"}
           </p>
         </div>
+
+        {/* ── Membership banner ── */}
+        {providerWithPlans && providerWithPlans.plans.length > 0 && (
+          <MemberBanner
+            provider={providerWithPlans}
+            membershipResult={membershipResult}
+            onSubscribeClick={async (planId) => {
+              const origin = window.location.origin;
+              const result = await createSubscriptionCheckout({
+                plan_id: planId,
+                success_url: `${origin}/payment/result?subscription=true`,
+                cancel_url: `${origin}/`,
+              });
+              if (result?.checkout_url) {
+                window.location.href = result.checkout_url;
+              }
+            }}
+          />
+        )}
 
         {/* ── Calendly-style booking card ── */}
         <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">

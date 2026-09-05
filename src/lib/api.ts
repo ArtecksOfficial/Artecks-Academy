@@ -164,3 +164,19 @@ export async function fetchMyBookings(phone: string): Promise<MyBooking[]> {
   if (!res.ok) return [];
   return res.json();
 }
+
+// ── Provider plans (public, no account_id required) ───────────────────────────
+
+export async function fetchProviderPlans(
+  providerSlug: string
+): Promise<import("./types").Provider | null> {
+  try {
+    const res = await fetch(`${BASE}/providers/${providerSlug}/plans/`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
