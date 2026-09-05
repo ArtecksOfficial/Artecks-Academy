@@ -668,6 +668,10 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
+            <a href="/" className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-indigo-600 transition-colors mr-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Home
+            </a>
             <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm flex-shrink-0">
               <span className="text-white text-sm font-black">♟</span>
             </div>

@@ -147,12 +147,7 @@ function SubscribeBanner({ provider }: { provider: Provider }) {
           Save {plan.discount_percent}% on every session · Priority booking · Member-only events
         </p>
       </div>
-      <a
-        href="/sessions"
-        className="flex-shrink-0 flex items-center gap-1.5 bg-white text-indigo-700 font-black text-sm px-5 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors"
-      >
-        Subscribe <ArrowRight size={14} />
-      </a>
+      <HomeSubscribeButton planId={plan.id} />
     </div>
   );
 }
