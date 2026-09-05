@@ -174,8 +174,8 @@ export default async function HomePage() {
             inset: 0,
             backgroundImage: `url(https://images.pexels.com/photos/39191114/pexels-photo-39191114.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
             backgroundSize: "cover",
-            backgroundPosition: "center right",
-            opacity: 0.45,
+            backgroundPosition: "center center",
+            opacity: 1,
           }}
         />
         {/* Dark indigo gradient over photo */}
@@ -184,7 +184,7 @@ export default async function HomePage() {
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(105deg, #0f0d2a 40%, rgba(15,13,42,0.6) 65%, rgba(15,13,42,0.05) 100%)",
+            background: "linear-gradient(to right, #0f0d2a 0%, #0f0d2a 30%, rgba(15,13,42,0.85) 45%, rgba(15,13,42,0.3) 60%, rgba(15,13,42,0.0) 75%)",
           }}
         />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col gap-8">
