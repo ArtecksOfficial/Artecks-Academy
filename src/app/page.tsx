@@ -161,15 +161,33 @@ export default async function HomePage() {
       {/* ── Hero ── */}
       <section
         style={{
-          background: "#1E1B4B",
-          backgroundImage: `
-            linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #1E1B4B 100%),
-            repeating-conic-gradient(rgba(255,255,255,0.03) 0% 25%, transparent 0% 50%)
-          `,
-          backgroundSize: "100% 100%, 48px 48px",
+          background: "#0f0d2a",
+          overflow: "hidden",
+          position: "relative",
         }}
       >
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col gap-8">
+        {/* Background photo with overlay */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(https://images.pexels.com/photos/6115018/pexels-photo-6115018.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
+            backgroundSize: "cover",
+            backgroundPosition: "center right",
+            opacity: 0.35,
+          }}
+        />
+        {/* Dark indigo gradient over photo */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(105deg, #0f0d2a 45%, rgba(15,13,42,0.5) 70%, rgba(15,13,42,0.1) 100%)",
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col gap-8">
           <div className="flex flex-col gap-5 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-3 py-1 rounded-full tracking-wide uppercase">
