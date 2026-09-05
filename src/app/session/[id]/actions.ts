@@ -107,3 +107,31 @@ export async function checkMembership(
     return { is_member: false };
   }
 }
+
+// ── Subscription Checkout ─────────────────────────────────────────────────────
+export interface SubscriptionCheckoutPayload {
+  plan_id: string;
+  customer_email?: string;
+  customer_phone?: string;
+  artecks_account_id?: string;
+  success_url: string;
+  cancel_url: string;
+}
+
+export async function createSubscriptionCheckoutAction(
+  payload: SubscriptionCheckoutPayload
+): Promise<{ checkout_url: string } | null> {
+  const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
+  try {
+    const res = await fetch(`${BACKEND}/api/academy/subscriptions/checkout/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}

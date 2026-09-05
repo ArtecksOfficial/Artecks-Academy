@@ -13,7 +13,7 @@ import {
 import type { AcademySession, PriceVariant, Provider, MembershipCheckResult } from "@/lib/types";
 import { bookSession, checkMembership, type BookingState, type ContactMethod } from "./session/[id]/actions";
 import MemberBanner from "./components/MemberBanner";
-import { createSubscriptionCheckout } from "@/lib/api";
+import { createSubscriptionCheckoutAction } from "./session/[id]/actions";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
 
@@ -709,7 +709,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
             membershipResult={membershipResult}
             onSubscribeClick={async (planId) => {
               const origin = window.location.origin;
-              const result = await createSubscriptionCheckout({
+              const result = await createSubscriptionCheckoutAction({
                 plan_id: planId,
                 success_url: `${origin}/payment/result?subscription=true`,
                 cancel_url: `${origin}/`,
