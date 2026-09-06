@@ -163,6 +163,22 @@ function ConfirmationScreen({
   );
 }
 
+
+// ── Contact value validator ───────────────────────────────────────────────────
+function validateContact(method: ContactMethod, value: string): string | null {
+  const v = value.trim();
+  if (!v) return "請填寫聯絡方式";
+  if (method === "whatsapp" || method === "sms") {
+    if (!/^[+\d\s\-\(\)]{8,20}$/.test(v))
+      return "請輸入有效電話號碼（例：+886 912 345 678）";
+  }
+  if (method === "line") {
+    if (v.length < 4) return "LINE ID 太短（至少 4 個字元）";
+  }
+  // email: browser validates via type="email"
+  return null;
+}
+
 // ── Main booking form ─────────────────────────────────────────────────────────
 export default function BookingSection({
   session,
@@ -176,6 +192,7 @@ export default function BookingSection({
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [experience, setExperience] = useState<string>("beginner");
   const [artecksAccountId, setArtecksAccountId] = useState<string>("");
+  const [contactError, setContactError] = useState<string | null>(null);
 
   // Persist Artecks ID to localStorage on successful booking
   useEffect(() => {
@@ -236,7 +253,16 @@ export default function BookingSection({
             </p>
           </div>
         ) : (
-          <form action={formAction} className="flex flex-col gap-5">
+          <form
+            action={formAction}
+            className="flex flex-col gap-5"
+            onSubmit={(e) => {
+              const val = (e.currentTarget.elements.namedItem("contact_value") as HTMLInputElement)?.value ?? "";
+              const err = validateContact(contactMethod, val);
+              if (err) { e.preventDefault(); setContactError(err); }
+              else setContactError(null);
+            }}
+          >
             <input type="hidden" name="session_id" value={session.id} />
 
             {/* ── Parent info ──────────────────────────────────────────── */}
@@ -325,7 +351,7 @@ export default function BookingSection({
                   <button
                     key={key}
                     type="button"
-                    onClick={() => setContactMethod(key)}
+                    onClick={() => { setContactMethod(key); setContactError(null); }}
                     className={`rounded-xl py-2 text-xs font-semibold flex flex-col items-center gap-0.5 transition-all ${
                       contactMethod === key
                         ? "bg-indigo-600 text-white shadow-sm"
@@ -355,8 +381,12 @@ export default function BookingSection({
                   required
                   placeholder={t(placeholderKey)}
                   type={contactMethod === "email" ? "email" : "text"}
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+                  onChange={() => contactError && setContactError(null)}
+                  className={`rounded-xl border bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:bg-white ${contactError ? "border-red-400 focus:border-red-400" : "border-gray-200 focus:border-indigo-400"}`}
                 />
+                {contactError && (
+                  <p className="text-xs text-red-600 mt-0.5">{contactError}</p>
+                )}
               </label>
             </div>
 
