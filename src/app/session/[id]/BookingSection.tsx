@@ -117,31 +117,40 @@ function ConfirmationScreen({
             {t("paymentTitle")}
           </p>
           <p className="text-sm font-semibold text-gray-800">
-            NT$ {(session.price_twd ?? 0).toLocaleString()} · {t("paymentBankTransfer")}
+            NT$ {(session.price_twd ?? 0).toLocaleString()}
           </p>
-          <div className="mt-2 rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 font-mono text-sm">
-            <span className="text-gray-500 text-xs block mb-0.5">
-              {locale === "zh" ? "銀行代碼" : "Bank Code"}
-            </span>
-            <span className="font-bold text-gray-900">{session.coach?.bank_code || "—"}</span>
-            <span className="text-gray-500 text-xs block mt-2 mb-0.5">
-              {locale === "zh" ? "帳號" : "Account"}
-            </span>
-            <span className="font-bold text-gray-900 tracking-widest">{session.coach?.bank_account || "—"}</span>
-          </div>
-          <p className="text-xs text-gray-500 mt-2">{t("paymentBankNote")}</p>
+          <p className="text-xs text-gray-500 mt-1">Choose a payment method below to complete your booking.</p>
         </div>
 
-        {/* Contact coach */}
-        <div className="px-6 py-4">
+        {/* Payment buttons */}
+        <div className="px-6 py-4 flex flex-col gap-3">
+          {/* Stripe — card / PayPal */}
           <a
-            href={lineUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex items-center justify-center gap-2 w-full rounded-2xl ${coachLineId ? "bg-[#06C755]" : "bg-gray-300 cursor-not-allowed pointer-events-none"} py-3.5 text-sm font-bold text-white shadow-md shadow-green-200 active:scale-95 transition-all`}
+            href={`/api/pay/${bookingId}`}
+            className="flex items-center justify-center gap-2 w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-3.5 text-sm font-bold text-white shadow-md shadow-indigo-200 active:scale-95 transition-all"
           >
-            <span className="text-lg">🟢</span>
-            {t("contactCoachLine")}
+            Pay Now (Card / PayPal)
+          </a>
+
+          {/* LINE Pay */}
+          <a
+            href={`/api/pay/linepay/${bookingId}`}
+            className="flex items-center justify-center gap-2 w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-sm active:scale-95 transition-all"
+            style={{ backgroundColor: "#06C755" }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
+            </svg>
+            LINE Pay
+          </a>
+
+          {/* ECPay */}
+          <a
+            href={`/api/pay/ecpay/${bookingId}`}
+            className="flex items-center justify-center gap-2 w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-sm active:scale-95 transition-all"
+            style={{ backgroundColor: "#0066CC" }}
+          >
+            台灣在地支付 (信用卡 / ATM / 行動支付)
           </a>
         </div>
 
