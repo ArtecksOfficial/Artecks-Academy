@@ -407,10 +407,23 @@ function SuccessScreen({
         </div>
         <p className="text-xs text-gray-400">Pay securely via Stripe — credit or debit card accepted.</p>
       </div>
+      {/* ── Primary: Stripe ─────────────────────────────────────────── */}
       <button onClick={handlePay}
         className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all">
-        Pay Now →
+        Pay Now (Card / PayPal)
       </button>
+
+      {/* ── Alternative: LINE Pay ────────────────────────────────────── */}
+      <a
+        href={`/api/pay/linepay/${bookingId}`}
+        className="w-full flex items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold text-white shadow-sm active:scale-[0.98] transition-all"
+        style={{ backgroundColor: "#06C755" }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
+        </svg>
+        LINE Pay
+      </a>
       <a href={`/report/${bookingId}`} className="text-xs text-indigo-500 hover:underline">View booking details</a>
     </div>
   );
