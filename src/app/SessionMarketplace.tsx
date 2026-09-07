@@ -424,6 +424,15 @@ function SuccessScreen({
         </svg>
         LINE Pay
       </a>
+      {/* ── Alternative: ECPay 台灣在地支付 ─────────────────────────── */}
+      <a
+        href={`/api/pay/ecpay/${bookingId}`}
+        className="w-full flex items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold text-white shadow-sm active:scale-[0.98] transition-all"
+        style={{ backgroundColor: "#0066CC" }}
+      >
+        台灣在地支付 (信用卡 / ATM / 行動支付)
+      </a>
+
       <a href={`/report/${bookingId}`} className="text-xs text-indigo-500 hover:underline">View booking details</a>
     </div>
   );
