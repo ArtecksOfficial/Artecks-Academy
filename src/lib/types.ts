@@ -84,8 +84,16 @@ export interface BookingReport {
   parent_name: string;
   student_name: string;
   status: string;
+  attended: boolean;
   xp_awarded: number;
   coins_awarded: number;
+  rewards_credited: boolean;
+  skill_tags: string[] | null;
+  coach_notes: string | null;
+  generated_summary: string | null;
+  price_twd: number | null;
+  member_rate_applied: boolean;
+  artecks_account_id: string | null;
   created_at: string;
 }
 
