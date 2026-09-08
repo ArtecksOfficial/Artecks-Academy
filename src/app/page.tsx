@@ -143,8 +143,7 @@ export default async function HomePage() {
             <div className="flex items-center gap-2.5">
               <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
               <div>
-                <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
-                <p className="text-[11px] font-semibold mt-0.5" style={{ color: "#4F46E5" }}>林口 · Chess &amp; Enrichment</p>
+                <p className="text-sm font-black text-gray-900 leading-none">Linkou Artecks Academy</p>
               </div>
             </div>
           </div>
