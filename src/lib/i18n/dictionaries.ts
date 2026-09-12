@@ -8,7 +8,77 @@ const zh = {
   // Brand
   brandName: "Artecks Academy",
 
-  // Session landing page
+  // ── Homepage ────────────────────────────────────────────────────────────────
+  // Hero
+  heroTitle1: "棋藝課程",
+  heroTitle2: "孩子愛上學習。",
+  heroCta: "瀏覽課程",
+  heroSubscribe: "訂閱會員",
+
+  // Location pill
+  locationLabel: "新北市林口區",
+
+  // Trust pills
+  trustCoaches: "專業教練",
+  trustAges: "5歲以上",
+  trustGroups: "小班教學",
+  trustRewards: "XP 與寶石獎勵",
+
+  // How it works
+  howItWorksTitle: "如何報名",
+  howItWorksSub: "三個步驟，從好奇到上桌",
+  step1Title: "選擇課程",
+  step1Desc: "瀏覽即將開課的棋藝課程與活動，可依年齡、日期或教練篩選。",
+  step2Title: "預約名額",
+  step2Desc: "填寫姓名與聯絡資訊即可完成報名。會員享有優先預約及折扣優惠。",
+  step3Title: "出席並獲得獎勵",
+  step3Desc: "出席課程後，孩子將自動在 Artecks 平台獲得 XP 和金幣。",
+
+  // Sessions section
+  upcomingTitle: "近期課程",
+  upcomingSubOpen: "個課程開放報名",
+  upcomingSubEmpty: "請持續關注，每週新增課程",
+  seeAllSessions: "查看全部課程與行事曆",
+  calendarView: "行事曆檢視",
+  emptyTitle: "目前沒有開放課程",
+  emptyDesc: "每週新增課程與活動，訂閱會員以獲得最新通知。",
+
+  // Session card status
+  statusFull: "額滿",
+  statusCancelled: "已取消",
+  statusOpen: "開放報名",
+  withCoach: "教練",
+  priceFree: "免費",
+  durationMin: "分鐘",
+
+  // Membership section
+  membersBadge: "Artecks 會員",
+  membersSaveLabel: "每堂課享折扣",
+  benefit1: "優先預約 — 名額優先為您保留",
+  benefit2: "會員專屬活動與工作坊",
+  benefit3: "結帳時自動套用折扣",
+  cancelAnytime: "隨時取消 · Stripe 安全付款",
+
+  // Rewards
+  rewardsTitle: "內建獎勵系統",
+  rewardsSub: "每堂課都能為孩子賺取 Artecks 平台貨幣",
+  xpTitle: "XP 經驗值 — 成長紀錄",
+  xpDesc: "每堂課自動發放，追蹤孩子的學習歷程，決定 Artecks 等級。",
+  gemsTitle: "寶石 — 進階獎勵",
+  gemsDesc: "通過里程碑與出席課程獲得，可用於 Artecks 遊戲的進階功能。",
+  coinsTitle: "金幣 — 日常貨幣",
+  coinsDesc: "棋藝、小遊戲與 Artecks 生態系的日常通貨。",
+
+  // Coaches
+  coachesTitle: "認識教練",
+  coachesSub: "所有教練皆由 Artecks 培訓及審核",
+  viewSessions: "查看課程",
+
+  // Footer
+  footerBook: "預約課程",
+  footerBookings: "我的報名",
+
+  // ── Session landing page ───────────────────────────────────────────────────
   sessionDetails: "課程詳情",
   spotsLeft: "剩餘名額",
   spotsOf: "名",
@@ -117,7 +187,77 @@ const en: typeof zh = {
   // Brand
   brandName: "Artecks Academy",
 
-  // Session landing page
+  // ── Homepage ────────────────────────────────────────────────────────────────
+  // Hero
+  heroTitle1: "Chess Lessons",
+  heroTitle2: "Kids Actually Love.",
+  heroCta: "Browse Sessions",
+  heroSubscribe: "Subscribe",
+
+  // Location pill
+  locationLabel: "Linkou, New Taipei",
+
+  // Trust pills
+  trustCoaches: "Expert Coaches",
+  trustAges: "Ages 5 and up",
+  trustGroups: "Small Groups",
+  trustRewards: "XP & Gem Rewards",
+
+  // How it works
+  howItWorksTitle: "How it works",
+  howItWorksSub: "Three steps from curious to playing",
+  step1Title: "Pick a session",
+  step1Desc: "Browse upcoming chess lessons and enrichment events. Filter by age group, date, or coach.",
+  step2Title: "Book your spot",
+  step2Desc: "Reserve with your name and contact info. Members get priority access and discounts on every session.",
+  step3Title: "Show up & earn",
+  step3Desc: "Attend the session and your child earns XP and gems on the Artecks platform — automatically.",
+
+  // Sessions section
+  upcomingTitle: "Upcoming Sessions",
+  upcomingSubOpen: "sessions open to book",
+  upcomingSubEmpty: "Check back soon — new sessions added weekly",
+  seeAllSessions: "See all sessions & calendar",
+  calendarView: "Calendar view",
+  emptyTitle: "No sessions open right now",
+  emptyDesc: "New lessons and events are added every week. Subscribe to get notified when spots open up.",
+
+  // Session card status
+  statusFull: "Full",
+  statusCancelled: "Cancelled",
+  statusOpen: "Open",
+  withCoach: "with",
+  priceFree: "Free",
+  durationMin: "min",
+
+  // Membership section
+  membersBadge: "Artecks Members",
+  membersSaveLabel: "on every session.",
+  benefit1: "Priority booking — your spot is held first",
+  benefit2: "Member-only events and workshops",
+  benefit3: "Discount applied automatically at checkout",
+  cancelAnytime: "Cancel anytime · Stripe-secured",
+
+  // Rewards
+  rewardsTitle: "Built-in Rewards",
+  rewardsSub: "Every session earns your child currency on the Artecks platform",
+  xpTitle: "XP — Progress",
+  xpDesc: "Earned automatically every session. Tracks your child's journey and determines their Artecks level.",
+  gemsTitle: "Gems — Premium",
+  gemsDesc: "Earned through milestones and class attendance. Spent on premium features across Artecks games.",
+  coinsTitle: "Coins — Everyday",
+  coinsDesc: "The everyday in-game currency for chess, mini-games, and the Artecks ecosystem.",
+
+  // Coaches
+  coachesTitle: "Meet the Coaches",
+  coachesSub: "All coaches are trained and vetted by Artecks",
+  viewSessions: "View sessions",
+
+  // Footer
+  footerBook: "Book a Session",
+  footerBookings: "My Bookings",
+
+  // ── Session landing page ───────────────────────────────────────────────────
   sessionDetails: "Session Details",
   spotsLeft: "spots left",
   spotsOf: "",
