@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckCircle, XCircle, Crown } from "lucide-react";
+import { CheckCircle, XCircle, Crown, Phone } from "lucide-react";
 
 export default async function PaymentResultPage({
   searchParams,
@@ -8,14 +8,14 @@ export default async function PaymentResultPage({
     booking_id?: string;
     success?: string;
     subscription?: string;
-    session_id?: string;    // Stripe checkout session ID (subscription flow)
+    phone?: string;
   }>;
 }) {
   const params = await searchParams;
   const isSubscription = params.subscription === "true";
   const bookingId = params.booking_id ?? "";
-  // Stripe appends ?success=true on success, ?success=false on cancel
   const success = params.success === "true";
+  const linkedPhone = params.phone ? decodeURIComponent(params.phone) : null;
 
   // ── Subscription confirmation branch ──────────────────────────────────────
   if (isSubscription) {
@@ -37,15 +37,29 @@ export default async function PaymentResultPage({
 
           {/* Body */}
           <div className="px-6 py-6 flex flex-col gap-4">
-            <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3">
-              <p className="text-xs font-bold text-emerald-700 mb-1">
-                ✓ Membership Active
-              </p>
-              <p className="text-xs text-emerald-600 leading-relaxed">
-                Add your Artecks account ID when booking to automatically
-                receive your member discount at checkout.
-              </p>
-            </div>
+            {/* Linked phone callout */}
+            {linkedPhone ? (
+              <div className="rounded-xl bg-indigo-50 border border-indigo-200 px-4 py-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Phone size={12} className="text-indigo-600" />
+                  <p className="text-xs font-bold text-indigo-700">Membership linked to</p>
+                </div>
+                <p className="text-sm font-mono font-bold text-indigo-800">{linkedPhone}</p>
+                <p className="text-[10px] text-indigo-500 mt-1 leading-snug">
+                  Enter this phone number when booking to receive your member discount automatically.
+                </p>
+              </div>
+            ) : (
+              <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3">
+                <p className="text-xs font-bold text-emerald-700 mb-1">
+                  ✓ Membership Active
+                </p>
+                <p className="text-xs text-emerald-600 leading-relaxed">
+                  Use the phone number or Artecks account ID you registered with when booking to
+                  automatically receive your member discount at checkout.
+                </p>
+              </div>
+            )}
 
             <Link
               href="/"
@@ -55,8 +69,15 @@ export default async function PaymentResultPage({
             </Link>
 
             <Link
-              href="/"
+              href="/my-membership"
               className="w-full flex items-center justify-center rounded-2xl border border-gray-200 bg-white text-gray-600 text-sm font-semibold py-3 hover:bg-gray-50 transition-colors"
+            >
+              View My Membership
+            </Link>
+
+            <Link
+              href="/"
+              className="w-full flex items-center justify-center text-gray-400 text-xs py-1 hover:text-gray-600 transition-colors"
             >
               Back to Sessions
             </Link>
