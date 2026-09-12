@@ -6,6 +6,7 @@ import type { AcademySession, Coach, Provider } from "@/lib/types";
 import { MapPin, Clock, Users, Crown, ArrowRight, ChevronRight, Star, Zap, Gem } from "lucide-react";
 import HomeSubscribeButton from "@/app/components/HomeSubscribeButton";
 import AuthButton from "@/app/components/AuthButton";
+import { LanguageToggle } from "@/lib/i18n/LanguageContext";
 
 const TZ = "Asia/Taipei";
 
@@ -152,6 +153,7 @@ export default async function HomePage() {
               <MapPin size={11} className="text-indigo-500" />
               <span className="font-semibold text-indigo-600">Linkou, New Taipei</span>
             </div>
+            <LanguageToggle />
             <AuthButton />
           </div>
         </div>

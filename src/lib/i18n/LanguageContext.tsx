@@ -11,6 +11,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { Globe } from "lucide-react";
 import { dictionaries, type Locale, type DictionaryKey } from "./dictionaries";
 
 const STORAGE_KEY = "artecks-academy-locale";
@@ -63,13 +64,17 @@ export function useLanguage() {
 
 export function LanguageToggle({ className = "" }: { className?: string }) {
   const { locale, setLocale } = useLanguage();
+  const isZh = locale === "zh";
+
   return (
     <button
-      onClick={() => setLocale(locale === "zh" ? "en" : "zh")}
-      className={`rounded-full border px-3 py-1 text-xs font-semibold transition-opacity hover:opacity-80 ${className}`}
-      aria-label="Toggle language"
+      onClick={() => setLocale(isZh ? "en" : "zh")}
+      aria-label={isZh ? "Switch to English" : "切換至中文"}
+      title={isZh ? "Switch to English" : "切換至中文"}
+      className={`flex items-center gap-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 hover:border-indigo-200 px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-indigo-700 transition-all shadow-sm ${className}`}
     >
-      {locale === "zh" ? "EN" : "中文"}
+      <Globe size={13} className="flex-shrink-0 opacity-70" />
+      <span>{isZh ? "EN" : "中文"}</span>
     </button>
   );
 }
