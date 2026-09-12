@@ -7,6 +7,7 @@ import type { AcademySession, Coach, Provider } from "@/lib/types";
 import HomeSubscribeButton from "./HomeSubscribeButton";
 import AuthButton from "./AuthButton";
 import { useLanguage, LanguageToggle } from "@/lib/i18n/LanguageContext";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -38,7 +39,7 @@ function uniqueCoaches(sessions: AcademySession[]): Coach[] {
 function SessionCard({ session, locale, t }: {
   session: AcademySession;
   locale: string;
-  t: (k: string) => string;
+  t: (k: DictionaryKey) => string;
 }) {
   const canBook = session.booking_open && !session.is_full && session.status === "open";
   const dur = durationMins(session.start_time, session.end_time);
@@ -100,7 +101,7 @@ function SessionCard({ session, locale, t }: {
 
 // ── Coach Card ────────────────────────────────────────────────────────────────
 
-function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: string) => string }) {
+function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: DictionaryKey) => string }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-4 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-4">
