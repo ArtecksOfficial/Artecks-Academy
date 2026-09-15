@@ -320,6 +320,31 @@ export default function HomePageContent({ sessions, provider }: Props) {
           ))}
         </div>
 
+        {/* ── Trial CTA ── */}
+        <section className="rounded-3xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #451a03 0%, #78350f 100%)" }}>
+          <div aria-hidden="true" style={{
+            position: "absolute", top: "-80px", left: "-80px", width: "400px", height: "400px",
+            background: "radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%)", pointerEvents: "none",
+          }} />
+          <div className="relative p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="text-6xl flex-shrink-0 select-none">♟</div>
+            <div className="flex flex-col gap-3 flex-1">
+              <span className="text-xs font-bold text-amber-400 bg-amber-900/50 border border-amber-700/50 px-2.5 py-1 rounded-full w-fit uppercase tracking-wide">
+                {t("trialBadge")}
+              </span>
+              <h3 className="text-2xl font-black text-white">{t("trialTitle")}</h3>
+              <p className="text-sm text-amber-100/80 leading-relaxed max-w-xl">{t("trialSub")}</p>
+            </div>
+            <a
+              href="/sessions"
+              className="flex-shrink-0 inline-flex items-center gap-2 font-black text-sm px-6 py-3.5 rounded-xl transition-all whitespace-nowrap"
+              style={{ background: "linear-gradient(135deg,#f59e0b,#d97706)", color: "#fff", boxShadow: "0 8px 24px rgba(245,158,11,0.4)" }}
+            >
+              {t("trialCta")} <ArrowRight size={14} />
+            </a>
+          </div>
+        </section>
+
         {/* ── English Callout ── */}
         <section className="rounded-3xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)" }}>
           <div aria-hidden="true" style={{
@@ -361,6 +386,42 @@ export default function HomePageContent({ sessions, provider }: Props) {
                 <p className="text-sm text-gray-600 leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── Skill Roadmap ── */}
+        <section>
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-black text-gray-900">{t("roadmapTitle")}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t("roadmapSub")}</p>
+          </div>
+          <div className="relative">
+            {/* Connecting line */}
+            <div className="hidden sm:block absolute left-1/2 top-8 bottom-8 w-px bg-gradient-to-b from-indigo-200 via-indigo-300 to-indigo-200 -translate-x-1/2" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {([
+                { badge: t("roadmapL1Badge"), title: t("roadmapL1Title"), desc: t("roadmapL1Desc"), skills: t("roadmapL1Skills"), color: "bg-indigo-50 border-indigo-200", badge_color: "bg-indigo-600 text-white", num: "01" },
+                { badge: t("roadmapL2Badge"), title: t("roadmapL2Title"), desc: t("roadmapL2Desc"), skills: t("roadmapL2Skills"), color: "bg-violet-50 border-violet-200", badge_color: "bg-violet-600 text-white", num: "02" },
+                { badge: t("roadmapL3Badge"), title: t("roadmapL3Title"), desc: t("roadmapL3Desc"), skills: t("roadmapL3Skills"), color: "bg-blue-50 border-blue-200", badge_color: "bg-blue-600 text-white", num: "03" },
+                { badge: t("roadmapL4Badge"), title: t("roadmapL4Title"), desc: t("roadmapL4Desc"), skills: t("roadmapL4Skills"), color: "bg-emerald-50 border-emerald-200", badge_color: "bg-emerald-600 text-white", num: "04" },
+              ] as const).map(({ badge, title, desc, skills, color, badge_color, num }) => (
+                <div key={num} className={`rounded-2xl border p-6 flex flex-col gap-3 ${color} hover:shadow-md transition-shadow`}>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs font-black px-3 py-1 rounded-full ${badge_color}`}>{badge}</span>
+                    <span className="text-3xl font-black text-gray-100 select-none">{num}</span>
+                  </div>
+                  <div>
+                    <p className="font-black text-gray-900 text-base">{title}</p>
+                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">{desc}</p>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {skills.split(" · ").map(s => (
+                      <span key={s} className="text-[11px] font-semibold text-gray-500 bg-white/70 border border-gray-200 px-2 py-0.5 rounded-full">{s}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 

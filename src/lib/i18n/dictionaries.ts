@@ -84,6 +84,32 @@ const zh = {
   footerBook: "預約課程",
   footerBookings: "我的報名",
 
+  // ── Trial CTA ───────────────────────────────────────────────────────────────
+  trialBadge: "免費體驗",
+  trialTitle: "不確定適不適合？先試一堂。",
+  trialSub: "體驗課免費，60 分鐘，孩子將學會用棋盤將死對手。沒有壓力，沒有承諾。",
+  trialCta: "預約免費體驗課",
+
+  // ── Skill roadmap ───────────────────────────────────────────────────────────
+  roadmapTitle: "清晰的學習路徑",
+  roadmapSub: "從零開始到能打比賽，每個階段都有明確目標",
+  roadmapL1Badge: "Level 1",
+  roadmapL1Title: "棋盤入門",
+  roadmapL1Desc: "棋子移動、將軍與將死、基本戰術",
+  roadmapL1Skills: "棋子走法 · 將死 · 開局原則",
+  roadmapL2Badge: "Level 2",
+  roadmapL2Title: "戰術思維",
+  roadmapL2Desc: "叉擊、釘子、串打、棋局分析",
+  roadmapL2Skills: "叉擊 · 釘子 · 串打 · 計算力",
+  roadmapL3Badge: "Level 3",
+  roadmapL3Title: "策略與殘局",
+  roadmapL3Desc: "開局系統、中盤計畫、殘局技巧",
+  roadmapL3Skills: "開局系統 · 兵型 · 殘局",
+  roadmapL4Badge: "Level 4",
+  roadmapL4Title: "競賽準備",
+  roadmapL4Desc: "比賽心理、時間管理、對局覆盤",
+  roadmapL4Skills: "時間壓力 · 覆盤 · 比賽策略",
+
   // ── Anchor nav ──────────────────────────────────────────────────────────────
   navWhyChess: "為什麼學棋",
   navSessions: "近期課程",
@@ -328,6 +354,32 @@ const en: typeof zh = {
   // Footer
   footerBook: "Book a Session",
   footerBookings: "My Bookings",
+
+  // ── Trial CTA ───────────────────────────────────────────────────────────────
+  trialBadge: "Free Trial",
+  trialTitle: "Not sure yet? Try one class.",
+  trialSub: "One free 60-minute trial lesson. Your child will learn to checkmate an opponent before the session ends. No pressure, no commitment.",
+  trialCta: "Book a Free Trial",
+
+  // ── Skill roadmap ───────────────────────────────────────────────────────────
+  roadmapTitle: "A clear path forward",
+  roadmapSub: "From absolute beginner to tournament-ready — every stage has a goal",
+  roadmapL1Badge: "Level 1",
+  roadmapL1Title: "The Basics",
+  roadmapL1Desc: "How pieces move, check and checkmate, opening principles",
+  roadmapL1Skills: "Piece movement · Checkmate · Opening rules",
+  roadmapL2Badge: "Level 2",
+  roadmapL2Title: "Tactical Thinking",
+  roadmapL2Desc: "Forks, pins, skewers, and reading the board ahead",
+  roadmapL2Skills: "Forks · Pins · Skewers · Calculation",
+  roadmapL3Badge: "Level 3",
+  roadmapL3Title: "Strategy & Endgame",
+  roadmapL3Desc: "Opening systems, middlegame plans, endgame technique",
+  roadmapL3Skills: "Opening systems · Pawn structure · Endgame",
+  roadmapL4Badge: "Level 4",
+  roadmapL4Title: "Tournament Ready",
+  roadmapL4Desc: "Match psychology, time management, game analysis",
+  roadmapL4Skills: "Clock pressure · Analysis · Match strategy",
 
   // ── Anchor nav ──────────────────────────────────────────────────────────────
   navWhyChess: "Why Chess",
