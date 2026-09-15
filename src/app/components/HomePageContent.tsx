@@ -2,7 +2,8 @@
 // ─── HomePageContent ──────────────────────────────────────────────────────────
 // Client component — receives server-fetched data and renders with live i18n.
 
-import { MapPin, Clock, Users, Crown, ArrowRight, ChevronRight } from "lucide-react";
+import { MapPin, Clock, Users, Crown, ArrowRight, ChevronRight, ChevronDown } from "lucide-react";
+import { useState } from "react";
 import type { AcademySession, Coach, Provider } from "@/lib/types";
 import HomeSubscribeButton from "./HomeSubscribeButton";
 import AuthButton from "./AuthButton";
@@ -134,6 +135,31 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
   );
 }
 
+// ── FAQ Item ──────────────────────────────────────────────────────────────────
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-gray-200 rounded-2xl bg-white overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left hover:bg-gray-50 transition-colors"
+        onClick={() => setOpen(o => !o)}
+      >
+        <span className="font-bold text-gray-900 text-sm">{q}</span>
+        <ChevronDown
+          size={16}
+          className={`text-gray-400 flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className="px-6 pb-4">
+          <p className="text-sm text-gray-600 leading-relaxed">{a}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 interface Props {
@@ -185,18 +211,26 @@ export default function HomePageContent({ sessions, provider }: Props) {
           aria-hidden="true"
           style={{
             position: "absolute", inset: 0,
-            background: "linear-gradient(to bottom, rgba(15,13,42,0.35) 0%, rgba(15,13,42,0.25) 50%, rgba(15,13,42,0.45) 100%)",
+            background: "linear-gradient(to bottom, rgba(15,13,42,0.35) 0%, rgba(15,13,42,0.25) 50%, rgba(15,13,42,0.55) 100%)",
           }}
         />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-24 sm:py-36 flex flex-col gap-6">
           <div className="flex flex-col gap-5 max-w-xl">
-            <span className="text-xs font-bold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-3 py-1 rounded-full tracking-wide uppercase w-fit">
-              林口 · Linkou · New Taipei
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-bold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-3 py-1 rounded-full tracking-wide uppercase w-fit">
+                林口 · Linkou · New Taipei
+              </span>
+              <span className="text-xs font-bold text-emerald-300 bg-emerald-900/60 border border-emerald-700/50 px-3 py-1 rounded-full tracking-wide w-fit">
+                {t("englishBadge")}
+              </span>
+            </div>
             <h1 className="text-4xl sm:text-6xl font-black text-white leading-[1.05] tracking-tight" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8)" }}>
               {t("heroTitle1")}<br />
               <span style={{ color: "#818CF8" }}>{t("heroTitle2")}</span>
             </h1>
+            <p className="text-base text-indigo-100 max-w-md leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+              {t("whyChessSub")}
+            </p>
             <div className="flex flex-wrap items-center gap-3 mt-2">
               <a
                 href="/sessions"
@@ -218,6 +252,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
             { icon: "♟", label: t("trustCoaches") },
             { icon: "👶", label: t("trustAges") },
             { icon: "👥", label: t("trustGroups") },
+            { icon: "🇬🇧", label: t("englishBadge") },
             { icon: "⭐", label: t("trustRewards") },
           ].map(({ icon, label }) => (
             <div key={label} className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
@@ -225,6 +260,41 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </div>
           ))}
         </div>
+
+        {/* ── English Callout ── */}
+        <section className="rounded-3xl overflow-hidden border border-emerald-200" style={{ background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)" }}>
+          <div className="p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="text-5xl flex-shrink-0">🇬🇧</div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-xl font-black text-emerald-900">{t("englishCalloutTitle")}</h3>
+              <p className="text-sm text-emerald-800 leading-relaxed max-w-xl">{t("englishCalloutDesc")}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Why Chess ── */}
+        <section>
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-black text-gray-900">{t("whyChessTitle")}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t("whyChessSub")}</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {([
+              { iconKey: "whyChess1Icon" as DictionaryKey, titleKey: "whyChess1Title" as DictionaryKey, descKey: "whyChess1Desc" as DictionaryKey, color: "bg-blue-50 border-blue-100" },
+              { iconKey: "whyChess2Icon" as DictionaryKey, titleKey: "whyChess2Title" as DictionaryKey, descKey: "whyChess2Desc" as DictionaryKey, color: "bg-amber-50 border-amber-100" },
+              { iconKey: "whyChess3Icon" as DictionaryKey, titleKey: "whyChess3Title" as DictionaryKey, descKey: "whyChess3Desc" as DictionaryKey, color: "bg-violet-50 border-violet-100" },
+              { iconKey: "whyChess4Icon" as DictionaryKey, titleKey: "whyChess4Title" as DictionaryKey, descKey: "whyChess4Desc" as DictionaryKey, color: "bg-rose-50 border-rose-100" },
+              { iconKey: "whyChess5Icon" as DictionaryKey, titleKey: "whyChess5Title" as DictionaryKey, descKey: "whyChess5Desc" as DictionaryKey, color: "bg-orange-50 border-orange-100" },
+              { iconKey: "whyChess6Icon" as DictionaryKey, titleKey: "whyChess6Title" as DictionaryKey, descKey: "whyChess6Desc" as DictionaryKey, color: "bg-emerald-50 border-emerald-100" },
+            ]).map(({ iconKey, titleKey, descKey, color }) => (
+              <div key={titleKey} className={`rounded-2xl border p-6 flex flex-col gap-3 ${color}`}>
+                <span className="text-3xl">{t(iconKey)}</span>
+                <p className="font-black text-gray-900 text-sm">{t(titleKey)}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{t(descKey)}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* ── How it works ── */}
         <section>
@@ -243,6 +313,38 @@ export default function HomePageContent({ sessions, provider }: Props) {
                 <span className="text-2xl">{icon}</span>
                 <p className="font-black text-gray-900 text-base">{title}</p>
                 <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Testimonials ── */}
+        <section>
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-black text-gray-900">{t("testimonialsTitle")}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t("testimonialsSub")}</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {([
+              { quoteKey: "testimonial1Quote" as DictionaryKey, nameKey: "testimonial1Name" as DictionaryKey, roleKey: "testimonial1Role" as DictionaryKey },
+              { quoteKey: "testimonial2Quote" as DictionaryKey, nameKey: "testimonial2Name" as DictionaryKey, roleKey: "testimonial2Role" as DictionaryKey },
+              { quoteKey: "testimonial3Quote" as DictionaryKey, nameKey: "testimonial3Name" as DictionaryKey, roleKey: "testimonial3Role" as DictionaryKey },
+            ]).map(({ quoteKey, nameKey, roleKey }) => (
+              <div key={nameKey} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-4 hover:shadow-md transition-shadow">
+                <div className="text-indigo-400 text-3xl leading-none font-black select-none">&ldquo;</div>
+                <p className="text-sm text-gray-700 leading-relaxed flex-1 -mt-2">{t(quoteKey)}</p>
+                <div className="border-t border-gray-100 pt-4 flex items-center gap-3">
+                  <div
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-black flex-shrink-0"
+                    style={{ background: "linear-gradient(135deg,#6366f1,#4f46e5)" }}
+                  >
+                    {t(nameKey).slice(0, 2)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">{t(nameKey)}</p>
+                    <p className="text-xs text-gray-400">{t(roleKey)}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -355,6 +457,25 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </div>
           </section>
         )}
+
+        {/* ── FAQ ── */}
+        <section>
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>
+          </div>
+          <div className="flex flex-col gap-3 max-w-2xl mx-auto">
+            {([
+              { qKey: "faq1Q" as DictionaryKey, aKey: "faq1A" as DictionaryKey },
+              { qKey: "faq2Q" as DictionaryKey, aKey: "faq2A" as DictionaryKey },
+              { qKey: "faq3Q" as DictionaryKey, aKey: "faq3A" as DictionaryKey },
+              { qKey: "faq4Q" as DictionaryKey, aKey: "faq4A" as DictionaryKey },
+              { qKey: "faq5Q" as DictionaryKey, aKey: "faq5A" as DictionaryKey },
+            ]).map(({ qKey, aKey }) => (
+              <FaqItem key={qKey} q={t(qKey)} a={t(aKey)} />
+            ))}
+          </div>
+        </section>
 
         {/* ── Footer ── */}
         <footer className="border-t border-gray-200 pt-8 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-gray-400">
