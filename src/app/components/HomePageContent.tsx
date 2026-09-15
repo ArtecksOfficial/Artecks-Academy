@@ -505,40 +505,25 @@ export default function HomePageContent({ sessions, provider }: Props) {
           </div>
         </section>
 
-        {/* ── Coaches (from sessions API) ── */}
-        {coaches.length > 0 && (
-          <section>
-            <div className="mb-6">
-              <h2 className="text-2xl font-black text-gray-900">{t("coachesTitle")}</h2>
-              <p className="text-sm text-gray-500 mt-1">{t("coachesSub")}</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {coaches.map(c => <CoachCard key={c.id} coach={c} locale={locale} t={t} />)}
-            </div>
-          </section>
-        )}
+        {/* ── FAQ ── */}
+        <section id="faq" style={{ scrollMarginTop: "120px" }}>
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>
+          </div>
+          <div className="flex flex-col gap-3 max-w-2xl mx-auto">
+            {([
+              { qKey: "faq1Q" as DictionaryKey, aKey: "faq1A" as DictionaryKey },
+              { qKey: "faq2Q" as DictionaryKey, aKey: "faq2A" as DictionaryKey },
+              { qKey: "faq3Q" as DictionaryKey, aKey: "faq3A" as DictionaryKey },
+              { qKey: "faq4Q" as DictionaryKey, aKey: "faq4A" as DictionaryKey },
+              { qKey: "faq5Q" as DictionaryKey, aKey: "faq5A" as DictionaryKey },
+            ]).map(({ qKey, aKey }) => (
+              <FaqItem key={qKey} q={t(qKey)} a={t(aKey)} />
+            ))}
+          </div>
+        </section>
 
-        {/* ── Coach spotlight (always visible) ── */}
-        {coaches.length === 0 && (
-          <section>
-            <div className="mb-6 text-center">
-              <h2 className="text-2xl font-black text-gray-900">{t("coachSpotlightTitle")}</h2>
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col sm:flex-row items-start gap-6 hover:shadow-md transition-shadow max-w-2xl mx-auto">
-              <div
-                className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 text-white text-2xl font-black"
-                style={{ background: "linear-gradient(135deg,#6366f1,#4f46e5)" }}
-              >
-                IC
-              </div>
-              <div className="flex flex-col gap-2">
-                <p className="font-black text-gray-900 text-lg">{t("coachSpotlightName")}</p>
-                <p className="text-xs text-indigo-600 font-semibold">{t("coachSpotlightCredential")}</p>
-                <p className="text-sm text-gray-500 leading-relaxed mt-1">{t("coachSpotlightBio")}</p>
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* ── FAQ ── */}
         <section id="faq" style={{ scrollMarginTop: "120px" }}>
