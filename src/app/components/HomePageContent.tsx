@@ -186,6 +186,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
     { label: t("navWhyChess"), id: "why-chess" },
     { label: t("navSessions"), id: "sessions" },
     { label: t("navTestimonials"), id: "testimonials" },
+    { label: locale === "zh" ? "聯絡我們" : "Contacts", id: "line-contact" },
     { label: t("navFaq"), id: "faq" },
   ];
 
@@ -505,48 +506,8 @@ export default function HomePageContent({ sessions, provider }: Props) {
           </div>
         </section>
 
-        {/* ── FAQ ── */}
-        <section id="faq" style={{ scrollMarginTop: "120px" }}>
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>
-          </div>
-          <div className="flex flex-col gap-3 max-w-2xl mx-auto">
-            {([
-              { qKey: "faq1Q" as DictionaryKey, aKey: "faq1A" as DictionaryKey },
-              { qKey: "faq2Q" as DictionaryKey, aKey: "faq2A" as DictionaryKey },
-              { qKey: "faq3Q" as DictionaryKey, aKey: "faq3A" as DictionaryKey },
-              { qKey: "faq4Q" as DictionaryKey, aKey: "faq4A" as DictionaryKey },
-              { qKey: "faq5Q" as DictionaryKey, aKey: "faq5A" as DictionaryKey },
-            ]).map(({ qKey, aKey }) => (
-              <FaqItem key={qKey} q={t(qKey)} a={t(aKey)} />
-            ))}
-          </div>
-        </section>
-
-
-        {/* ── FAQ ── */}
-        <section id="faq" style={{ scrollMarginTop: "120px" }}>
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>
-          </div>
-          <div className="flex flex-col gap-3 max-w-2xl mx-auto">
-            {([
-              { qKey: "faq1Q" as DictionaryKey, aKey: "faq1A" as DictionaryKey },
-              { qKey: "faq2Q" as DictionaryKey, aKey: "faq2A" as DictionaryKey },
-              { qKey: "faq3Q" as DictionaryKey, aKey: "faq3A" as DictionaryKey },
-              { qKey: "faq4Q" as DictionaryKey, aKey: "faq4A" as DictionaryKey },
-              { qKey: "faq5Q" as DictionaryKey, aKey: "faq5A" as DictionaryKey },
-            ]).map(({ qKey, aKey }) => (
-              <FaqItem key={qKey} q={t(qKey)} a={t(aKey)} />
-            ))}
-          </div>
-        </section>
-
-
         {/* ── LINE Contact ── */}
-        <section className="rounded-3xl overflow-hidden" style={{ background: "linear-gradient(135deg, #06C755 0%, #00a544 100%)" }}>
+        <section id="line-contact" className="rounded-3xl overflow-hidden" style={{ scrollMarginTop: "120px", background: "linear-gradient(135deg, #06C755 0%, #00a544 100%)" }}>
           <div className="p-8 sm:p-10 flex flex-col gap-6">
             <div className="text-center">
               <h2 className="text-2xl font-black text-white">{t("lineTitle")}</h2>
@@ -570,6 +531,26 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </div>
           </div>
         </section>
+
+        {/* ── FAQ ── */}
+        <section id="faq" style={{ scrollMarginTop: "120px" }}>
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>
+          </div>
+          <div className="flex flex-col gap-3 max-w-2xl mx-auto">
+            {([
+              { qKey: "faq1Q" as DictionaryKey, aKey: "faq1A" as DictionaryKey },
+              { qKey: "faq2Q" as DictionaryKey, aKey: "faq2A" as DictionaryKey },
+              { qKey: "faq3Q" as DictionaryKey, aKey: "faq3A" as DictionaryKey },
+              { qKey: "faq4Q" as DictionaryKey, aKey: "faq4A" as DictionaryKey },
+              { qKey: "faq5Q" as DictionaryKey, aKey: "faq5A" as DictionaryKey },
+            ]).map(({ qKey, aKey }) => (
+              <FaqItem key={qKey} q={t(qKey)} a={t(aKey)} />
+            ))}
+          </div>
+        </section>
+
 
         {/* ── Footer ── */}
         <footer className="border-t border-gray-200 pt-8 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-gray-400">
