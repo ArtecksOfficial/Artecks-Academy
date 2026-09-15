@@ -36,6 +36,7 @@ function uniqueCoaches(sessions: AcademySession[]): Coach[] {
 }
 
 function scrollTo(id: string) {
+  if (id === "home") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -181,6 +182,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
   const plan = provider?.plans[0] ?? null;
 
   const navLinks = [
+    { label: locale === "zh" ? "首頁" : "Home", id: "home" },
     { label: t("navWhyChess"), id: "why-chess" },
     { label: t("navSessions"), id: "sessions" },
     { label: t("navTestimonials"), id: "testimonials" },
@@ -219,14 +221,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
                 {label}
               </button>
             ))}
-            <div className="ml-auto flex-shrink-0 py-1.5">
-              <a
-                href="/sessions"
-                className="inline-flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black px-4 py-1.5 rounded-lg transition-colors"
-              >
-                {t("heroCta")} <ArrowRight size={11} />
-              </a>
-            </div>
+
           </div>
         </div>
       </header>
@@ -366,7 +361,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         </section>
 
         {/* ── Why Chess ── */}
-        <section id="why-chess" style={{ scrollMarginTop: "90px" }}>
+        <section id="why-chess" style={{ scrollMarginTop: "120px" }}>
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-black text-gray-900">{t("whyChessTitle")}</h2>
             <p className="text-sm text-gray-500 mt-1">{t("whyChessSub")}</p>
@@ -426,7 +421,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         </section>
 
         {/* ── Upcoming sessions ── */}
-        <section id="sessions" style={{ scrollMarginTop: "90px" }}>
+        <section id="sessions" style={{ scrollMarginTop: "120px" }}>
           <div className="flex items-center justify-between mb-5">
             <div>
               <h2 className="text-2xl font-black text-gray-900">{t("upcomingTitle")}</h2>
@@ -479,7 +474,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         </section>
 
         {/* ── Testimonials ── */}
-        <section id="testimonials" style={{ scrollMarginTop: "90px" }}>
+        <section id="testimonials" style={{ scrollMarginTop: "120px" }}>
           <style>{`
             @keyframes marquee-scroll {
               from { transform: translateX(0); }
@@ -546,7 +541,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         )}
 
         {/* ── FAQ ── */}
-        <section id="faq" style={{ scrollMarginTop: "90px" }}>
+        <section id="faq" style={{ scrollMarginTop: "120px" }}>
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
             <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>
