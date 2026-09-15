@@ -273,6 +273,15 @@ const zh = {
   shareLine: "LINE 分享",
   copyLink: "複製連結",
   linkCopied: "已複製！",
+
+  // LINE Contact
+  lineTitle: "加入我們的 LINE 群組",
+  lineSub: "有問題或想報名？直接在 LINE 上聯繫我們。",
+  lineClubLabel: "♟ 棋藝俱樂部",
+  lineClubDesc: "課程公告、學員分享、比賽資訊",
+  linePrivateLabel: "👤 私人課程諮詢",
+  linePrivateDesc: "一對一排課、課程規劃、費用詢問",
+  lineJoin: "加入群組",
 };
 
 const en: typeof zh = {
@@ -544,6 +553,15 @@ const en: typeof zh = {
   shareLine: "Share via LINE",
   copyLink: "Copy Link",
   linkCopied: "Copied!",
+
+  // LINE Contact
+  lineTitle: "Join Our LINE Groups",
+  lineSub: "Questions or ready to sign up? Reach us directly on LINE.",
+  lineClubLabel: "♟ Chess Club",
+  lineClubDesc: "Class announcements, student updates, tournament news",
+  linePrivateLabel: "👤 Private Lessons",
+  linePrivateDesc: "One-on-one scheduling, lesson planning, pricing enquiries",
+  lineJoin: "Join Group",
 };
 
 export const dictionaries = { zh, en } satisfies Record<Locale, Record<string, string>>;
