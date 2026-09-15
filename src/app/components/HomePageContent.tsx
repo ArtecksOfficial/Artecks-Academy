@@ -183,6 +183,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
 
   const navLinks = [
     { label: locale === "zh" ? "首頁" : "Home", id: "home" },
+    { label: locale === "zh" ? "概覽" : "Overview", id: "overview" },
     { label: t("navWhyChess"), id: "why-chess" },
     { label: t("navSessions"), id: "sessions" },
     { label: t("navTestimonials"), id: "testimonials" },
@@ -301,7 +302,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-16">
 
         {/* ── Stats bar ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 -mt-4">
+        <div id="overview" style={{ scrollMarginTop: "120px" }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 -mt-4">
           {[
             { icon: "♟", stat: locale === "zh" ? "專業教練" : "Expert Coaches", sub: locale === "zh" ? "Artecks 認證" : "Artecks Certified" },
             { icon: "🧒", stat: locale === "zh" ? "5 歲以上" : "Ages 5 & Up", sub: locale === "zh" ? "從零開始" : "Absolute beginners welcome" },

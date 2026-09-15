@@ -111,7 +111,7 @@ const zh = {
   roadmapL4Skills: "時間壓力 · 覆盤 · 比賽策略",
 
   // ── Anchor nav ──────────────────────────────────────────────────────────────
-  navWhyChess: "為什麼學棋",
+  navWhyChess: "學棋好處",
   navSessions: "近期課程",
   navTestimonials: "家長評價",
   navFaq: "常見問題",
@@ -122,7 +122,7 @@ const zh = {
   englishCalloutDesc: "每堂課由認證教練以純英語進行。孩子在學下棋的同時，自然而然地沉浸在英語環境中 — 一舉兩得。",
 
   // ── Why Chess section ────────────────────────────────────────────────────────
-  whyChessTitle: "為什麼學西洋棋？",
+  whyChessTitle: "學西洋棋的好處",
   whyChessSub: "西洋棋培養一輩子受用的能力，而且孩子真的很喜歡。",
   whyChess1Icon: "🧠",
   whyChess1Title: "批判性思考",
@@ -412,7 +412,7 @@ const en: typeof zh = {
   roadmapL4Skills: "Clock pressure · Analysis · Match strategy",
 
   // ── Anchor nav ──────────────────────────────────────────────────────────────
-  navWhyChess: "Why Chess",
+  navWhyChess: "Benefits",
   navSessions: "Sessions",
   navTestimonials: "Reviews",
   navFaq: "FAQ",
@@ -423,7 +423,7 @@ const en: typeof zh = {
   englishCalloutDesc: "Every lesson is conducted 100% in English by our vetted coaches. Your child learns chess and practises English simultaneously — no translation, no code-switching.",
 
   // ── Why Chess section ────────────────────────────────────────────────────────
-  whyChessTitle: "Why Chess?",
+  whyChessTitle: "Benefits of Learning Chess",
   whyChessSub: "Chess builds skills that last a lifetime — and kids actually love it.",
   whyChess1Icon: "🧠",
   whyChess1Title: "Critical Thinking",
