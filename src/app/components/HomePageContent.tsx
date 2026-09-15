@@ -480,35 +480,33 @@ export default function HomePageContent({ sessions, provider }: Props) {
 
         {/* ── Testimonials ── */}
         <section id="testimonials" style={{ scrollMarginTop: "90px" }}>
+          <style>{`
+            @keyframes marquee-scroll {
+              from { transform: translateX(0); }
+              to { transform: translateX(-50%); }
+            }
+            .marquee-track { animation: marquee-scroll 40s linear infinite; }
+            .marquee-track:hover { animation-play-state: paused; }
+          `}</style>
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-black text-gray-900">{t("testimonialsTitle")}</h2>
             <p className="text-sm text-gray-500 mt-1">{t("testimonialsSub")}</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {([
-              { quoteKey: "testimonial1Quote" as DictionaryKey, nameKey: "testimonial1Name" as DictionaryKey, roleKey: "testimonial1Role" as DictionaryKey },
-              { quoteKey: "testimonial2Quote" as DictionaryKey, nameKey: "testimonial2Name" as DictionaryKey, roleKey: "testimonial2Role" as DictionaryKey },
-              { quoteKey: "testimonial3Quote" as DictionaryKey, nameKey: "testimonial3Name" as DictionaryKey, roleKey: "testimonial3Role" as DictionaryKey },
-            ]).map(({ quoteKey, nameKey, roleKey }) => (
-              <div key={nameKey} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => <span key={i} className="text-amber-400 text-sm">★</span>)}
-                </div>
-                <p className="text-sm text-gray-700 leading-relaxed flex-1">{t(quoteKey)}</p>
-                <div className="border-t border-gray-100 pt-4 flex items-center gap-3">
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-black flex-shrink-0"
-                    style={{ background: "linear-gradient(135deg,#6366f1,#4f46e5)" }}
-                  >
-                    {t(nameKey).slice(0, 2)}
+          <div className="overflow-hidden -mx-4 sm:-mx-6">
+            <div className="marquee-track flex gap-4 w-max">
+              {([1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10] as const).map((n, i) => (
+                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-4 w-72 flex-shrink-0 hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-0.5">
+                    {[...Array(5)].map((_, j) => <span key={j} className="text-amber-400 text-sm">★</span>)}
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">{t(nameKey)}</p>
-                    <p className="text-xs text-gray-400">{t(roleKey)}</p>
+                  <p className="text-sm text-gray-700 leading-relaxed flex-1">{t(`testimonial${n}Quote` as DictionaryKey)}</p>
+                  <div className="border-t border-gray-100 pt-3">
+                    <p className="text-sm font-bold text-gray-900">{t(`testimonial${n}Name` as DictionaryKey)}</p>
+                    <p className="text-xs text-gray-400">{t(`testimonial${n}Role` as DictionaryKey)}</p>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
