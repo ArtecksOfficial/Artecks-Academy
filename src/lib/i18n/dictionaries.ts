@@ -10,8 +10,8 @@ const zh = {
 
   // ── Homepage ────────────────────────────────────────────────────────────────
   // Hero
-  heroTitle1: "全英語西洋棋課",
-  heroTitle2: "孩子真正愛上學習。",
+  heroTitle1: "棋藝課程",
+  heroTitle2: "孩子愛上學習。",
   heroCta: "瀏覽課程",
   heroSubscribe: "訂閱會員",
 
@@ -40,8 +40,8 @@ const zh = {
   upcomingSubEmpty: "請持續關注，每週新增課程",
   seeAllSessions: "查看全部課程與行事曆",
   calendarView: "行事曆檢視",
-  emptyTitle: "下一期即將開班，名額有限",
-  emptyDesc: "留下資料，搶先獲得開班通知，會員享優先報名及折扣優惠。",
+  emptyTitle: "目前沒有開放課程",
+  emptyDesc: "每週新增課程與活動，訂閱會員以獲得最新通知。",
 
   // Session card status
   statusFull: "額滿",
@@ -74,21 +74,9 @@ const zh = {
   coachesSub: "所有教練皆由 Artecks 培訓及審核",
   viewSessions: "查看課程",
 
-  // Static coach spotlight
-  coachSpotlightTitle: "認識你的教練",
-  coachSpotlightName: "Issac Chang",
-  coachSpotlightCredential: "Artecks Academy 創辦人 · 英語授課教練",
-  coachSpotlightBio: "Issac 熱愛西洋棋與英語教育，相信棋盤是培養孩子批判性思維最好的道具。每堂課全程英語授課，讓孩子在學棋的同時自然習得英語。",
-
   // Footer
   footerBook: "預約課程",
   footerBookings: "我的報名",
-
-  // ── Anchor nav ──────────────────────────────────────────────────────────────
-  navWhyChess: "為什麼學棋",
-  navSessions: "近期課程",
-  navTestimonials: "家長評價",
-  navFaq: "常見問題",
 
   // ── English callout ─────────────────────────────────────────────────────────
   englishBadge: "🇬🇧 全英語授課",
@@ -255,7 +243,7 @@ const en: typeof zh = {
 
   // ── Homepage ────────────────────────────────────────────────────────────────
   // Hero
-  heroTitle1: "English-Immersion Chess",
+  heroTitle1: "Chess Lessons",
   heroTitle2: "Kids Actually Love.",
   heroCta: "Browse Sessions",
   heroSubscribe: "Subscribe",
@@ -285,8 +273,8 @@ const en: typeof zh = {
   upcomingSubEmpty: "Check back soon — new sessions added weekly",
   seeAllSessions: "See all sessions & calendar",
   calendarView: "Calendar view",
-  emptyTitle: "Next cohort forming — spots limited",
-  emptyDesc: "Join the waitlist to be first in line when booking opens. Members get priority access and a discount on every session.",
+  emptyTitle: "No sessions open right now",
+  emptyDesc: "New lessons and events are added every week. Subscribe to get notified when spots open up.",
 
   // Session card status
   statusFull: "Full",
@@ -319,21 +307,9 @@ const en: typeof zh = {
   coachesSub: "All coaches are trained and vetted by Artecks",
   viewSessions: "View sessions",
 
-  // Static coach spotlight
-  coachSpotlightTitle: "Meet Your Coach",
-  coachSpotlightName: "Issac Chang",
-  coachSpotlightCredential: "Founder, Artecks Academy · English-Instruction Coach",
-  coachSpotlightBio: "Issac combines a passion for chess with a belief that the board is the best tool for building critical thinking in kids. Every session is conducted entirely in English — so children level up in chess and language at the same time.",
-
   // Footer
   footerBook: "Book a Session",
   footerBookings: "My Bookings",
-
-  // ── Anchor nav ──────────────────────────────────────────────────────────────
-  navWhyChess: "Why Chess",
-  navSessions: "Sessions",
-  navTestimonials: "Reviews",
-  navFaq: "FAQ",
 
   // ── English callout ─────────────────────────────────────────────────────────
   englishBadge: "🇬🇧 Taught in English",

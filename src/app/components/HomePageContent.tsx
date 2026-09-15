@@ -232,75 +232,110 @@ export default function HomePageContent({ sessions, provider }: Props) {
       </header>
 
       {/* ── Hero ── */}
-      <section style={{ background: "#0f0d2a", overflow: "hidden", position: "relative" }}>
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute", inset: 0,
-            backgroundImage: `url(https://images.pexels.com/photos/39191114/pexels-photo-39191114.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
-            backgroundSize: "cover", backgroundPosition: "center 75%", opacity: 1,
-          }}
-        />
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute", inset: 0,
-            background: "linear-gradient(to bottom, rgba(15,13,42,0.35) 0%, rgba(15,13,42,0.25) 50%, rgba(15,13,42,0.55) 100%)",
-          }}
-        />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-24 sm:py-36 flex flex-col gap-6">
-          <div className="flex flex-col gap-5 max-w-xl">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-3 py-1 rounded-full tracking-wide uppercase w-fit">
-                林口 · Linkou · New Taipei
+      <section style={{ background: "#0a0818", overflow: "hidden", position: "relative", minHeight: "520px" }}>
+        {/* Background photo */}
+        <div aria-hidden="true" style={{
+          position: "absolute", inset: 0,
+          backgroundImage: `url(https://images.pexels.com/photos/39191114/pexels-photo-39191114.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
+          backgroundSize: "cover", backgroundPosition: "center 70%", opacity: 0.45,
+        }} />
+        {/* Gradient overlay */}
+        <div aria-hidden="true" style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(135deg, rgba(10,8,24,0.92) 0%, rgba(49,46,129,0.55) 60%, rgba(10,8,24,0.75) 100%)",
+        }} />
+        {/* Accent glow */}
+        <div aria-hidden="true" style={{
+          position: "absolute", top: "-120px", right: "-80px", width: "600px", height: "600px",
+          background: "radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)", pointerEvents: "none",
+        }} />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-32 flex flex-col gap-8">
+          {/* Badges */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-700/60 px-3 py-1 rounded-full tracking-widest uppercase">
+              林口 · Linkou · New Taipei
+            </span>
+            <span className="text-[11px] font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-600/60 px-3 py-1 rounded-full tracking-wide flex items-center gap-1">
+              🇬🇧 {locale === "zh" ? "全英語授課" : "Taught in English"}
+            </span>
+          </div>
+
+          {/* Headline */}
+          <div className="flex flex-col gap-3 max-w-2xl">
+            <h1 className="text-5xl sm:text-7xl font-black text-white leading-[1.0] tracking-tight"
+              style={{ textShadow: "0 4px 32px rgba(0,0,0,0.8)" }}>
+              {t("heroTitle1")}
+              <br />
+              <span style={{ background: "linear-gradient(90deg,#a5b4fc,#818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                {t("heroTitle2")}
               </span>
-              <span className="text-xs font-bold text-emerald-300 bg-emerald-900/60 border border-emerald-700/50 px-3 py-1 rounded-full tracking-wide w-fit">
-                {t("englishBadge")}
-              </span>
-            </div>
-            <h1 className="text-4xl sm:text-6xl font-black text-white leading-[1.05] tracking-tight" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8)" }}>
-              {t("heroTitle1")}<br />
-              <span style={{ color: "#818CF8" }}>{t("heroTitle2")}</span>
             </h1>
-            <p className="text-base text-indigo-100 max-w-md leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+            <p className="text-base sm:text-lg text-indigo-200/90 max-w-lg leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.7)" }}>
               {t("whyChessSub")}
             </p>
-            <div className="flex flex-wrap items-center gap-3 mt-2">
-              <a
-                href="/sessions"
-                className="inline-flex items-center gap-2 bg-white text-indigo-700 hover:bg-indigo-50 text-sm font-black px-6 py-3 rounded-xl transition-colors shadow-lg"
-              >
-                {t("heroCta")} <ArrowRight size={15} />
-              </a>
-              {plan && <HomeSubscribeButton planId={plan.id} discountPercent={plan.discount_percent} />}
-            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center gap-3">
+            <a href="/sessions"
+              className="inline-flex items-center gap-2 text-sm font-black px-7 py-3.5 rounded-xl transition-all shadow-xl"
+              style={{ background: "linear-gradient(135deg,#6366f1,#4f46e5)", color: "#fff", boxShadow: "0 8px 32px rgba(99,102,241,0.45)" }}>
+              {t("heroCta")} <ArrowRight size={15} />
+            </a>
+            {plan && <HomeSubscribeButton planId={plan.id} discountPercent={plan.discount_percent} />}
+          </div>
+
+          {/* Social proof bar */}
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            {[
+              { v: "40+", l: locale === "zh" ? "位學員" : "Students Taught" },
+              { v: "★★★★★", l: locale === "zh" ? "家長評價" : "Parent Reviews" },
+              { v: "100%", l: locale === "zh" ? "全英語授課" : "English Instruction" },
+            ].map(({ v, l }) => (
+              <div key={l} className="flex items-center gap-1.5">
+                <span className="text-sm font-black text-white">{v}</span>
+                <span className="text-xs text-indigo-300 font-medium">{l}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-16">
 
-        {/* ── Trust pills ── */}
-        <div className="flex flex-wrap justify-center gap-3 -mt-4">
+        {/* ── Stats bar ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 -mt-4">
           {[
-            { icon: "♟", label: t("trustCoaches") },
-            { icon: "👶", label: t("trustAges") },
-            { icon: "👥", label: t("trustGroups") },
-            { icon: "🇬🇧", label: t("englishBadge") },
-          ].map(({ icon, label }) => (
-            <div key={label} className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
-              <span>{icon}</span><span>{label}</span>
+            { icon: "♟", stat: locale === "zh" ? "專業教練" : "Expert Coaches", sub: locale === "zh" ? "Artecks 認證" : "Artecks Certified" },
+            { icon: "🧒", stat: locale === "zh" ? "5 歲以上" : "Ages 5 & Up", sub: locale === "zh" ? "從零開始" : "Absolute beginners welcome" },
+            { icon: "👥", stat: locale === "zh" ? "小班教學" : "Max 8 Students", sub: locale === "zh" ? "每位教練最多 8 人" : "Per coach, every session" },
+            { icon: "🇬🇧", stat: locale === "zh" ? "全英語授課" : "100% English", sub: locale === "zh" ? "林口唯一英語棋課" : "Only English chess in Linkou" },
+          ].map(({ icon, stat, sub }) => (
+            <div key={stat} className="bg-white rounded-2xl border border-gray-200 px-4 py-4 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-2xl">{icon}</span>
+              <p className="text-sm font-black text-gray-900">{stat}</p>
+              <p className="text-[11px] text-gray-400 font-medium">{sub}</p>
             </div>
           ))}
         </div>
 
         {/* ── English Callout ── */}
-        <section className="rounded-3xl overflow-hidden border border-emerald-200" style={{ background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)" }}>
-          <div className="p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="text-5xl flex-shrink-0">🇬🇧</div>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-xl font-black text-emerald-900">{t("englishCalloutTitle")}</h3>
-              <p className="text-sm text-emerald-800 leading-relaxed max-w-xl">{t("englishCalloutDesc")}</p>
+        <section className="rounded-3xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)" }}>
+          <div aria-hidden="true" style={{
+            position: "absolute", top: "-60px", right: "-60px", width: "300px", height: "300px",
+            background: "radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)", pointerEvents: "none",
+          }} />
+          <div className="relative p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="text-6xl flex-shrink-0 select-none">🇬🇧</div>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-emerald-400 bg-emerald-900/50 border border-emerald-700/50 px-2.5 py-1 rounded-full uppercase tracking-wide">
+                  {locale === "zh" ? "林口唯一" : "Linkou Exclusive"}
+                </span>
+              </div>
+              <h3 className="text-2xl font-black text-white">{t("englishCalloutTitle")}</h3>
+              <p className="text-sm text-slate-300 leading-relaxed max-w-xl">{t("englishCalloutDesc")}</p>
             </div>
           </div>
         </section>
@@ -395,8 +430,10 @@ export default function HomePageContent({ sessions, provider }: Props) {
               { quoteKey: "testimonial3Quote" as DictionaryKey, nameKey: "testimonial3Name" as DictionaryKey, roleKey: "testimonial3Role" as DictionaryKey },
             ]).map(({ quoteKey, nameKey, roleKey }) => (
               <div key={nameKey} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-4 hover:shadow-md transition-shadow">
-                <div className="text-indigo-400 text-3xl leading-none font-black select-none">&ldquo;</div>
-                <p className="text-sm text-gray-700 leading-relaxed flex-1 -mt-2">{t(quoteKey)}</p>
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, i) => <span key={i} className="text-amber-400 text-sm">★</span>)}
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed flex-1">{t(quoteKey)}</p>
                 <div className="border-t border-gray-100 pt-4 flex items-center gap-3">
                   <div
                     className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-black flex-shrink-0"
