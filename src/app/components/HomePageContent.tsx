@@ -35,6 +35,10 @@ function uniqueCoaches(sessions: AcademySession[]): Coach[] {
   return coaches;
 }
 
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 // ── Session Card ──────────────────────────────────────────────────────────────
 
 function SessionCard({ session, locale, t }: {
@@ -176,6 +180,13 @@ export default function HomePageContent({ sessions, provider }: Props) {
     .slice(0, 9);
   const plan = provider?.plans[0] ?? null;
 
+  const navLinks = [
+    { label: t("navWhyChess"), id: "why-chess" },
+    { label: t("navSessions"), id: "sessions" },
+    { label: t("navTestimonials"), id: "testimonials" },
+    { label: t("navFaq"), id: "faq" },
+  ];
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
 
@@ -193,6 +204,29 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </div>
             <LanguageToggle />
             <AuthButton />
+          </div>
+        </div>
+
+        {/* ── Anchor nav ── */}
+        <div className="border-t border-gray-100 bg-white">
+          <div className="max-w-6xl mx-auto px-3 sm:px-5 flex items-center gap-1 overflow-x-auto scrollbar-none">
+            {navLinks.map(({ label, id }) => (
+              <button
+                key={id}
+                onClick={() => scrollTo(id)}
+                className="flex-shrink-0 text-xs font-semibold text-gray-500 hover:text-indigo-600 px-3 py-2.5 transition-colors whitespace-nowrap"
+              >
+                {label}
+              </button>
+            ))}
+            <div className="ml-auto flex-shrink-0 py-1.5">
+              <a
+                href="/sessions"
+                className="inline-flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black px-4 py-1.5 rounded-lg transition-colors"
+              >
+                {t("heroCta")} <ArrowRight size={11} />
+              </a>
+            </div>
           </div>
         </div>
       </header>
@@ -253,7 +287,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
             { icon: "👶", label: t("trustAges") },
             { icon: "👥", label: t("trustGroups") },
             { icon: "🇬🇧", label: t("englishBadge") },
-            { icon: "⭐", label: t("trustRewards") },
           ].map(({ icon, label }) => (
             <div key={label} className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
               <span>{icon}</span><span>{label}</span>
@@ -273,7 +306,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         </section>
 
         {/* ── Why Chess ── */}
-        <section>
+        <section id="why-chess" style={{ scrollMarginTop: "90px" }}>
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-black text-gray-900">{t("whyChessTitle")}</h2>
             <p className="text-sm text-gray-500 mt-1">{t("whyChessSub")}</p>
@@ -296,30 +329,61 @@ export default function HomePageContent({ sessions, provider }: Props) {
           </div>
         </section>
 
-        {/* ── How it works ── */}
-        <section>
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-black text-gray-900">{t("howItWorksTitle")}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t("howItWorksSub")}</p>
+        {/* ── Upcoming sessions ── */}
+        <section id="sessions" style={{ scrollMarginTop: "90px" }}>
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-2xl font-black text-gray-900">{t("upcomingTitle")}</h2>
+              <p className="text-sm text-gray-400 mt-0.5">
+                {upcoming.length > 0
+                  ? `${upcoming.length} ${t("upcomingSubOpen")}`
+                  : t("upcomingSubEmpty")}
+              </p>
+            </div>
+            {upcoming.length > 0 && (
+              <a href="/sessions" className="hidden sm:flex items-center gap-1 text-sm font-bold text-indigo-600 hover:underline">
+                {t("calendarView")} <ChevronRight size={14} />
+              </a>
+            )}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {([
-              { step: "01", icon: "🗓️", title: t("step1Title"), desc: t("step1Desc") },
-              { step: "02", icon: "✅", title: t("step2Title"), desc: t("step2Desc") },
-              { step: "03", icon: "⭐", title: t("step3Title"), desc: t("step3Desc") },
-            ] as const).map(({ step, icon, title, desc }) => (
-              <div key={step} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-3 relative overflow-hidden">
-                <span className="absolute top-4 right-5 text-4xl font-black text-gray-100 select-none leading-none">{step}</span>
-                <span className="text-2xl">{icon}</span>
-                <p className="font-black text-gray-900 text-base">{title}</p>
-                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+
+          {upcoming.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {upcoming.map(s => <SessionCard key={s.id} session={s} locale={locale} t={t} />)}
               </div>
-            ))}
-          </div>
+              <div className="mt-4 text-center">
+                <a href="/sessions" className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:underline">
+                  {t("seeAllSessions")} <ChevronRight size={14} />
+                </a>
+              </div>
+            </>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-gray-300 bg-white py-16 px-8 text-center flex flex-col items-center gap-4">
+              <span className="text-5xl">♟</span>
+              <div>
+                <p className="text-base font-bold text-gray-600">{t("emptyTitle")}</p>
+                <p className="text-sm text-gray-400 mt-1 max-w-sm mx-auto">{t("emptyDesc")}</p>
+              </div>
+              {plan && (
+                <div className="mt-2 flex flex-col items-center gap-3">
+                  <HomeSubscribeButton planId={plan.id} discountPercent={plan.discount_percent} />
+                  {plan && (
+                    <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                      <Crown size={11} className="text-yellow-500" />
+                      {locale === "zh"
+                        ? `會員每堂課享 ${plan.discount_percent}% 折扣`
+                        : `Members save ${plan.discount_percent}% on every session`}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* ── Testimonials ── */}
-        <section>
+        <section id="testimonials" style={{ scrollMarginTop: "90px" }}>
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-black text-gray-900">{t("testimonialsTitle")}</h2>
             <p className="text-sm text-gray-500 mt-1">{t("testimonialsSub")}</p>
@@ -350,101 +414,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
           </div>
         </section>
 
-        {/* ── Upcoming sessions ── */}
-        <section>
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2 className="text-2xl font-black text-gray-900">{t("upcomingTitle")}</h2>
-              <p className="text-sm text-gray-400 mt-0.5">
-                {upcoming.length > 0
-                  ? locale === "zh"
-                    ? `${upcoming.length} ${t("upcomingSubOpen")}`
-                    : `${upcoming.length} ${t("upcomingSubOpen")}`
-                  : t("upcomingSubEmpty")}
-              </p>
-            </div>
-            {upcoming.length > 0 && (
-              <a href="/sessions" className="hidden sm:flex items-center gap-1 text-sm font-bold text-indigo-600 hover:underline">
-                {t("calendarView")} <ChevronRight size={14} />
-              </a>
-            )}
-          </div>
-
-          {upcoming.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {upcoming.map(s => <SessionCard key={s.id} session={s} locale={locale} t={t} />)}
-              </div>
-              <div className="mt-4 text-center">
-                <a href="/sessions" className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:underline">
-                  {t("seeAllSessions")} <ChevronRight size={14} />
-                </a>
-              </div>
-            </>
-          ) : (
-            <div className="rounded-2xl border border-dashed border-gray-300 bg-white py-16 px-8 text-center flex flex-col items-center gap-4">
-              <span className="text-5xl">♟</span>
-              <div>
-                <p className="text-base font-bold text-gray-600">{t("emptyTitle")}</p>
-                <p className="text-sm text-gray-400 mt-1 max-w-sm mx-auto">{t("emptyDesc")}</p>
-              </div>
-              {plan && <div className="mt-2"><HomeSubscribeButton planId={plan.id} discountPercent={plan.discount_percent} /></div>}
-            </div>
-          )}
-        </section>
-
-        {/* ── Membership ── */}
-        {plan && (
-          <section className="rounded-3xl overflow-hidden" style={{ background: "linear-gradient(135deg,#4F46E5,#7C3AED)" }}>
-            <div className="p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-8">
-              <div className="flex-1 flex flex-col gap-3">
-                <div className="flex items-center gap-2">
-                  <Crown size={18} className="text-yellow-300" />
-                  <span className="text-xs font-black text-yellow-300 uppercase tracking-widest">{t("membersBadge")}</span>
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-                  {locale === "zh"
-                    ? `每堂課享 ${plan.discount_percent}% 折扣`
-                    : `Save ${plan.discount_percent}% ${t("membersSaveLabel")}`}
-                </h3>
-                <ul className="flex flex-col gap-1.5 text-sm text-indigo-200">
-                  {[t("benefit1"), t("benefit2"), t("benefit3")].map(item => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="text-indigo-300 mt-0.5">✓</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex flex-col items-start sm:items-end gap-3 shrink-0">
-                <HomeSubscribeButton planId={plan.id} discountPercent={plan.discount_percent} />
-                <p className="text-xs text-indigo-300">{t("cancelAnytime")}</p>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ── Rewards ── */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-black text-gray-900">{t("rewardsTitle")}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t("rewardsSub")}</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { icon: "⭐", color: "bg-amber-50 border-amber-200", labelColor: "text-amber-700", title: t("xpTitle"), desc: t("xpDesc") },
-              { icon: "💎", color: "bg-violet-50 border-violet-200", labelColor: "text-violet-700", title: t("gemsTitle"), desc: t("gemsDesc") },
-              { icon: "🪙", color: "bg-yellow-50 border-yellow-200", labelColor: "text-yellow-700", title: t("coinsTitle"), desc: t("coinsDesc") },
-            ].map(({ icon, color, labelColor, title, desc }) => (
-              <div key={title} className={`rounded-2xl border p-6 flex flex-col gap-3 ${color}`}>
-                <span className="text-3xl">{icon}</span>
-                <p className={`font-black text-sm ${labelColor}`}>{title}</p>
-                <p className="text-sm text-gray-600 leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* ── Coaches ── */}
         {coaches.length > 0 && (
           <section>
@@ -459,7 +428,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         )}
 
         {/* ── FAQ ── */}
-        <section>
+        <section id="faq" style={{ scrollMarginTop: "90px" }}>
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
             <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>

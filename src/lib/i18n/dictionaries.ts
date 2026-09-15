@@ -78,6 +78,12 @@ const zh = {
   footerBook: "預約課程",
   footerBookings: "我的報名",
 
+  // ── Anchor nav ──────────────────────────────────────────────────────────────
+  navWhyChess: "為什麼學棋",
+  navSessions: "近期課程",
+  navTestimonials: "家長評價",
+  navFaq: "常見問題",
+
   // ── English callout ─────────────────────────────────────────────────────────
   englishBadge: "🇬🇧 全英語授課",
   englishCalloutTitle: "全英語教學環境",
@@ -310,6 +316,12 @@ const en: typeof zh = {
   // Footer
   footerBook: "Book a Session",
   footerBookings: "My Bookings",
+
+  // ── Anchor nav ──────────────────────────────────────────────────────────────
+  navWhyChess: "Why Chess",
+  navSessions: "Sessions",
+  navTestimonials: "Reviews",
+  navFaq: "FAQ",
 
   // ── English callout ─────────────────────────────────────────────────────────
   englishBadge: "🇬🇧 Taught in English",
