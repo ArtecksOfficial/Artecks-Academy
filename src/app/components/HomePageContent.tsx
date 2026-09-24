@@ -233,12 +233,12 @@ export default function HomePageContent({ sessions, provider }: Props) {
         <div aria-hidden="true" style={{
           position: "absolute", inset: 0,
           backgroundImage: `url(https://images.pexels.com/photos/39191114/pexels-photo-39191114.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
-          backgroundSize: "cover", backgroundPosition: "center 70%", opacity: 0.45,
+          backgroundSize: "cover", backgroundPosition: "center 70%", opacity: 0.72,
         }} />
         {/* Gradient overlay */}
         <div aria-hidden="true" style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, rgba(10,8,24,0.92) 0%, rgba(49,46,129,0.55) 60%, rgba(10,8,24,0.75) 100%)",
+          background: "linear-gradient(135deg, rgba(10,8,24,0.55) 0%, rgba(49,46,129,0.30) 60%, rgba(10,8,24,0.45) 100%)",
         }} />
         {/* Accent glow */}
         <div aria-hidden="true" style={{
