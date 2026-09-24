@@ -506,10 +506,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
             <span className="font-bold text-gray-500">Artecks Academy</span>
             <span>· Linkou, New Taipei</span>
           </div>
-          <div className="flex items-center gap-4">
-            <a href="/sessions" className="hover:text-indigo-600 transition-colors font-medium">{t("footerBook")}</a>
-            <a href="/bookings/mine" className="hover:text-indigo-600 transition-colors font-medium">{t("footerBookings")}</a>
-          </div>
+
         </footer>
 
       </div>
