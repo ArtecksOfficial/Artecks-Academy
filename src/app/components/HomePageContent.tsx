@@ -185,7 +185,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
     { label: locale === "zh" ? "首頁" : "Home", id: "home" },
     { label: locale === "zh" ? "概覽" : "Overview", id: "overview" },
     { label: t("navWhyChess"), id: "why-chess" },
-    { label: t("navSessions"), id: "sessions" },
     { label: t("navTestimonials"), id: "testimonials" },
     { label: locale === "zh" ? "聯絡我們" : "Contacts", id: "line-contact" },
     { label: t("navFaq"), id: "faq" },
@@ -420,59 +419,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
               ))}
             </div>
           </div>
-        </section>
-
-        {/* ── Upcoming sessions ── */}
-        <section id="sessions" style={{ scrollMarginTop: "120px" }}>
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2 className="text-2xl font-black text-gray-900">{t("upcomingTitle")}</h2>
-              <p className="text-sm text-gray-400 mt-0.5">
-                {upcoming.length > 0
-                  ? `${upcoming.length} ${t("upcomingSubOpen")}`
-                  : t("upcomingSubEmpty")}
-              </p>
-            </div>
-            {upcoming.length > 0 && (
-              <a href="/sessions" className="hidden sm:flex items-center gap-1 text-sm font-bold text-indigo-600 hover:underline">
-                {t("calendarView")} <ChevronRight size={14} />
-              </a>
-            )}
-          </div>
-
-          {upcoming.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {upcoming.map(s => <SessionCard key={s.id} session={s} locale={locale} t={t} />)}
-              </div>
-              <div className="mt-4 text-center">
-                <a href="/sessions" className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 hover:underline">
-                  {t("seeAllSessions")} <ChevronRight size={14} />
-                </a>
-              </div>
-            </>
-          ) : (
-            <div className="rounded-2xl border border-dashed border-gray-300 bg-white py-16 px-8 text-center flex flex-col items-center gap-4">
-              <span className="text-5xl">♟</span>
-              <div>
-                <p className="text-base font-bold text-gray-600">{t("emptyTitle")}</p>
-                <p className="text-sm text-gray-400 mt-1 max-w-sm mx-auto">{t("emptyDesc")}</p>
-              </div>
-              {plan && (
-                <div className="mt-2 flex flex-col items-center gap-3">
-                  <HomeSubscribeButton planId={plan.id} discountPercent={plan.discount_percent} />
-                  {plan && (
-                    <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                      <Crown size={11} className="text-yellow-500" />
-                      {locale === "zh"
-                        ? `會員每堂課享 ${plan.discount_percent}% 折扣`
-                        : `Members save ${plan.discount_percent}% on every class`}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
         </section>
 
         {/* ── Testimonials ── */}
