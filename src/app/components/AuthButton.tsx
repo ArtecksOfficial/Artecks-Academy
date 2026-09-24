@@ -13,9 +13,10 @@ interface WalletData {
 interface Props {
   /** "dark" = used on dark hero headers; "light" = used on white bg headers */
   variant?: "dark" | "light";
+  locale?: string;
 }
 
-export default function AuthButton({ variant = "light" }: Props) {
+export default function AuthButton({ variant = "light", locale = "en" }: Props) {
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
   const [wallet, setWallet] = useState<WalletData | null>(null);
@@ -23,6 +24,7 @@ export default function AuthButton({ variant = "light" }: Props) {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const dark = variant === "dark";
+  const zh = locale === "zh";
 
   // Fetch wallet when user is logged in
   useEffect(() => {
@@ -71,13 +73,13 @@ export default function AuthButton({ variant = "light" }: Props) {
               : "text-gray-600 hover:text-indigo-600 border border-gray-200 hover:border-indigo-200"
           }`}
         >
-          Log in
+          {zh ? "登入" : "Log in"}
         </button>
         <button
           onClick={() => router.push("/signup")}
           className="text-xs font-bold bg-indigo-500 hover:bg-indigo-400 text-white px-3 py-1.5 rounded-full transition-colors"
         >
-          Sign up
+          {zh ? "註冊" : "Sign up"}
         </button>
       </div>
     );
@@ -123,7 +125,7 @@ export default function AuthButton({ variant = "light" }: Props) {
         {menuOpen && (
           <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-xl py-1 z-50">
             <div className="px-4 py-2 border-b border-gray-100">
-              <p className="text-xs text-gray-400">Signed in as</p>
+              <p className="text-xs text-gray-400">{zh ? "已登入" : "Signed in as"}</p>
               <p className="text-sm text-gray-800 font-semibold truncate">{user.email}</p>
             </div>
             {user.account_id && (
@@ -142,7 +144,7 @@ export default function AuthButton({ variant = "light" }: Props) {
               onClick={() => setMenuOpen(false)}
               className="block px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 transition-colors"
             >
-              My Bookings
+              {zh ? "我的預約" : "My Bookings"}
             </a>
             <button
               onClick={async () => {
@@ -152,7 +154,7 @@ export default function AuthButton({ variant = "light" }: Props) {
               }}
               className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors"
             >
-              Sign out
+              {zh ? "登出" : "Sign out"}
             </button>
           </div>
         )}

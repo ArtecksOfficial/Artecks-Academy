@@ -206,7 +206,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
               <span className="font-semibold text-indigo-600">{t("locationLabel")}</span>
             </div>
             <LanguageToggle />
-            <AuthButton />
+            <AuthButton locale={locale} />
           </div>
         </div>
 
@@ -332,7 +332,9 @@ export default function HomePageContent({ sessions, provider }: Props) {
               <p className="text-sm text-amber-100/80 leading-relaxed max-w-xl">{t("trialSub")}</p>
             </div>
             <a
-              href="/sessions"
+              href="https://line.me/R/ti/g/wFsD8CkSGR"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex-shrink-0 inline-flex items-center gap-2 font-black text-sm px-6 py-3.5 rounded-xl transition-all whitespace-nowrap"
               style={{ background: "linear-gradient(135deg,#f59e0b,#d97706)", color: "#fff", boxShadow: "0 8px 24px rgba(245,158,11,0.4)" }}
             >
