@@ -313,7 +313,7 @@ const en: typeof zh = {
   // Hero
   heroTitle1: "English-Immersion Chess",
   heroTitle2: "Kids Actually Love.",
-  heroCta: "Browse Sessions",
+  heroCta: "Browse Classes",
   heroSubscribe: "Subscribe",
 
   // Location pill
@@ -328,21 +328,21 @@ const en: typeof zh = {
   // How it works
   howItWorksTitle: "How it works",
   howItWorksSub: "Three steps from curious to playing",
-  step1Title: "Pick a session",
+  step1Title: "Pick a class",
   step1Desc: "Browse upcoming chess lessons and enrichment events. Filter by age group, date, or coach.",
   step2Title: "Book your spot",
-  step2Desc: "Reserve with your name and contact info. Members get priority access and discounts on every session.",
+  step2Desc: "Reserve with your name and contact info. Members get priority access and discounts on every class.",
   step3Title: "Show up & earn",
-  step3Desc: "Attend the session and your child earns XP and gems on the Artecks platform — automatically.",
+  step3Desc: "Attend the class and your child earns XP and gems on the Artecks platform — automatically.",
 
   // Sessions section
-  upcomingTitle: "Upcoming Sessions",
-  upcomingSubOpen: "sessions open to book",
-  upcomingSubEmpty: "Check back soon — new sessions added weekly",
-  seeAllSessions: "See all sessions & calendar",
+  upcomingTitle: "Upcoming Classes",
+  upcomingSubOpen: "classes open to book",
+  upcomingSubEmpty: "Check back soon — new classes added weekly",
+  seeAllSessions: "See all classes & calendar",
   calendarView: "Calendar view",
   emptyTitle: "Next cohort forming — spots limited",
-  emptyDesc: "Join the waitlist to be first in line when booking opens. Members get priority access and a discount on every session.",
+  emptyDesc: "Join the waitlist to be first in line when booking opens. Members get priority access and a discount on every class.",
 
   // Session card status
   statusFull: "Full",
@@ -354,7 +354,7 @@ const en: typeof zh = {
 
   // Membership section
   membersBadge: "Artecks Members",
-  membersSaveLabel: "on every session.",
+  membersSaveLabel: "on every class.",
   benefit1: "Priority booking — your spot is held first",
   benefit2: "Member-only events and workshops",
   benefit3: "Discount applied automatically at checkout",
@@ -362,9 +362,9 @@ const en: typeof zh = {
 
   // Rewards
   rewardsTitle: "Built-in Rewards",
-  rewardsSub: "Every session earns your child currency on the Artecks platform",
+  rewardsSub: "Every class earns your child currency on the Artecks platform",
   xpTitle: "XP — Progress",
-  xpDesc: "Earned automatically every session. Tracks your child's journey and determines their Artecks level.",
+  xpDesc: "Earned automatically every class. Tracks your child's journey and determines their Artecks level.",
   gemsTitle: "Gems — Premium",
   gemsDesc: "Earned through milestones and class attendance. Spent on premium features across Artecks games.",
   coinsTitle: "Coins — Everyday",
@@ -373,22 +373,22 @@ const en: typeof zh = {
   // Coaches
   coachesTitle: "Meet the Coaches",
   coachesSub: "All coaches are trained and vetted by Artecks",
-  viewSessions: "View sessions",
+  viewSessions: "View classes",
 
   // Static coach spotlight
   coachSpotlightTitle: "Meet Your Coach",
   coachSpotlightName: "Issac Chang",
   coachSpotlightCredential: "Founder, Artecks Academy · English-Instruction Coach",
-  coachSpotlightBio: "Issac combines a passion for chess with a belief that the board is the best tool for building critical thinking in kids. Every session is conducted entirely in English — so children level up in chess and language at the same time.",
+  coachSpotlightBio: "Issac combines a passion for chess with a belief that the board is the best tool for building critical thinking in kids. Every class is conducted entirely in English — so children level up in chess and language at the same time.",
 
   // Footer
-  footerBook: "Book a Session",
+  footerBook: "Book a Class",
   footerBookings: "My Bookings",
 
   // ── Trial CTA ───────────────────────────────────────────────────────────────
   trialBadge: "Free Trial",
   trialTitle: "Not sure yet? Try one class.",
-  trialSub: "One free 60-minute trial lesson. Your child will learn to checkmate an opponent before the session ends. No pressure, no commitment.",
+  trialSub: "One free 60-minute trial lesson. Your child will learn to checkmate an opponent before the class ends. No pressure, no commitment.",
   trialCta: "Book a Free Trial",
 
   // ── Skill roadmap ───────────────────────────────────────────────────────────
@@ -413,7 +413,7 @@ const en: typeof zh = {
 
   // ── Anchor nav ──────────────────────────────────────────────────────────────
   navWhyChess: "Benefits",
-  navSessions: "Sessions",
+  navSessions: "Classes",
   navTestimonials: "Reviews",
   navFaq: "FAQ",
 
@@ -442,7 +442,7 @@ const en: typeof zh = {
   whyChess5Desc: "Performing under time pressure and real stakes teaches kids to stay calm and focused when it counts most.",
   whyChess6Icon: "🗣️",
   whyChess6Title: "English Immersion",
-  whyChess6Desc: "All sessions are taught entirely in English. Chess vocabulary becomes natural spoken language — learning two skills at once.",
+  whyChess6Desc: "All classes are taught entirely in English. Chess vocabulary becomes natural spoken language — learning two skills at once.",
 
   // ── Testimonials ─────────────────────────────────────────────────────────────
   testimonialsTitle: "What Linkou Parents Say",
@@ -450,7 +450,7 @@ const en: typeof zh = {
   testimonial1Quote: "My son was too shy to speak English. After two months here, he's explaining chess moves and asking questions confidently in English. It's been remarkable.",
   testimonial1Name: "Sarah L.",
   testimonial1Role: "Parent of an 8-year-old",
-  testimonial2Quote: "The small group size is what sold us. The coach actually knows my daughter's weaknesses and works on them every single session.",
+  testimonial2Quote: "The small group size is what sold us. The coach actually knows my daughter's weaknesses and works on them every single class.",
   testimonial2Name: "Kevin C.",
   testimonial2Role: "Parent of a 6-year-old",
   testimonial3Quote: "We tried a big cram school chess class and it felt like babysitting. Here the coach is structured, passionate, and my son makes visible progress every week.",
@@ -462,7 +462,7 @@ const en: typeof zh = {
   testimonial5Quote: "My shy daughter started analyzing positions out loud after just a few lessons. The confidence boost is real.",
   testimonial5Name: "Jason H.",
   testimonial5Role: "Parent of 9-year-old",
-  testimonial6Quote: "My son was hooked after the first trial class. The coach is incredibly patient and he looks forward to every session.",
+  testimonial6Quote: "My son was hooked after the first trial class. The coach is incredibly patient and he looks forward to every class.",
   testimonial6Name: "Linda C.",
   testimonial6Role: "Parent of 6-year-old",
   testimonial7Quote: "Chess here has taught my son to slow down and think. His focus during homework has improved noticeably.",
@@ -482,10 +482,10 @@ const en: typeof zh = {
   faqTitle: "Parent FAQ",
   faqSub: "Common questions from Linkou families",
   faq1Q: "Is the entire lesson conducted in English?",
-  faq1A: "Yes. Our coaches teach every session 100% in English. We use chess as the medium for natural English acquisition — no translation, no code-switching.",
+  faq1A: "Yes. Our coaches teach every class 100% in English. We use chess as the medium for natural English acquisition — no translation, no code-switching.",
   faq2Q: "What age is ideal to start?",
   faq2A: "We welcome kids from age 5 and up. Beginners at any age are warmly received — most students start with zero experience.",
-  faq3Q: "How many students per session?",
+  faq3Q: "How many students per class?",
   faq3A: "We keep groups small — typically 4 to 8 students per coach — so your child gets real, personalised attention every class.",
   faq4Q: "Does my child need their own chess set?",
   faq4A: "Not at all. We provide everything at the venue. If your child wants to practise at home, we're happy to recommend a set.",

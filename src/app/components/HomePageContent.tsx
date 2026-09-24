@@ -306,7 +306,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
           {[
             { icon: "♟", stat: locale === "zh" ? "專業教練" : "Expert Coaches", sub: locale === "zh" ? "Artecks 認證" : "Artecks Certified" },
             { icon: "🧒", stat: locale === "zh" ? "5 歲以上" : "Ages 5 & Up", sub: locale === "zh" ? "從零開始" : "Absolute beginners welcome" },
-            { icon: "👥", stat: locale === "zh" ? "小班教學" : "Max 8 Students", sub: locale === "zh" ? "每位教練最多 8 人" : "Per coach, every session" },
+            { icon: "👥", stat: locale === "zh" ? "小班教學" : "Max 8 Students", sub: locale === "zh" ? "每位教練最多 8 人" : "Per coach, every class" },
             { icon: "🇬🇧", stat: locale === "zh" ? "全英語授課" : "100% English", sub: locale === "zh" ? "林口唯一英語棋課" : "Only English chess in Linkou" },
           ].map(({ icon, stat, sub }) => (
             <div key={stat} className="bg-white rounded-2xl border border-gray-200 px-4 py-4 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow">
@@ -466,7 +466,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
                       <Crown size={11} className="text-yellow-500" />
                       {locale === "zh"
                         ? `會員每堂課享 ${plan.discount_percent}% 折扣`
-                        : `Members save ${plan.discount_percent}% on every session`}
+                        : `Members save ${plan.discount_percent}% on every class`}
                     </div>
                   )}
                 </div>
