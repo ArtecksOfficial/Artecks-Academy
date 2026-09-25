@@ -6,7 +6,6 @@ import { MapPin, Clock, Users, Crown, ArrowRight, ChevronRight, ChevronDown } fr
 import { useState } from "react";
 import type { AcademySession, Coach, Provider } from "@/lib/types";
 import HomeSubscribeButton from "./HomeSubscribeButton";
-import AuthButton from "./AuthButton";
 import { useLanguage, LanguageToggle } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 
@@ -206,7 +205,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
               <span className="font-semibold text-indigo-600">{t("locationLabel")}</span>
             </div>
             <LanguageToggle />
-            <AuthButton locale={locale} />
+
           </div>
         </div>
 
