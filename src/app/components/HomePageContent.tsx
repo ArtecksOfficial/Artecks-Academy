@@ -272,16 +272,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </p>
           </div>
 
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center gap-3">
-            <a href="/sessions"
-              className="inline-flex items-center gap-2 text-sm font-black px-7 py-3.5 rounded-xl transition-all shadow-xl"
-              style={{ background: "linear-gradient(135deg,#6366f1,#4f46e5)", color: "#fff", boxShadow: "0 8px 32px rgba(99,102,241,0.45)" }}>
-              {t("heroCta")} <ArrowRight size={15} />
-            </a>
-            {plan && <HomeSubscribeButton planId={plan.id} discountPercent={plan.discount_percent} />}
-          </div>
-
           {/* Social proof bar */}
           <div className="flex flex-wrap items-center gap-4 pt-2">
             {[
