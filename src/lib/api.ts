@@ -14,18 +14,28 @@ function revalidation() {
 // ── Sessions ──────────────────────────────────────────────────────────────────
 
 export async function fetchSessions(): Promise<AcademySession[]> {
-  const res = await fetch(`${BASE}/sessions/`, revalidation());
-  if (!res.ok) {
-    console.error("[api] fetchSessions failed", res.status, await res.text());
+  try {
+    const res = await fetch(`${BASE}/sessions/`, revalidation());
+    if (!res.ok) {
+      console.error("[api] fetchSessions failed", res.status, await res.text());
+      return [];
+    }
+    return res.json();
+  } catch (err) {
+    console.warn("[api] fetchSessions unreachable:", err instanceof Error ? err.message : String(err));
     return [];
   }
-  return res.json();
 }
 
 export async function fetchSession(id: string | number): Promise<AcademySession | null> {
-  const res = await fetch(`${BASE}/sessions/${id}/`, revalidation());
-  if (!res.ok) return null;
-  return res.json();
+  try {
+    const res = await fetch(`${BASE}/sessions/${id}/`, revalidation());
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    console.warn("[api] fetchSession unreachable:", err instanceof Error ? err.message : String(err));
+    return null;
+  }
 }
 
 // ── Bookings ──────────────────────────────────────────────────────────────────
@@ -129,12 +139,17 @@ export async function createSubscriptionCheckout(
 export async function fetchBookingReport(
   bookingId: string | number
 ): Promise<BookingReport | null> {
-  const res = await fetch(
-    `${BASE}/bookings/${bookingId}/report/`,
-    revalidation()
-  );
-  if (!res.ok) return null;
-  return res.json();
+  try {
+    const res = await fetch(
+      `${BASE}/bookings/${bookingId}/report/`,
+      revalidation()
+    );
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    console.warn("[api] fetchBookingReport unreachable:", err instanceof Error ? err.message : String(err));
+    return null;
+  }
 }
 
 // ── My Bookings ───────────────────────────────────────────────────────────────
