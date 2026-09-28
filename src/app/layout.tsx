@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
+import PageViewTracker from '@/components/PageViewTracker'
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -32,6 +33,7 @@ export default function RootLayout({
         className={`${jakarta.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
+      <Suspense fallback={null}><PageViewTracker /></Suspense>
         <AuthProvider>
           <LanguageProvider>{children}</LanguageProvider>
         </AuthProvider>
