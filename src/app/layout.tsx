@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
 import PageViewTracker from '@/components/PageViewTracker'
+import { Analytics } from '@vercel/analytics/next';
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -37,6 +39,7 @@ export default function RootLayout({
         <AuthProvider>
           <LanguageProvider>{children}</LanguageProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
