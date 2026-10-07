@@ -7,6 +7,8 @@ import { Loader2, CheckCircle, AlertCircle, MapPin, ChevronRight } from "lucide-
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { bookSession, type BookingState, type ContactMethod } from "./actions";
 
+// LINE Pay stays hidden until the merchant review is approved and keys are set on the backend.
+const LINEPAY_ENABLED = process.env.NEXT_PUBLIC_LINEPAY_ENABLED === "true";
 
 interface Session {
   id: string | number;
@@ -124,26 +126,6 @@ function ConfirmationScreen({
 
         {/* Payment buttons */}
         <div className="px-6 py-4 flex flex-col gap-3">
-          {/* Stripe — card / PayPal */}
-          <a
-            href={`/api/pay/${bookingId}`}
-            className="flex items-center justify-center gap-2 w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-3.5 text-sm font-bold text-white shadow-md shadow-indigo-200 active:scale-95 transition-all"
-          >
-            Pay Now (Card / PayPal)
-          </a>
-
-          {/* LINE Pay */}
-          <a
-            href={`/api/pay/linepay/${bookingId}`}
-            className="flex items-center justify-center gap-2 w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-sm active:scale-95 transition-all"
-            style={{ backgroundColor: "#06C755" }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
-            </svg>
-            LINE Pay
-          </a>
-
           {/* ECPay */}
           <a
             href={`/api/pay/ecpay/${bookingId}`}
@@ -152,6 +134,19 @@ function ConfirmationScreen({
           >
             台灣在地支付 (信用卡 / ATM / 行動支付)
           </a>
+          {/* LINE Pay — shown only once the merchant account is live (NEXT_PUBLIC_LINEPAY_ENABLED=true) */}
+          {LINEPAY_ENABLED && (
+            <a
+              href={`/api/pay/linepay/${bookingId}`}
+              className="flex items-center justify-center gap-2 w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-sm active:scale-95 transition-all"
+              style={{ backgroundColor: "#06C755" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
+              </svg>
+              LINE Pay
+            </a>
+          )}
         </div>
 
         {/* Booking ref + report link */}
