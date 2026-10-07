@@ -2,7 +2,7 @@
 // ─── HomePageContent ──────────────────────────────────────────────────────────
 // Client component — receives server-fetched data and renders with live i18n.
 
-import { MapPin, Clock, Users, Crown, ArrowRight, ChevronRight, ChevronDown } from "lucide-react";
+import { MapPin, Clock, Users, Crown, ChevronRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import type { AcademySession, Coach, Provider } from "@/lib/types";
 import HomeSubscribeButton from "./HomeSubscribeButton";
@@ -304,33 +304,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </div>
           ))}
         </div>
-
-        {/* ── Trial CTA ── */}
-        <section className="rounded-3xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #451a03 0%, #78350f 100%)" }}>
-          <div aria-hidden="true" style={{
-            position: "absolute", top: "-80px", left: "-80px", width: "400px", height: "400px",
-            background: "radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%)", pointerEvents: "none",
-          }} />
-          <div className="relative p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="text-6xl flex-shrink-0 select-none">♟</div>
-            <div className="flex flex-col gap-3 flex-1">
-              <span className="text-xs font-bold text-amber-400 bg-amber-900/50 border border-amber-700/50 px-2.5 py-1 rounded-full w-fit uppercase tracking-wide">
-                {t("trialBadge")}
-              </span>
-              <h3 className="text-2xl font-black text-white">{t("trialTitle")}</h3>
-              <p className="text-sm text-amber-100/80 leading-relaxed max-w-xl">{t("trialSub")}</p>
-            </div>
-            <a
-              href="https://line.me/R/ti/g/wFsD8CkSGR"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 inline-flex items-center gap-2 font-black text-sm px-6 py-3.5 rounded-xl transition-all whitespace-nowrap"
-              style={{ background: "linear-gradient(135deg,#f59e0b,#d97706)", color: "#fff", boxShadow: "0 8px 24px rgba(245,158,11,0.4)" }}
-            >
-              {t("trialCta")} <ArrowRight size={14} />
-            </a>
-          </div>
-        </section>
 
         {/* ── English Callout ── */}
         <section className="rounded-3xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)" }}>
