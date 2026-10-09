@@ -603,7 +603,7 @@ const en: typeof zh = {
   lineClubLabel: "♟ Chess Club",
   lineClubDesc: "Class announcements, student updates, tournament news",
   linePrivateLabel: "👤 Private Lessons",
-  linePrivateDesc: "One-on-one scheduling, lesson planning, pricing enquiries",
+  linePrivateDesc: "Scheduling, lesson planning, pricing enquiries",
   lineJoin: "Join Group",
   lineContact: "Contact",
 };
