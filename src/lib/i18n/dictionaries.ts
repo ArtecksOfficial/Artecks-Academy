@@ -191,7 +191,7 @@ const zh = {
   faq5Q: "孩子完全沒接觸過西洋棋沒關係嗎？",
   faq5A: "沒問題！我們大多數學生一開始都是零基礎。課程從最基礎的規則開始，依照每個孩子的進度循序漸進。",
   faq6Q: "課程費用與退費政策是什麼？",
-  faq6A: "1對1或1對2：每位學生 NT$1,200/小時。3人以上小組：每位學生 NT$1,000/小時。預購10堂課可獲贈1堂與創辦人的免費課程。如需退費，我們將退還已繳費用的 50%。",
+  faq6A: "1對1：NT$1,200/小時。1對2：每位學生 NT$1,000/小時。3人以上小組：每位學生 NT$800/小時。預購10堂課套餐可獲贈1堂與創辦人的里程碑課程。如需退費，我們將退還已繳費用的 50%。",
 
   // ── Session landing page ───────────────────────────────────────────────────
   sessionDetails: "課程詳情",
@@ -495,7 +495,7 @@ const en: typeof zh = {
   faq5Q: "What if my child has never touched a chess piece?",
   faq5A: "Most of our students start with zero experience. Our curriculum begins from the very basics and progresses at each child's individual pace.",
   faq6Q: "What are your prices and refund policy?",
-  faq6A: "1-on-1 or 1-on-2: NT$1,200/hour per student. Groups of 3 or more: NT$1,000/hour per student. Purchase 10 classes and receive a complimentary session with our founder. For refunds, we return 50% of the amount paid.",
+  faq6A: "1-on-1: NT$1,200/hour. 1-on-2: NT$1,000/hour per student. Groups of 3 or more: NT$800/hour per student. Purchase a 10-class package and receive a complimentary milestone session with our founder. For refunds, we return 50% of the amount paid.",
 
   // ── Session landing page ───────────────────────────────────────────────────
   sessionDetails: "Session Details",
