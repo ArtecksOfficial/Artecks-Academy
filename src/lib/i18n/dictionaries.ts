@@ -190,6 +190,8 @@ const zh = {
   faq4A: "完全不需要。課程現場提供所有器材。若孩子想在家練習，我們很樂意推薦合適的棋組。",
   faq5Q: "孩子完全沒接觸過西洋棋沒關係嗎？",
   faq5A: "沒問題！我們大多數學生一開始都是零基礎。課程從最基礎的規則開始，依照每個孩子的進度循序漸進。",
+  faq6Q: "可以退費嗎？",
+  faq6A: "若需要退費，我們將退還已繳費用的 50%。",
 
   // ── Session landing page ───────────────────────────────────────────────────
   sessionDetails: "課程詳情",
@@ -492,6 +494,8 @@ const en: typeof zh = {
   faq4A: "Not at all. We provide everything at the venue. If your child wants to practise at home, we're happy to recommend a set.",
   faq5Q: "What if my child has never touched a chess piece?",
   faq5A: "Most of our students start with zero experience. Our curriculum begins from the very basics and progresses at each child's individual pace.",
+  faq6Q: "What is your refund policy?",
+  faq6A: "If you need a refund, we return 50% of the amount paid.",
 
   // ── Session landing page ───────────────────────────────────────────────────
   sessionDetails: "Session Details",
