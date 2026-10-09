@@ -303,6 +303,7 @@ const zh = {
   linePrivateLabel: "👤 私人課程諮詢",
   linePrivateDesc: "一對一排課、課程規劃、費用詢問",
   lineJoin: "加入群組",
+  lineContact: "聯絡我們",
 };
 
 const en: typeof zh = {
@@ -604,6 +605,7 @@ const en: typeof zh = {
   linePrivateLabel: "👤 Private Lessons",
   linePrivateDesc: "One-on-one scheduling, lesson planning, pricing enquiries",
   lineJoin: "Join Group",
+  lineContact: "Contact",
 };
 
 export const dictionaries = { zh, en } satisfies Record<Locale, Record<string, string>>;
