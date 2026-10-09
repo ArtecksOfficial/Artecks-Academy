@@ -191,7 +191,7 @@ const zh = {
   faq5Q: "孩子完全沒接觸過西洋棋沒關係嗎？",
   faq5A: "沒問題！我們大多數學生一開始都是零基礎。課程從最基礎的規則開始，依照每個孩子的進度循序漸進。",
   faq6Q: "課程費用與套餐方案是什麼？",
-  faq6A: "1對1：NT$1,200/小時。1對2：每位學生 NT$1,000/小時。3人以上小組：每位學生 NT$800/小時。5堂課套餐：贈送30分鐘創辦人加課，協助為孩子的下一個套餐安排最適合的教練與班級。10堂課套餐：贈送1小時創辦人加課，進行更深入的評估，為孩子找出最理想的學習安排。",
+  faq6A: "• 1對1：NT$1,200/小時\n• 1對2：每位學生 NT$1,000/小時\n• 3人以上小組：每位學生 NT$800/小時\n\n贈送創辦人加課：\n• 5堂課套餐 ─ 30分鐘，協助為下一套餐安排最合適的教練與班級\n• 10堂課套餐 ─ 1小時深入評估，找出最理想的學習安排",
   faq7Q: "可以退費嗎？",
   faq7A: "退費依剩餘未上課堂數按比例計算，並收取退款金額 10% 的行政處理費用。請注意：套餐所附贈的創辦人加課，於申請退費後將一併取消，恕不保留。",
 
@@ -497,7 +497,7 @@ const en: typeof zh = {
   faq5Q: "What if my child has never touched a chess piece?",
   faq5A: "Most of our students start with zero experience. Our curriculum begins from the very basics and progresses at each child's individual pace.",
   faq6Q: "What are your prices and class packages?",
-  faq6A: "1-on-1: NT$1,200/hour. 1-on-2: NT$1,000/hour per student. Groups of 3 or more: NT$800/hour per student. 5-class package: includes a complimentary 30-minute session with our founder to help identify the best coach and group fit for your child's next package. 10-class package: includes a complimentary 1-hour session with our founder for a more in-depth assessment to find the ideal learning arrangement.",
+  faq6A: "• 1-on-1: NT$1,200/hour\n• 1-on-2: NT$1,000/hour per student\n• Groups of 3 or more: NT$800/hour per student\n\nComplimentary founder sessions:\n• 5-class package — 30-min session to find the best coach and group for your child\'s next package\n• 10-class package — 1-hour in-depth assessment to find the ideal learning arrangement",
   faq7Q: "What is your refund policy?",
   faq7A: "Refunds are prorated based on the number of remaining unattended classes, with a 10% administrative fee applied to the refunded amount. Please note: any complimentary founder sessions included in your package are forfeited upon requesting a refund.",
 

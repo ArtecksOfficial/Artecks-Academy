@@ -143,6 +143,42 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
+
+  const renderAnswer = (text: string) => {
+    const blocks = text.split("\n\n");
+    return blocks.map((block, bi) => {
+      const lines = block.split("\n");
+      const isList = lines.every(l => l.startsWith("• "));
+      if (isList) {
+        return (
+          <ul key={bi} className="list-disc list-inside space-y-1 mt-2">
+            {lines.map((l, li) => (
+              <li key={li}>{l.slice(2)}</li>
+            ))}
+          </ul>
+        );
+      }
+      const mixed = lines.some(l => l.startsWith("• "));
+      if (mixed) {
+        return (
+          <div key={bi} className="mt-2 space-y-1">
+            {lines.map((l, li) =>
+              l.startsWith("• ") ? (
+                <div key={li} className="flex gap-2">
+                  <span className="text-gray-400 flex-shrink-0">•</span>
+                  <span>{l.slice(2)}</span>
+                </div>
+              ) : (
+                <p key={li} className={li > 0 ? "mt-1" : ""}>{l}</p>
+              )
+            )}
+          </div>
+        );
+      }
+      return <p key={bi} className={bi > 0 ? "mt-2" : ""}>{block}</p>;
+    });
+  };
+
   return (
     <div className="border border-gray-200 rounded-2xl bg-white overflow-hidden">
       <button
@@ -157,7 +193,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
       </button>
       {open && (
         <div className="px-6 pb-4">
-          <p className="text-sm text-gray-600 leading-relaxed">{a}</p>
+          <div className="text-sm text-gray-600 leading-relaxed">{renderAnswer(a)}</div>
         </div>
       )}
     </div>
