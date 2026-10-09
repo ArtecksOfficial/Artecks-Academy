@@ -457,6 +457,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
               { qKey: "faq4Q" as DictionaryKey, aKey: "faq4A" as DictionaryKey },
               { qKey: "faq5Q" as DictionaryKey, aKey: "faq5A" as DictionaryKey },
               { qKey: "faq6Q" as DictionaryKey, aKey: "faq6A" as DictionaryKey },
+              { qKey: "faq7Q" as DictionaryKey, aKey: "faq7A" as DictionaryKey },
             ]).map(({ qKey, aKey }) => (
               <FaqItem key={qKey} q={t(qKey)} a={t(aKey)} />
             ))}
