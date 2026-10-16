@@ -1,5 +1,23 @@
 import Link from "next/link";
-import { CheckCircle, XCircle, Crown, Phone } from "lucide-react";
+import { CheckCircle, XCircle, Crown, Phone, Clock } from "lucide-react";
+
+const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
+
+export const dynamic = "force-dynamic";
+
+async function fetchPaymentStatus(bookingId: string): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `${BACKEND}/api/academy/bookings/${bookingId}/payment-status/`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return null;
+    const data: { payment_status?: string } = await res.json();
+    return data.payment_status ?? null;
+  } catch {
+    return null;
+  }
+}
 
 export default async function PaymentResultPage({
   searchParams,
@@ -13,8 +31,11 @@ export default async function PaymentResultPage({
 }) {
   const params = await searchParams;
   const isSubscription = params.subscription === "true";
-  const bookingId = params.booking_id ?? "";
-  const success = params.success === "true";
+  const bookingId = /^\d+$/.test(params.booking_id ?? "") ? params.booking_id! : "";
+  // Never trust ?success=true from the URL — ask the server what was recorded.
+  const paymentStatus = bookingId ? await fetchPaymentStatus(bookingId) : null;
+  const success = paymentStatus === "paid";
+  const pending = paymentStatus === "pending" && params.success !== "false";
   const linkedPhone = params.phone ? decodeURIComponent(params.phone) : null;
 
   // ── Subscription confirmation branch ──────────────────────────────────────
@@ -99,24 +120,34 @@ export default async function PaymentResultPage({
           className={`px-6 py-8 text-center text-white ${
             success
               ? "bg-gradient-to-br from-emerald-500 to-teal-500"
+              : pending
+              ? "bg-gradient-to-br from-amber-500 to-orange-500"
               : "bg-gradient-to-br from-red-500 to-rose-500"
           }`}
         >
           {success ? (
             <CheckCircle size={48} className="mx-auto mb-3" />
+          ) : pending ? (
+            <Clock size={48} className="mx-auto mb-3" />
           ) : (
             <XCircle size={48} className="mx-auto mb-3" />
           )}
           <h1 className="text-xl font-black">
-            {success ? "Payment Confirmed!" : "Payment Not Completed"}
+            {success
+              ? "Payment Confirmed! 付款成功"
+              : pending
+              ? "Payment Processing 付款確認中"
+              : "Payment Not Completed 尚未完成付款"}
           </h1>
           <p
             className={`text-sm mt-1 ${
-              success ? "text-emerald-100" : "text-red-100"
+              success ? "text-emerald-100" : pending ? "text-amber-100" : "text-red-100"
             }`}
           >
             {success
-              ? "Your spot is secured. See you at the session!"
+              ? "Your spot is secured. See you at class!"
+              : pending
+              ? "We haven't received confirmation from the payment provider yet. ATM / convenience-store payments are confirmed after you pay. Refresh this page in a minute, or contact us on LINE."
               : "Your booking is saved — try paying again from your booking details."}
           </p>
         </div>
