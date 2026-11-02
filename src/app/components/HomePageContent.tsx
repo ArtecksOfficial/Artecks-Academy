@@ -233,7 +233,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         <div className="max-w-6xl mx-auto px-3 sm:px-5 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-            <p className="text-sm font-black text-gray-900 leading-none">Linkou Artecks Academy</p>
+            <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">
