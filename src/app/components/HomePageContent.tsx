@@ -307,6 +307,25 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </p>
           </div>
 
+          {/* Primary CTAs — free trial goes straight to the private-lessons LINE account */}
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="https://lin.ee/6cna1xVd"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm sm:text-base font-black text-white bg-[#06C755] hover:bg-[#05b34c] px-6 py-3 rounded-2xl shadow-lg transition-colors"
+            >
+              {t("heroTrialCta")}
+            </a>
+            <a
+              href="/sessions"
+              className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-white bg-white/10 hover:bg-white/20 border border-white/30 px-6 py-3 rounded-2xl transition-colors"
+            >
+              {t("heroCta")}
+            </a>
+          </div>
+          <p className="text-xs text-indigo-200/80 -mt-4">{t("heroTrialNote")}</p>
+
           {/* Social proof bar */}
           <div className="flex flex-wrap items-center gap-4 pt-2">
             {[

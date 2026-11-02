@@ -13,6 +13,8 @@ const zh = {
   heroTitle1: "全英語西洋棋課",
   heroTitle2: "孩子真正愛上學習。",
   heroCta: "瀏覽課程",
+  heroTrialCta: "預約免費體驗課",
+  heroTrialNote: "透過 LINE 聯絡我們，安排一堂免費的全英語西洋棋體驗課。",
   heroSubscribe: "訂閱會員",
 
   // Location pill
@@ -317,6 +319,8 @@ const en: typeof zh = {
   heroTitle1: "English-Immersion Chess",
   heroTitle2: "Kids Actually Love.",
   heroCta: "Browse Classes",
+  heroTrialCta: "Book a Free Trial Class",
+  heroTrialNote: "Message us on LINE to schedule a free English-language chess trial class.",
   heroSubscribe: "Subscribe",
 
   // Location pill
