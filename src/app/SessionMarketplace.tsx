@@ -818,6 +818,9 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
                         </svg>
                         加入棋藝俱樂部 / Join Chess Club
                       </a>
+                      <a href="/request" className="block mt-3 text-xs font-bold text-indigo-600 hover:text-indigo-800">
+                        想要一對一課程？申請私人課程 → / Request private lessons →
+                      </a>
                     </div>
                   )}
                   <p className="text-[11px] text-gray-400 text-center mt-4">Asia/Taipei timezone</p>

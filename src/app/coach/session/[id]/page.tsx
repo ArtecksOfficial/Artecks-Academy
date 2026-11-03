@@ -1,17 +1,8 @@
-// ─── Coach Cockpit — Redirects to Django Admin ────────────────────────────────
-// The coach cockpit has been migrated to Django admin.
-// Lesson reports and attendance are managed via artecks.com/admin/academy/
-
+// Old coach cockpit link (used to redirect to Django admin, which required
+// staff access and exposed every family's contact details). Coaches now use
+// the scoped /coach dashboard.
 import { redirect } from "next/navigation";
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function CoachSessionPage({ params }: PageProps) {
-  const { id } = await params;
-  // Redirect to Django admin booking list for this session
-  redirect(
-    `https://artecks.com/admin/academy/academybooking/?session__id__exact=${id}`
-  );
+export default function CoachSessionPage() {
+  redirect("/coach");
 }

@@ -20,7 +20,9 @@ export default function LoginPage() {
     const result = await login(email, password);
     setLoading(false);
     if (result.ok) {
-      router.push("/");
+      // Only same-site relative paths, e.g. /login?next=/coach
+      const next = new URLSearchParams(window.location.search).get("next") ?? "";
+      router.push(next.startsWith("/") && !next.startsWith("//") ? next : "/");
     } else {
       setError(result.error ?? "Login failed.");
     }

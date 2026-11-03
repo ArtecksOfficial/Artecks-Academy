@@ -318,10 +318,10 @@ export default function HomePageContent({ sessions, provider }: Props) {
               {t("heroTrialCta")}
             </a>
             <a
-              href="/sessions"
+              href="/request"
               className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-white bg-white/10 hover:bg-white/20 border border-white/30 px-6 py-3 rounded-2xl transition-colors"
             >
-              {t("heroCta")}
+              {t("heroRequestCta")}
             </a>
           </div>
           <p className="text-xs text-indigo-200/80 -mt-4">{t("heroTrialNote")}</p>

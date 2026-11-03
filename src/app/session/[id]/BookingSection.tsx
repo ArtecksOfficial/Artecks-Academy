@@ -25,9 +25,6 @@ interface Session {
   coach: {
     name: string;
     line_id: string;
-    bank_name: string;
-    bank_code: string;
-    bank_account: string;
   } | null;
 }
 
