@@ -10,9 +10,6 @@ export interface Coach {
   bio: string;
   avatar_initials: string;
   line_id: string;
-  bank_name: string;
-  bank_code: string;
-  bank_account: string;
 }
 
 export interface PriceVariant {
