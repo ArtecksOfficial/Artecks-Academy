@@ -50,6 +50,7 @@ export interface BookingPayload {
   chess_experience_level?: string;
   special_notes?: string;
   artecks_account_id?: string;
+  account_consent?: boolean;
 }
 
 export interface BookingResult {

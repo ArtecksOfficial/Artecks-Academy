@@ -29,6 +29,7 @@ export async function bookSession(
   const chessExperienceLevel = (formData.get("chess_experience_level") as string) || "";
   const specialNotes = (formData.get("special_notes") as string) || "";
   const artecksAccountId = (formData.get("artecks_account_id") as string) || "";
+  const accountConsent = formData.get("account_consent") === "on";
 
   if (!sessionId || !parentName || !parentPhone || !studentName || !studentAge || !contactMethod || !contactValue) {
     return { status: "error", message: "請填寫所有必填欄位。" };
@@ -44,6 +45,7 @@ export async function bookSession(
     chess_experience_level: chessExperienceLevel,
     special_notes: specialNotes,
     artecks_account_id: artecksAccountId,
+    account_consent: accountConsent,
   });
 
   if (!result.success) {

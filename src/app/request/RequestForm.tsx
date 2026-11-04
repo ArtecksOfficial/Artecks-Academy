@@ -68,6 +68,7 @@ export default function RequestForm() {
       preferred_windows: windows,
       area: String(f.get("area") || "").trim(),
       notes: String(f.get("notes") || "").trim(),
+      account_consent: f.get("account_consent") === "on",
     };
     setState("sending");
     try {
@@ -210,6 +211,11 @@ export default function RequestForm() {
           <textarea id="notes" name="notes" rows={3} maxLength={2000} className={input} />
         </div>
       </section>
+
+      <label className="flex items-start gap-3 rounded-2xl bg-white border border-gray-200 px-4 py-4 text-sm text-gray-700 leading-relaxed cursor-pointer">
+        <input type="checkbox" name="account_consent" required className="mt-0.5 accent-indigo-600 w-4 h-4 flex-shrink-0" />
+        <span>{t("consentLabel")}</span>
+      </label>
 
       {error && (
         <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>

@@ -20,6 +20,9 @@ interface Student {
   skill_tags: string[];
   coach_notes: string;
   generated_summary: string;
+  parent_name?: string;
+  contact_method?: string;
+  contact_value?: string;
 }
 
 interface CoachSession {
@@ -282,6 +285,19 @@ function StudentRow({
             {st.student_name}{st.student_age ? <span className="font-normal text-gray-500">, {st.student_age}</span> : null}
           </p>
           {st.special_notes && <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{st.special_notes}</p>}
+          {st.contact_value && (
+            <p className="text-xs text-gray-600 mt-1">
+              {t("coachParent")}: {st.parent_name}
+              {" · "}
+              {st.contact_method === "line" ? (
+                <a href={`https://line.me/R/ti/p/~${encodeURIComponent(st.contact_value.replace(/^@/, ""))}`} target="_blank" rel="noopener noreferrer" className="text-[#06C755] font-semibold">
+                  LINE {st.contact_value}
+                </a>
+              ) : (
+                <span>{(st.contact_method ?? "").toUpperCase()} {st.contact_value}</span>
+              )}
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           {attended ? (

@@ -340,6 +340,8 @@ const zh = {
   winWeekendAfternoon: "週末下午",
   winWeekendEvening: "週末晚上",
 
+  consentLabel: "報名的同時，我同意為孩子建立 Artecks 西洋棋帳號，讓教練可以指派作業、孩子可以線上練習。",
+  coachParent: "家長",
   // ── Pay page (/pay/[id]) ───────────────────────────────────────────────────
   payTitle: "課程付款",
   payPaidTitle: "已完成付款",
@@ -728,6 +730,8 @@ const en: typeof zh = {
   winWeekendAfternoon: "Weekend afternoons",
   winWeekendEvening: "Weekend evenings",
 
+  consentLabel: "I agree to an Artecks Chess account for my child, so the coach can set homework and my child can practise online.",
+  coachParent: "Parent",
   // ── Pay page (/pay/[id]) ───────────────────────────────────────────────────
   payTitle: "Pay for your lesson",
   payPaidTitle: "Payment complete",
