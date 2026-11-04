@@ -419,6 +419,11 @@ export default function BookingSection({
               <span className="text-xs text-violet-600">{t("artecksIdHint")}</span>
             </label>
 
+            <label className="flex items-start gap-2.5 rounded-xl bg-indigo-50/60 border border-indigo-100 px-3 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
+              <input type="checkbox" name="account_consent" required className="mt-0.5 accent-indigo-600 w-4 h-4 flex-shrink-0" />
+              <span>{t("consentLabel")}</span>
+            </label>
+
             {state.status === "error" && (
               <div className="flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 p-3">
                 <AlertCircle size={15} className="text-red-500 shrink-0" />

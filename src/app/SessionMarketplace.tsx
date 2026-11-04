@@ -344,6 +344,11 @@ function BookingForm({
         />
       </label>
 
+      <label className="flex items-start gap-2.5 rounded-xl bg-indigo-50/60 border border-indigo-100 px-3 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
+              <input type="checkbox" name="account_consent" required className="mt-0.5 accent-indigo-600 w-4 h-4 flex-shrink-0" />
+              <span>報名的同時，我同意為孩子建立 Artecks 西洋棋帳號，讓教練可以指派作業、孩子可以線上練習。 / I agree to an Artecks Chess account for my child, so the coach can set homework and my child can practise online.</span>
+            </label>
+
       {state.status === "error" && (
         <div className="flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 p-3">
           <AlertCircle size={14} className="text-red-500 shrink-0" />
