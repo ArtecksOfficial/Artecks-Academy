@@ -24,10 +24,15 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+function payPath(url: string): string {
+  // Keep the parent on this site, whatever host the backend put in the link.
+  try { const u = new URL(url); return u.pathname + u.search; } catch { return url; }
+}
+
 function BookingCard({ booking }: { booking: MyBooking }) {
   return (
-    <a href={`/report/${booking.id}`}
-      className="block rounded-2xl border border-gray-200 bg-white hover:border-indigo-300 hover:shadow-sm transition-all overflow-hidden">
+    <div className="rounded-2xl border border-gray-200 bg-white hover:border-indigo-300 hover:shadow-sm transition-all overflow-hidden">
+    <a href={`/report/${booking.id}`} className="block">
       <div className="h-1 bg-gradient-to-r from-indigo-500 to-violet-500" />
       <div className="p-4 flex flex-col gap-2.5">
         <div className="flex items-start justify-between gap-3">
@@ -59,6 +64,15 @@ function BookingCard({ booking }: { booking: MyBooking }) {
         )}
       </div>
     </a>
+    {booking.pay_url && (
+      <div className="px-4 pb-4 -mt-1">
+        <a href={payPath(booking.pay_url)}
+          className="flex items-center justify-center w-full rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-2.5">
+          付款 / Pay · NT${Number(booking.price_twd).toLocaleString()}
+        </a>
+      </div>
+    )}
+    </div>
   );
 }
 
@@ -77,7 +91,8 @@ export default function MyBookingsPage() {
       const res = await fetch(`/api/my-bookings?phone=${encodeURIComponent(trimmed)}`);
       if (!res.ok) { setError("Could not find bookings for that number."); setBookings(null); return; }
       const data = await res.json();
-      setBookings(data.bookings ?? []);
+      // Django returns a plain list; older code expected { bookings: [...] }.
+      setBookings(Array.isArray(data) ? data : (data.bookings ?? []));
     } catch {
       setError("Something went wrong. Try again.");
     } finally {

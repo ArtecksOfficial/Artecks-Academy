@@ -164,6 +164,7 @@ export interface MyBooking {
   student_name: string;
   status: string;
   payment_status: string;
+  pay_url: string | null;
   xp_awarded: number;
   coins_awarded: number;
   applied_discount_amount: number;
