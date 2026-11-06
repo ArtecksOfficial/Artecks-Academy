@@ -6,7 +6,7 @@
 export async function seedTestSession(): Promise<{ error?: string }> {
   return {
     error:
-      "Sessions are managed via Django admin at artecks.com/admin/academy/. " +
+      "Sessions are managed via Django admin at store.artecks.com/admin/academy/. " +
       "Use the Django admin to create and manage sessions.",
   };
 }

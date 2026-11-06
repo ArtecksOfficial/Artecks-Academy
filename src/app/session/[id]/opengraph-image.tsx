@@ -344,7 +344,7 @@ export default async function Image({ params }: Props) {
             🎓 林口社區小課 · Linkou Community Sessions
           </span>
           <span style={{ color: "rgba(165,180,252,0.6)", fontSize: 15 }}>
-            artecks.com/academy
+            academy.artecks.com
           </span>
         </div>
       </div>
