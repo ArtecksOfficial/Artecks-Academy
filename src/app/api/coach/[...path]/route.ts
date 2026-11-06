@@ -13,6 +13,7 @@ const ALLOWED = [
   /^bookings\/\d+\/(attend|report)$/,
   /^availability$/,
   /^availability\/\d+$/,
+  /^feedback$/,
 ];
 
 type Ctx = { params: Promise<{ path: string[] }> };

@@ -23,6 +23,8 @@ export interface PayInfo {
   methods: { ecpay: boolean; linepay: boolean };
   bank: { bank_name: string; bank_code: string; account: string; holder: string } | null;
   contact_line_id: string;
+  referral_url?: string | null;
+  feedback?: "ok" | "not_attended" | "too_late" | "done";
 }
 
 function fmt(iso: string, locale: string) {
@@ -146,6 +148,15 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
         </div>
       )}
 
+      {paid && info.feedback === "ok" && (
+        <Link href={`/feedback/${info.booking_id}?t=${encodeURIComponent(token)}`}
+          className="block rounded-2xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold text-center py-3.5">
+          {t("payFeedbackCta")}
+        </Link>
+      )}
+
+      {paid && info.referral_url && <ReferralBox url={info.referral_url} />}
+
       {!paid && !cancelled && (
         <>
           {/* Online */}
@@ -242,5 +253,28 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
         </a>
       )}
     </>,
+  );
+}
+
+function ReferralBox({ url }: { url: string }) {
+  const { t } = useLanguage();
+  const [copied, setCopied] = useState(false);
+  const share = `https://line.me/R/share?text=${encodeURIComponent(`${t("refShareText")} ${url}`)}`;
+  return (
+    <section className="rounded-3xl bg-white border border-violet-200 p-5 shadow-sm">
+      <h2 className="text-base font-black text-gray-900">🎁 {t("refTitle")}</h2>
+      <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">{t("refBody")}</p>
+      <div className="mt-3 flex items-center gap-2 rounded-xl bg-gray-50 border border-gray-200 px-3 py-2">
+        <span className="flex-1 truncate font-mono text-xs text-gray-700">{url}</span>
+        <button type="button" className="text-xs font-bold text-indigo-600 flex-shrink-0"
+          onClick={() => navigator.clipboard?.writeText(url).then(() => setCopied(true)).catch(() => {})}>
+          {copied ? t("refCopied") : t("refCopy")}
+        </button>
+      </div>
+      <a href={share} target="_blank" rel="noopener noreferrer"
+        className="mt-3 flex items-center justify-center rounded-xl py-3 text-sm font-bold text-white" style={{ backgroundColor: "#06C755" }}>
+        {t("refShareLine")}
+      </a>
+    </section>
   );
 }

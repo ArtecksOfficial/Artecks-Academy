@@ -70,6 +70,13 @@ export default function BookPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<{ start: string } | null>(null);
+  const [ref, setRef] = useState("");
+
+  useEffect(() => {
+    // Referral links look like /book?ref=ABC1234
+    const r = new URLSearchParams(window.location.search).get("ref") ?? "";
+    if (/^[A-Za-z0-9]{4,12}$/.test(r)) setRef(r.toUpperCase());
+  }, []);
 
   useEffect(() => {
     fetch("/api/slots").then((r) => r.json()).then((a: string[]) => {
@@ -122,6 +129,7 @@ export default function BookPage() {
           chess_experience_level: level,
           special_notes: String(f.get("notes") || "").trim(),
           account_consent: f.get("account_consent") === "on",
+          ref,
         }),
       });
       const body = await res.json().catch(() => ({}));
