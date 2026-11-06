@@ -386,7 +386,7 @@ const zh = {
   bookSending: "預約中…",
   bookTaken: "這個時段剛被預約走了，請選擇其他時間。",
   bookPendingTitle: "已保留您的時段！",
-  bookPendingBody: "因為是第一次上課，我們會在 1 天內透過 LINE 與您確認教練和地點，確認後再傳付款連結給您。",
+  bookPendingBody: "我們會在 1 天內透過 LINE 與您聯絡，確認上課地點和最適合的教練，確認後再傳付款連結給您。",
   bookNoAreas: "教練們正在設定上課時間，請先告訴我們您方便的時段。",
   // ── Pay page (/pay/[id]) ───────────────────────────────────────────────────
   payTitle: "課程付款",
@@ -827,7 +827,7 @@ const en: typeof zh = {
   bookSending: "Booking…",
   bookTaken: "Someone just booked that time. Please pick another.",
   bookPendingTitle: "Your time is held!",
-  bookPendingBody: "Since it's your first lesson, we'll message you on LINE within a day to confirm the coach and place, then send the payment link.",
+  bookPendingBody: "We'll message you on LINE within a day to agree on the place and the best coach for your child, then send the payment link.",
   bookNoAreas: "Our coaches are still setting their hours. Tell us when you're free instead.",
   // ── Pay page (/pay/[id]) ───────────────────────────────────────────────────
   payTitle: "Pay for your lesson",
