@@ -418,7 +418,8 @@ function SuccessScreen({
         Pay Now (Card / PayPal)
       </button>
 
-      {/* ── Alternative: LINE Pay ────────────────────────────────────── */}
+      {/* ── Alternative: LINE Pay (hidden until NEXT_PUBLIC_LINEPAY_ENABLED=true) ── */}
+      {process.env.NEXT_PUBLIC_LINEPAY_ENABLED === "true" && (
       <a
         href={`/api/pay/linepay/${bookingId}`}
         className="w-full flex items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold text-white shadow-sm active:scale-[0.98] transition-all"
@@ -429,6 +430,7 @@ function SuccessScreen({
         </svg>
         LINE Pay
       </a>
+      )}
       {/* ── Alternative: ECPay 台灣在地支付 ─────────────────────────── */}
       <a
         href={`/api/pay/ecpay/${bookingId}`}
@@ -579,7 +581,7 @@ function InfoPanel({
         <p className="text-xs text-violet-600">Add your account ID to earn XP &amp; coins after each session.</p>
       </div>
       <a
-        href="https://artecks.com"
+        href="https://store.artecks.com"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-indigo-300 hover:text-indigo-600 transition-all"
@@ -902,7 +904,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
         {/* ── Footer ── */}
         <footer className="py-6 border-t border-gray-200 flex items-center justify-between">
           <p className="text-xs text-gray-400">© {new Date().getFullYear()} Artecks · academy.artecks.com</p>
-          <a href="https://artecks.com/admin/academy/" target="_blank" rel="noopener noreferrer"
+          <a href="https://store.artecks.com/admin/academy/" target="_blank" rel="noopener noreferrer"
              className="text-xs text-gray-300 hover:text-gray-400 transition-colors">Admin ↗</a>
         </footer>
       </div>
