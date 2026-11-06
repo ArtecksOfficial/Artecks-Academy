@@ -78,7 +78,8 @@ export default function CoachDashboard() {
   const { t, locale } = useLanguage();
   const [status, setStatus] = useState<Status>("loading");
   const [coachName, setCoachName] = useState("");
-  const [tab, setTab] = useState<"sessions" | "availability">("sessions");
+  const [tab, setTab] = useState<"sessions" | "availability" | "feedback">("sessions");
+  const [fb, setFb] = useState<{ count: number; avg_rating: number | null; avg_enjoyment: number | null; comments: string[]; comments_hidden_until: number } | null>(null);
   const [sessions, setSessions] = useState<CoachSession[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -88,9 +89,10 @@ export default function CoachDashboard() {
     if (me.status === 401) return setStatus("anon");
     if (!me.ok) return setStatus("not_coach");
     setCoachName(me.data?.name ?? "");
-    const [s, a] = await Promise.all([api<CoachSession[]>("sessions"), api<Slot[]>("availability")]);
+    const [s, a, f] = await Promise.all([api<CoachSession[]>("sessions"), api<Slot[]>("availability"), api<typeof fb>("feedback")]);
     setSessions(s.data ?? []);
     setSlots(a.data ?? []);
+    setFb(f.data ?? null);
     setStatus("ready");
   }, []);
 
@@ -186,7 +188,7 @@ export default function CoachDashboard() {
           <>
             <h1 className="text-2xl font-black text-gray-900 mb-5">{coachName}</h1>
             <div className="flex gap-2 mb-5" role="tablist">
-              {(["sessions", "availability"] as const).map((k) => (
+              {(["sessions", "availability", "feedback"] as const).map((k) => (
                 <button
                   key={k}
                   role="tab"
@@ -196,7 +198,7 @@ export default function CoachDashboard() {
                     tab === k ? "bg-indigo-600 text-white" : "bg-white border border-gray-200 text-gray-600"
                   }`}
                 >
-                  {k === "sessions" ? t("coachTabSessions") : t("coachTabAvailability")}
+                  {k === "sessions" ? t("coachTabSessions") : k === "availability" ? t("coachTabAvailability") : t("coachTabFeedback")}
                 </button>
               ))}
             </div>
@@ -208,6 +210,29 @@ export default function CoachDashboard() {
                 {sessions.length === 0 && <p className="text-sm text-gray-500">{t("coachNoSessions")}</p>}
                 {sessions.map((s) => (
                   <SessionCard key={s.id} s={s} locale={locale} t={t} onAttend={markAttended} onSaveReport={saveReport} />
+                ))}
+              </div>
+            )}
+
+            {tab === "feedback" && (
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    [t("coachFbCount"), fb?.count ?? 0],
+                    [t("coachFbRating"), fb?.avg_rating ?? "—"],
+                    [t("coachFbEnjoy"), fb?.avg_enjoyment ?? "—"],
+                  ].map(([k, v]) => (
+                    <div key={String(k)} className="rounded-2xl bg-white border border-gray-200 p-4 text-center">
+                      <p className="text-2xl font-black text-gray-900">{v}</p>
+                      <p className="text-[11px] font-semibold text-gray-500 mt-1">{k}</p>
+                    </div>
+                  ))}
+                </div>
+                {fb && fb.comments.length === 0 && (
+                  <p className="text-sm text-gray-500">{t("coachFbHidden").replace("{n}", String(fb.comments_hidden_until))}</p>
+                )}
+                {fb?.comments.map((c, i) => (
+                  <blockquote key={i} className="rounded-2xl bg-white border border-gray-200 p-4 text-sm text-gray-700 leading-relaxed">“{c}”</blockquote>
                 ))}
               </div>
             )}
