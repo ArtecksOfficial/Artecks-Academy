@@ -24,6 +24,7 @@ export interface PayInfo {
   bank: { bank_name: string; bank_code: string; account: string; holder: string } | null;
   contact_line_id: string;
   referral_url?: string | null;
+  referral_coach_name?: string;
   feedback?: "ok" | "not_attended" | "too_late" | "done";
 }
 
@@ -155,7 +156,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
         </Link>
       )}
 
-      {paid && info.referral_url && <ReferralBox url={info.referral_url} />}
+      {paid && info.referral_url && <ReferralBox url={info.referral_url} coach={info.referral_coach_name || "Issac"} />}
 
       {!paid && !cancelled && (
         <>
@@ -256,14 +257,14 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
   );
 }
 
-function ReferralBox({ url }: { url: string }) {
+function ReferralBox({ url, coach }: { url: string; coach: string }) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const share = `https://line.me/R/share?text=${encodeURIComponent(`${t("refShareText")} ${url}`)}`;
   return (
     <section className="rounded-3xl bg-white border border-violet-200 p-5 shadow-sm">
       <h2 className="text-base font-black text-gray-900">🎁 {t("refTitle")}</h2>
-      <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">{t("refBody")}</p>
+      <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">{t("refBody").replace("{coach}", coach)}</p>
       <div className="mt-3 flex items-center gap-2 rounded-xl bg-gray-50 border border-gray-200 px-3 py-2">
         <span className="flex-1 truncate font-mono text-xs text-gray-700">{url}</span>
         <button type="button" className="text-xs font-bold text-indigo-600 flex-shrink-0"
