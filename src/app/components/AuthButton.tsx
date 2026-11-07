@@ -66,7 +66,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
     return (
       <button
         onClick={() => router.push(`/login?next=${encodeURIComponent(window.location.pathname)}`)}
-        className="text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5 rounded-full transition-colors whitespace-nowrap"
+        className="text-xs font-bold bg-[#0E1E3A] hover:bg-[#1C3157] text-white px-3.5 py-1.5 rounded-full transition-colors whitespace-nowrap"
       >
         {zh ? "登入 / 註冊" : "Log in"}
       </button>

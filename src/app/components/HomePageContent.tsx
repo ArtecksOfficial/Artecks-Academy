@@ -2,6 +2,7 @@
 // ─── HomePageContent ──────────────────────────────────────────────────────────
 // Client component — receives server-fetched data and renders with live i18n.
 
+import HeroBoard from "./HeroBoard";
 import AuthButton from "./AuthButton";
 import BrochureBanner from "./BrochureBanner";
 import { MapPin, Clock, Users, Crown, ChevronRight, ChevronDown } from "lucide-react";
@@ -229,7 +230,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
 
       {/* ── Header ── */}
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -253,12 +254,12 @@ export default function HomePageContent({ sessions, provider }: Props) {
           <div className="max-w-6xl mx-auto px-3 sm:px-5 flex items-center gap-1 overflow-x-auto scrollbar-none">
             {navLinks.map(({ label, href, id }) => href ? (
               <a key={label} href={href}
-                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-indigo-600 px-3 py-2.5 transition-colors whitespace-nowrap">
+                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-[#A07C34] px-3 py-2.5 transition-colors whitespace-nowrap">
                 {label}
               </a>
             ) : (
               <button key={label} onClick={() => scrollTo(id!)}
-                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-indigo-600 px-3 py-2.5 transition-colors whitespace-nowrap">
+                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-[#A07C34] px-3 py-2.5 transition-colors whitespace-nowrap">
                 {label}
               </button>
             ))}
@@ -267,204 +268,103 @@ export default function HomePageContent({ sessions, provider }: Props) {
         </div>
       </header>
 
-      {/* ── Hero ── */}
-      <section style={{ background: "#0a0818", overflow: "hidden", position: "relative", minHeight: "520px" }}>
-        {/* Background photo */}
-        <div aria-hidden="true" style={{
-          position: "absolute", inset: 0,
-          backgroundImage: `url(https://images.pexels.com/photos/39191114/pexels-photo-39191114.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop)`,
-          backgroundSize: "cover", backgroundPosition: "center 70%", opacity: 0.72,
-        }} />
-        {/* Gradient overlay */}
-        <div aria-hidden="true" style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, rgba(10,8,24,0.55) 0%, rgba(49,46,129,0.30) 60%, rgba(10,8,24,0.45) 100%)",
-        }} />
-        {/* Accent glow */}
-        <div aria-hidden="true" style={{
-          position: "absolute", top: "-120px", right: "-80px", width: "600px", height: "600px",
-          background: "radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)", pointerEvents: "none",
-        }} />
-
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-32 flex flex-col gap-8">
-          {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-700/60 px-3 py-1 rounded-full tracking-widest uppercase">
-              林口 · Linkou · New Taipei
-            </span>
-            <span className="text-[11px] font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-600/60 px-3 py-1 rounded-full tracking-wide flex items-center gap-1">
-              🇬🇧 {locale === "zh" ? "全英語授課" : "Taught in English"}
-            </span>
-          </div>
-
-          {/* Headline */}
-          <div className="flex flex-col gap-3 max-w-2xl">
-            <h1 className="text-5xl sm:text-7xl font-black text-white leading-[1.0] tracking-tight"
-              style={{ textShadow: "0 4px 32px rgba(0,0,0,0.8)" }}>
-              {t("heroTitle1")}
-              <br />
-              <span style={{ background: "linear-gradient(90deg,#a5b4fc,#818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                {t("heroTitle2")}
-              </span>
-            </h1>
-            <p className="text-base sm:text-lg text-indigo-200/90 max-w-lg leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.7)" }}>
-              {t("whyChessSub")}
+      {/* ── Hero: the board is the one bold element ── */}
+      <section id="home" className="relative overflow-hidden" style={{ background: "#0E1E3A" }}>
+        <div aria-hidden="true" className="absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "repeating-conic-gradient(#C49A4A 0% 25%, transparent 0% 50%)", backgroundSize: "72px 72px" }} />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-10 sm:pt-20 sm:pb-14 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+          <div className="flex flex-col gap-7">
+            <p className="text-sm text-[#C49A4A] font-semibold">
+              {zh ? "林口 · 台北 · 1–9 年級" : "Linkou & Taipei · Grades 1–9"}
             </p>
+            <h1 className="font-serif-tc text-[2.15rem] leading-[1.2] sm:text-6xl sm:leading-[1.1] font-black text-white tracking-tight">
+              {t("heroTitle1")}
+              <span className="block font-bold text-[#E9DCC0]">{t("heroTitle2")}</span>
+            </h1>
+            <p className="text-base sm:text-lg text-[#C9D2E3] max-w-md leading-relaxed">{t("whyChessSub")}</p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a href="https://lin.ee/6cna1xVd" target="_blank" rel="noopener noreferrer"
+                className="inline-flex justify-center items-center rounded-xl px-6 py-3.5 text-base font-black text-[#0E1E3A] bg-[#C49A4A] hover:bg-[#D3AB5C] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E9DCC0]">
+                {t("heroTrialCta")}
+              </a>
+              <a href="/book"
+                className="inline-flex justify-center items-center rounded-xl px-6 py-3.5 text-base font-bold text-white border border-white/30 hover:bg-white/10 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E9DCC0]">
+                {t("heroBookCta")}
+              </a>
+            </div>
+            <p className="text-xs text-[#9FAAC0] -mt-3">{t("heroTrialNote")}</p>
           </div>
-
-          {/* Primary CTAs — free trial goes straight to the private-lessons LINE account */}
-          <div className="flex flex-wrap items-center gap-3">
-            <a
-              href="https://lin.ee/6cna1xVd"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm sm:text-base font-black text-white bg-[#06C755] hover:bg-[#05b34c] px-6 py-3 rounded-2xl shadow-lg transition-colors"
-            >
-              {t("heroTrialCta")}
-            </a>
-            <a
-              href="/book"
-              className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-white bg-white/10 hover:bg-white/20 border border-white/30 px-6 py-3 rounded-2xl transition-colors"
-            >
-              {t("heroBookCta")}
-            </a>
-          </div>
-          <p className="text-xs text-indigo-200/80 -mt-4">{t("heroTrialNote")}</p>
-
-          {/* Social proof bar */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <HeroBoard caption={zh ? "每一步都用英文說出來——孩子邊下棋邊學英文。" : "Every move is said in English — kids learn the language while they play."} />
+        </div>
+        {/* Facts, folded into the hero instead of a row of cards */}
+        <div className="relative border-t border-white/10">
+          <dl className="max-w-6xl mx-auto px-4 sm:px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-y-4 text-white">
             {[
-              { v: "40+", l: locale === "zh" ? "位學員" : "Students Taught" },
-              { v: "★★★★★", l: locale === "zh" ? "家長評價" : "Parent Reviews" },
-              { v: "100%", l: locale === "zh" ? "全英語授課" : "English Instruction" },
+              { v: "40+", l: zh ? "位學員" : "students taught" },
+              { v: zh ? "2024 全國冠軍" : "2024 champion", l: zh ? "創辦人（公開組）" : "founder, national open" },
+              { v: zh ? "一對一 · 小班" : "1-on-1 & groups", l: zh ? "依年齡與程度配對" : "matched by age & level" },
+              { v: "100%", l: zh ? "英語授課" : "taught in English" },
             ].map(({ v, l }) => (
-              <div key={l} className="flex items-center gap-1.5">
-                <span className="text-sm font-black text-white">{v}</span>
-                <span className="text-xs text-indigo-300 font-medium">{l}</span>
+              <div key={l} className="sm:border-l sm:first:border-l-0 border-white/10 sm:pl-6 sm:first:pl-0">
+                <dt className="sr-only">{l}</dt>
+                <dd className="font-serif-tc text-xl font-bold text-[#E9DCC0]">{v}</dd>
+                <dd className="text-xs text-[#9FAAC0] mt-0.5">{l}</dd>
               </div>
             ))}
-          </div>
+          </dl>
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-16">
-
-        {/* ── Stats bar ── */}
-        <div id="overview" style={{ scrollMarginTop: "120px" }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 -mt-4">
-          {[
-            { icon: "♟", stat: locale === "zh" ? "專業教練" : "Expert Coaches", sub: locale === "zh" ? "Artecks 認證" : "Artecks Certified" },
-            { icon: "🧒", stat: locale === "zh" ? "1–9 年級" : "Grades 1–9", sub: locale === "zh" ? "從零開始" : "Absolute beginners welcome" },
-            { icon: "👥", stat: locale === "zh" ? "一對一 · 小班" : "1-on-1 & Small Groups", sub: locale === "zh" ? "依年齡與程度配對" : "Matched by age and level" },
-            { icon: "🇬🇧", stat: locale === "zh" ? "全英語授課" : "100% English", sub: locale === "zh" ? "林口唯一英語棋課" : "Only English chess in Linkou" },
-          ].map(({ icon, stat, sub }) => (
-            <div key={stat} className="bg-white rounded-2xl border border-gray-200 px-4 py-4 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-2xl">{icon}</span>
-              <p className="text-sm font-black text-gray-900">{stat}</p>
-              <p className="text-[11px] text-gray-400 font-medium">{sub}</p>
-            </div>
-          ))}
-        </div>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 flex flex-col gap-20">
 
         {/* ── Coaches & programs (from the printed brochure) ── */}
         <BrochureBanner locale={locale} />
 
-        {/* ── Why Chess ── */}
+        {/* ── Why chess: a plain list, each point marked by a piece ── */}
         <section id="why-chess" style={{ scrollMarginTop: "120px" }}>
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-black text-gray-900">{t("whyChessTitle")}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t("whyChessSub")}</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {([
-              { iconKey: "whyChess1Icon" as DictionaryKey, titleKey: "whyChess1Title" as DictionaryKey, descKey: "whyChess1Desc" as DictionaryKey, color: "bg-blue-50 border-blue-100" },
-              { iconKey: "whyChess2Icon" as DictionaryKey, titleKey: "whyChess2Title" as DictionaryKey, descKey: "whyChess2Desc" as DictionaryKey, color: "bg-amber-50 border-amber-100" },
-              { iconKey: "whyChess3Icon" as DictionaryKey, titleKey: "whyChess3Title" as DictionaryKey, descKey: "whyChess3Desc" as DictionaryKey, color: "bg-violet-50 border-violet-100" },
-              { iconKey: "whyChess4Icon" as DictionaryKey, titleKey: "whyChess4Title" as DictionaryKey, descKey: "whyChess4Desc" as DictionaryKey, color: "bg-rose-50 border-rose-100" },
-              { iconKey: "whyChess5Icon" as DictionaryKey, titleKey: "whyChess5Title" as DictionaryKey, descKey: "whyChess5Desc" as DictionaryKey, color: "bg-orange-50 border-orange-100" },
-              { iconKey: "whyChess6Icon" as DictionaryKey, titleKey: "whyChess6Title" as DictionaryKey, descKey: "whyChess6Desc" as DictionaryKey, color: "bg-emerald-50 border-emerald-100" },
-            ]).map(({ iconKey, titleKey, descKey, color }) => (
-              <div key={titleKey} className={`rounded-2xl border p-6 flex flex-col gap-3 ${color}`}>
-                <span className="text-3xl">{t(iconKey)}</span>
-                <p className="font-black text-gray-900 text-sm">{t(titleKey)}</p>
-                <p className="text-sm text-gray-600 leading-relaxed">{t(descKey)}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Skill Roadmap ── */}
-        <section>
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-black text-gray-900">{t("roadmapTitle")}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t("roadmapSub")}</p>
-          </div>
-          <div className="relative">
-            {/* Connecting line */}
-            <div className="hidden sm:block absolute left-1/2 top-8 bottom-8 w-px bg-gradient-to-b from-indigo-200 via-indigo-300 to-indigo-200 -translate-x-1/2" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {([
-                { badge: t("roadmapL1Badge"), title: t("roadmapL1Title"), desc: t("roadmapL1Desc"), skills: t("roadmapL1Skills"), color: "bg-indigo-50 border-indigo-200", badge_color: "bg-indigo-600 text-white", num: "01" },
-                { badge: t("roadmapL2Badge"), title: t("roadmapL2Title"), desc: t("roadmapL2Desc"), skills: t("roadmapL2Skills"), color: "bg-violet-50 border-violet-200", badge_color: "bg-violet-600 text-white", num: "02" },
-                { badge: t("roadmapL3Badge"), title: t("roadmapL3Title"), desc: t("roadmapL3Desc"), skills: t("roadmapL3Skills"), color: "bg-blue-50 border-blue-200", badge_color: "bg-blue-600 text-white", num: "03" },
-                { badge: t("roadmapL4Badge"), title: t("roadmapL4Title"), desc: t("roadmapL4Desc"), skills: t("roadmapL4Skills"), color: "bg-emerald-50 border-emerald-200", badge_color: "bg-emerald-600 text-white", num: "04" },
-              ] as const).map(({ badge, title, desc, skills, color, badge_color, num }) => (
-                <div key={num} className={`rounded-2xl border p-6 flex flex-col gap-3 ${color} hover:shadow-md transition-shadow`}>
-                  <div className="flex items-center justify-between">
-                    <span className={`text-xs font-black px-3 py-1 rounded-full ${badge_color}`}>{badge}</span>
-                    <span className="text-3xl font-black text-gray-100 select-none">{num}</span>
-                  </div>
+          <h2 className="font-serif-tc text-3xl font-black text-[#13223F]">{t("whyChessTitle")}</h2>
+          <p className="mt-2 text-sm text-[#5B6478] max-w-lg">{t("whyChessSub")}</p>
+          <ul className="mt-8 grid sm:grid-cols-2 gap-x-12 gap-y-8">
+            {(["♙", "♘", "♗", "♖", "♕", "♔"] as const).map((piece, i) => {
+              const n = i + 1;
+              return (
+                <li key={n} className="flex gap-4">
+                  <span aria-hidden="true" className="text-3xl leading-none text-[#C49A4A] w-8 flex-shrink-0">{piece}</span>
                   <div>
-                    <p className="font-black text-gray-900 text-base">{title}</p>
-                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">{desc}</p>
+                    <p className="font-bold text-[#13223F]">{t(`whyChess${n}Title` as DictionaryKey)}</p>
+                    <p className="mt-1 text-sm text-[#5B6478] leading-relaxed">{t(`whyChess${n}Desc` as DictionaryKey)}</p>
                   </div>
-                  <div className="flex flex-wrap gap-1.5 mt-1">
-                    {skills.split(" · ").map(s => (
-                      <span key={s} className="text-[11px] font-semibold text-gray-500 bg-white/70 border border-gray-200 px-2 py-0.5 rounded-full">{s}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
-        {/* ── Testimonials ── */}
-        <section id="testimonials" style={{ scrollMarginTop: "120px" }}>
-          <style>{`
-            @keyframes marquee-scroll {
-              from { transform: translateX(0); }
-              to { transform: translateX(-50%); }
-            }
-            .marquee-track { animation: marquee-scroll 40s linear infinite; }
-            .marquee-track:hover { animation-play-state: paused; }
-          `}</style>
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-black text-gray-900">{t("testimonialsTitle")}</h2>
-            <p className="text-sm text-gray-500 mt-1">{t("testimonialsSub")}</p>
-          </div>
-          <div className="overflow-hidden -mx-4 sm:-mx-6">
-            <div className="marquee-track flex gap-4 w-max">
-              {([1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10] as const).map((n, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-4 w-72 flex-shrink-0 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-0.5">
-                    {[...Array(5)].map((_, j) => <span key={j} className="text-amber-400 text-sm">★</span>)}
-                  </div>
-                  <p className="text-sm text-gray-700 leading-relaxed flex-1">{t(`testimonial${n}Quote` as DictionaryKey)}</p>
-                  <div className="border-t border-gray-100 pt-3">
-                    <p className="text-sm font-bold text-gray-900">{t(`testimonial${n}Name` as DictionaryKey)}</p>
-                    <p className="text-xs text-gray-400">{t(`testimonial${n}Role` as DictionaryKey)}</p>
-                  </div>
+        {/* ── Roadmap: a real sequence, so it is numbered ── */}
+        <section>
+          <h2 className="font-serif-tc text-3xl font-black text-[#13223F]">{t("roadmapTitle")}</h2>
+          <p className="mt-2 text-sm text-[#5B6478]">{t("roadmapSub")}</p>
+          <ol className="mt-8 grid sm:grid-cols-4 gap-6 relative">
+            <span aria-hidden="true" className="hidden sm:block absolute top-5 left-5 right-5 h-px bg-[#C49A4A]/40" />
+            {[1, 2, 3, 4].map((n) => (
+              <li key={n} className="relative flex sm:flex-col gap-4">
+                <span className="relative z-10 w-10 h-10 flex-shrink-0 rounded-full flex items-center justify-center font-serif-tc font-black text-[#0E1E3A] bg-[#E9DCC0] ring-4 ring-[#F7F6F2]">{n}</span>
+                <div>
+                  <p className="text-xs font-semibold text-[#A07C34]">{t(`roadmapL${n}Badge` as DictionaryKey)}</p>
+                  <p className="mt-0.5 font-bold text-[#13223F]">{t(`roadmapL${n}Title` as DictionaryKey)}</p>
+                  <p className="mt-1 text-sm text-[#5B6478] leading-relaxed">{t(`roadmapL${n}Desc` as DictionaryKey)}</p>
+                  <p className="mt-2 text-xs text-[#8A92A3]">{t(`roadmapL${n}Skills` as DictionaryKey).split(" · ").join("、")}</p>
                 </div>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ol>
         </section>
 
         {/* ── LINE Contact ── */}
-        <section id="line-contact" className="rounded-3xl overflow-hidden" style={{ scrollMarginTop: "120px", background: "linear-gradient(135deg, #06C755 0%, #00a544 100%)" }}>
+        <section id="line-contact" className="rounded-2xl overflow-hidden" style={{ scrollMarginTop: "120px", background: "#06C755" }}>
           <div className="p-8 sm:p-10 flex flex-col gap-6">
             <div className="text-center">
-              <h2 className="text-2xl font-black text-white">{t("lineTitle")}</h2>
+              <h2 className="font-serif-tc text-3xl font-black text-white">{t("lineTitle")}</h2>
               <p className="text-sm text-green-100/80 mt-1">{t("lineSub")}</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -489,7 +389,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         {/* ── FAQ ── */}
         <section id="faq" style={{ scrollMarginTop: "120px" }}>
           <div className="mb-8 text-center">
-            <h2 className="text-2xl font-black text-gray-900">{t("faqTitle")}</h2>
+            <h2 className="font-serif-tc text-3xl font-black text-[#13223F]">{t("faqTitle")}</h2>
             <p className="text-sm text-gray-500 mt-1">{t("faqSub")}</p>
           </div>
           <div className="flex flex-col gap-3 max-w-2xl mx-auto">
@@ -510,7 +410,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
         {/* ── Footer ── */}
         <footer className="border-t border-gray-200 pt-8 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-gray-400">
           <div className="flex items-center gap-2">
-            <span className="text-base">♟</span>
+            <span className="text-base text-[#C49A4A]">♞</span>
             <span className="font-bold text-gray-500">Artecks Academy</span>
             <span>· Linkou, New Taipei</span>
           </div>
