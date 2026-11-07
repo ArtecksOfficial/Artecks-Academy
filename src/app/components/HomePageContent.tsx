@@ -2,6 +2,7 @@
 // ─── HomePageContent ──────────────────────────────────────────────────────────
 // Client component — receives server-fetched data and renders with live i18n.
 
+import BrochureBanner from "./BrochureBanner";
 import { MapPin, Clock, Users, Crown, ChevronRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import type { AcademySession, Coach, Provider } from "@/lib/types";
@@ -371,6 +372,9 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </div>
           ))}
         </div>
+
+        {/* ── Coaches & programs (from the printed brochure) ── */}
+        <BrochureBanner locale={locale} />
 
         {/* ── English Callout ── */}
         <section className="rounded-3xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)" }}>
