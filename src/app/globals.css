@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Headline serif (matches the printed brochure) */
+.font-serif-tc { font-family: var(--font-serif-tc), "Noto Serif TC", "Songti TC", serif; }

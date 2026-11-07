@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter, Noto_Serif_TC } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
@@ -11,6 +11,14 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const serifTc = Noto_Serif_TC({
+  variable: "--font-serif-tc",
+  subsets: ["latin"],
+  weight: ["700", "900"],
+  display: "swap",
+  preload: false,
 });
 
 const inter = Inter({
@@ -32,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="zh-TW" suppressHydrationWarning>
       <body
-        className={`${jakarta.variable} ${inter.variable} antialiased`}
+        className={`${jakarta.variable} ${inter.variable} ${serifTc.variable} antialiased`}
         suppressHydrationWarning
       >
       <Suspense fallback={null}><PageViewTracker /></Suspense>
