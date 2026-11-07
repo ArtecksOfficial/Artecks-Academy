@@ -148,7 +148,7 @@ export default function CoachDashboard() {
   const weekdays = locale === "en" ? WEEKDAYS_EN : WEEKDAYS_ZH;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
@@ -186,7 +186,7 @@ export default function CoachDashboard() {
 
         {status === "ready" && (
           <>
-            <h1 className="text-2xl font-black text-gray-900 mb-5">{coachName}</h1>
+            <h1 className="font-serif-tc text-2xl font-black text-gray-900 mb-5">{coachName}</h1>
             <div className="flex gap-2 mb-5" role="tablist">
               {(["sessions", "availability", "feedback"] as const).map((k) => (
                 <button

@@ -2,6 +2,7 @@
 // Server Component. Fetches session from Django API, then renders the static
 // shell + hands off interactivity to <BookingSection />.
 
+import SiteHeader from "@/app/components/SiteHeader";
 import { notFound } from "next/navigation";
 import { fetchSession } from "@/lib/api";
 import BookingSection from "./BookingSection";
@@ -66,17 +67,7 @@ export default async function SessionPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ── Nav ── */}
-      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-gray-100">
-        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2 text-sm font-bold text-indigo-600 hover:opacity-80 transition-opacity">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15 18l-6-6 6-6" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Artecks Academy
-          </a>
-          <LanguageToggle />
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="max-w-3xl mx-auto px-4 py-8 space-y-5">
 

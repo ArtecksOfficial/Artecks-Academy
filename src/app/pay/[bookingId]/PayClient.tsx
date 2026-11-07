@@ -1,5 +1,6 @@
 "use client";
 
+import SiteHeader from "@/app/components/SiteHeader";
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { CheckCircle, Clock, Copy, MapPin } from "lucide-react";
@@ -53,16 +54,8 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
   const [copied, setCopied] = useState(false);
 
   const shell = (children: React.ReactNode) => (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB" }}>
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-            <span className="text-sm font-black text-gray-900">Artecks Academy</span>
-          </Link>
-          <LanguageToggle />
-        </div>
-      </header>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+      <SiteHeader />
       <main className="max-w-lg mx-auto px-4 py-8 flex flex-col gap-4">{children}</main>
     </div>
   );
@@ -105,7 +98,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
 
   return shell(
     <>
-      <h1 className="text-2xl font-black text-gray-900">{paid ? t("payPaidTitle") : t("payTitle")}</h1>
+      <h1 className="font-serif-tc text-2xl font-black text-gray-900">{paid ? t("payPaidTitle") : t("payTitle")}</h1>
 
       {/* Lesson */}
       <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">

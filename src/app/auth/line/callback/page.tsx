@@ -40,7 +40,7 @@ export default function LineCallbackPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: "#F6F7FB" }}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: "#F7F6F2" }}>
       <div className="max-w-sm w-full rounded-3xl bg-white border border-gray-200 p-8 text-center shadow-sm">
         {error ? (
           <>

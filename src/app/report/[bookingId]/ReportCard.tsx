@@ -134,7 +134,7 @@ export default function ReportCard({
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-200 mb-1">
               {t("reportCardLabel")}
             </p>
-            <h1 className="text-2xl font-black">{studentName}</h1>
+            <h1 className="font-serif-tc text-2xl font-black">{studentName}</h1>
             {session && (
               <p className="text-sm text-indigo-200 mt-1">
                 {formatDateTW(session.start_time, locale)} · {session.location_name}

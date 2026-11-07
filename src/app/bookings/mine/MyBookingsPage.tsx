@@ -1,4 +1,5 @@
 "use client";
+import SiteHeader from "@/app/components/SiteHeader";
 import { useState } from "react";
 import { Phone, Loader2, ArrowLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import type { MyBooking } from "@/lib/api";
@@ -101,18 +102,9 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB", fontFamily: "system-ui, sans-serif" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2", fontFamily: "system-ui, sans-serif" }}>
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <a href="/" className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-indigo-600 transition-colors">
-            <ArrowLeft size={13} />
-            Home
-          </a>
-          <div className="w-px h-4 bg-gray-200" />
-          <p className="text-sm font-black text-gray-900">My Bookings</p>
-        </div>
-      </header>
+      <SiteHeader />
 
       <div className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-6">
         {/* Lookup form */}

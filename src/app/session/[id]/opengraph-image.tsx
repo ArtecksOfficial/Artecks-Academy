@@ -44,7 +44,7 @@ export default async function Image({ params }: Props) {
           style={{
             width: 1200,
             height: 630,
-            background: "#4f46e5",
+            background: "#1C3157",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -82,7 +82,7 @@ export default async function Image({ params }: Props) {
         style={{
           width: 1200,
           height: 630,
-          background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4f46e5 100%)",
+          background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1C3157 100%)",
           display: "flex",
           flexDirection: "column",
           position: "relative",
@@ -136,7 +136,7 @@ export default async function Image({ params }: Props) {
                 justifyContent: "center",
               }}
             >
-              <span style={{ fontSize: 22, fontWeight: 900, color: "#4f46e5" }}>A</span>
+              <span style={{ fontSize: 22, fontWeight: 900, color: "#1C3157" }}>A</span>
             </div>
             <span style={{ color: "rgba(255,255,255,0.9)", fontSize: 22, fontWeight: 700, letterSpacing: 1 }}>
               Artecks Academy
@@ -280,7 +280,7 @@ export default async function Image({ params }: Props) {
                   width: 88,
                   height: 88,
                   borderRadius: "50%",
-                  background: "linear-gradient(135deg, #818cf8, #6366f1)",
+                  background: "linear-gradient(135deg, #818cf8, #34497A)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

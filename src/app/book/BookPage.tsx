@@ -3,6 +3,7 @@
 // One merged calendar across coaches. Parents never pick a coach: every
 // booking waits for the owner, who assigns the coach and place.
 
+import SiteHeader from "@/app/components/SiteHeader";
 import AuthButton from "@/app/components/AuthButton";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
@@ -172,16 +173,8 @@ export default function BookPage() {
   const contact = CONTACTS.find((c) => c.value === contactMethod)!;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB" }}>
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-            <span className="text-sm font-black text-gray-900">Artecks Academy</span>
-          </Link>
-          <div className="flex items-center gap-2"><AuthButton locale={locale} /><LanguageToggle /></div>
-        </div>
-      </header>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+      <SiteHeader />
 
       <main className="max-w-2xl mx-auto px-4 py-8 sm:py-12 flex flex-col gap-5">
         {pending ? (
@@ -195,7 +188,7 @@ export default function BookPage() {
         ) : (
           <>
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("bookTitle")}</h1>
+              <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("bookTitle")}</h1>
               <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t("bookSub")}</p>
             </div>
 

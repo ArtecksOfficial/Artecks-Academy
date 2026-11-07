@@ -1,6 +1,7 @@
 "use client";
 // ─── My account — one place for a family's gems, lessons left and kids' XP ───
 
+import SiteHeader from "@/app/components/SiteHeader";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Gem, Loader2, Package, Trophy } from "lucide-react";
@@ -33,19 +34,11 @@ export default function AccountClient() {
   const totalCredits = credits ? credits.private + credits.pair + credits.group : 0;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB" }}>
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-            <span className="text-sm font-black text-gray-900 hidden sm:inline">Artecks Academy</span>
-          </Link>
-          <div className="flex items-center gap-2"><AuthButton locale={locale} /><LanguageToggle /></div>
-        </div>
-      </header>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+      <SiteHeader />
 
       <main className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-5">
-        <h1 className="text-3xl font-black text-gray-900">{zh ? "我的帳戶" : "My account"}</h1>
+        <h1 className="font-serif-tc text-3xl font-black text-gray-900">{zh ? "我的帳戶" : "My account"}</h1>
 
         {isLoading ? (
           <Loader2 className="animate-spin text-gray-300" />

@@ -5,6 +5,7 @@
  * Below the picker: coach cards, rewards callout, footer
  */
 
+import SiteHeader from "@/app/components/SiteHeader";
 import { useActionState, useState, useMemo, useEffect, useTransition } from "react";
 import {
   ChevronLeft, ChevronRight, MapPin, Clock, Users,
@@ -28,7 +29,7 @@ const COACHES = [
     reviews: 24,
     bio: "Founder of Artecks and lead chess educator. Passionate about making chess accessible and fun for youth in Linkou.",
     avatar: "IC",
-    color: "#4F46E5",
+    color: "#1C3157",
   },
   {
     id: "michael",
@@ -567,7 +568,7 @@ function InfoPanel({
       {session?.coach && (
         <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black flex-shrink-0"
-               style={{ backgroundColor: "#4F46E5" }}>
+               style={{ backgroundColor: "#1C3157" }}>
             {session.coach.avatar_initials || session.coach.name.slice(0, 2).toUpperCase()}
           </div>
           <div>
@@ -692,40 +693,16 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
   }[step];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
 
-      {/* ── Header ── */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-3 sm:px-5 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-indigo-600 transition-colors mr-1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-              Home
-            </a>
-            <div className="flex items-center gap-2.5">
-              <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-              <div>
-                <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
-                <p className="text-[11px] font-semibold mt-0.5" style={{ color: "#4F46E5" }}>林口 · Chess &amp; Enrichment</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">
-              <MapPin size={11} className="text-indigo-500" />
-              <span className="font-semibold text-indigo-600">Linkou, New Taipei</span>
-            </div>
-            <AuthButton />
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-8">
 
         {/* ── Hero intro ── */}
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 leading-tight">
-            Chess Lessons in <span style={{ color: "#4F46E5" }}>Linkou</span>
+          <h1 className="font-serif-tc text-2xl sm:text-3xl font-black text-gray-900 leading-tight">
+            Chess Lessons in <span style={{ color: "#1C3157" }}>Linkou</span>
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             {hasAnySessions

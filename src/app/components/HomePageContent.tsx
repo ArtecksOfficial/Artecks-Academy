@@ -2,6 +2,7 @@
 // ─── HomePageContent ──────────────────────────────────────────────────────────
 // Client component — receives server-fetched data and renders with live i18n.
 
+import SiteHeader from "@/app/components/SiteHeader";
 import HeroBoard from "./HeroBoard";
 import AuthButton from "./AuthButton";
 import BrochureBanner from "./BrochureBanner";
@@ -115,7 +116,7 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
       <div className="flex items-center gap-4">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-black"
-          style={{ background: "linear-gradient(135deg,#6366f1,#4f46e5)" }}
+          style={{ background: "linear-gradient(135deg,#34497A,#1C3157)" }}
         >
           {coach.avatar_initials || coach.name.slice(0, 2).toUpperCase()}
         </div>
@@ -232,41 +233,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
 
-      {/* ── Header ── */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-3 sm:px-5 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-            <p className="text-sm font-black text-gray-900 leading-none">Artecks Academy</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">
-              <MapPin size={11} className="text-indigo-500" />
-              <span className="font-semibold text-indigo-600">{t("locationLabel")}</span>
-            </div>
-            <AuthButton locale={locale} />
-            <LanguageToggle />
-          </div>
-        </div>
-
-        {/* ── Anchor nav ── */}
-        <div className="border-t border-gray-100 bg-white">
-          <div className="max-w-6xl mx-auto px-3 sm:px-5 flex items-center gap-1 overflow-x-auto scrollbar-none">
-            {navLinks.map(({ label, href, id }) => href ? (
-              <a key={label} href={href}
-                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-[#A07C34] px-3 py-2.5 transition-colors whitespace-nowrap">
-                {label}
-              </a>
-            ) : (
-              <button key={label} onClick={() => scrollTo(id!)}
-                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-[#A07C34] px-3 py-2.5 transition-colors whitespace-nowrap">
-                {label}
-              </button>
-            ))}
-
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* ── Hero: the board is the one bold element ── */}
       <section id="home" className="relative overflow-hidden" style={{ background: "#0E1E3A" }}>
