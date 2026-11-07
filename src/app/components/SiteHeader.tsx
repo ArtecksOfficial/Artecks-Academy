@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import AuthButton from "./AuthButton";
 
@@ -12,6 +12,26 @@ export default function SiteHeader() {
   const { locale } = useLanguage();
   const zh = locale === "zh";
   const path = usePathname() || "/";
+  // Which homepage section is in the middle of the screen (null = top / Home).
+  const [section, setSection] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (path !== "/") { setSection(null); return; }
+    const ids = ["coaches-programs", "faq", "line-contact"];
+    const els = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
+    if (!els.length || typeof IntersectionObserver === "undefined") return;
+    const visible = new Set<string>();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id);
+      }
+      // The band is the middle of the viewport, so at most one or two sections hit it; take the last in page order.
+      const hit = ids.filter((id) => visible.has(id));
+      setSection(hit.length ? hit[hit.length - 1] : null);
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [path]);
 
   // On the homepage, "Home" (and the logo) scroll to the very top and clear any #section.
   function goHome(e: MouseEvent) {
@@ -20,6 +40,7 @@ export default function SiteHeader() {
     let reduce = false;
     try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { /* noop */ }
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    setSection(null);
     if (window.location.hash) window.history.replaceState(null, "", "/");
   }
 
@@ -48,7 +69,9 @@ export default function SiteHeader() {
       <nav aria-label={zh ? "主選單" : "Main"} className="border-t border-[#EEEAE1]">
         <div className="max-w-6xl mx-auto px-3 sm:px-5 flex items-center gap-1 overflow-x-auto scrollbar-none">
           {links.map(({ href, label }) => {
-            const active = href === "/" ? path === "/" : !href.startsWith("/#") && path.startsWith(href);
+            const active = href.startsWith("/#")
+              ? path === "/" && section === href.slice(2)
+              : href === "/" ? path === "/" && section === null : path.startsWith(href);
             return (
               <Link key={href} href={href} onClick={href === "/" ? goHome : undefined} aria-current={active ? "page" : undefined}
                 className={`relative flex-shrink-0 text-xs font-semibold px-3 py-2.5 whitespace-nowrap transition-colors ${
