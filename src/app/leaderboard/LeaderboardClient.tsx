@@ -2,6 +2,7 @@
 // ─── Kids' XP leaderboard — by age group, this month / all time ──────────────
 // Opted-in kids only, nicknames only. Parents manage their kids below.
 
+import SiteHeader from "@/app/components/SiteHeader";
 import AuthButton from "@/app/components/AuthButton";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
@@ -31,7 +32,7 @@ export default function LeaderboardClient() {
 
   const loadBoard = useCallback(() => {
     fetch(`/api/leaderboard?period=${period}`, { headers: authHeaders() })
-      .then((r) => r.json()).then((d: Board) => setBoard(d)).catch(() => setBoard(null));
+      .then((r) => r.json()).then((d: Board) => setBoard(Array.isArray(d?.groups) ? d : { period, prize: "", lesson_xp: 100, groups: [] })).catch(() => setBoard({ period, prize: "", lesson_xp: 100, groups: [] }));
   }, [period]);
   useEffect(() => { loadBoard(); }, [loadBoard, user]);
 
@@ -44,23 +45,15 @@ export default function LeaderboardClient() {
   // Open on my child's age group the first time kids load
   useEffect(() => { if (kids?.length) setGroup(kids[0].age_group); }, [kids?.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const rows = board?.groups.find((g) => g.key === group)?.rows ?? [];
+  const rows = board?.groups?.find((g) => g.key === group)?.rows ?? [];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB" }}>
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-            <span className="text-sm font-black text-gray-900">Artecks Academy</span>
-          </Link>
-          <div className="flex items-center gap-2"><AuthButton locale={locale} /><LanguageToggle /></div>
-        </div>
-      </header>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+      <SiteHeader />
 
       <main className="max-w-2xl mx-auto px-4 py-8 sm:py-12 flex flex-col gap-5">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight inline-flex items-center gap-3">
+          <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight inline-flex items-center gap-3">
             <Trophy className="text-amber-500" size={32} /> {t("lbTitle")}
           </h1>
           <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t("lbSub")}</p>

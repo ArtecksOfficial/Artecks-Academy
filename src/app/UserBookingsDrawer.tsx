@@ -204,7 +204,7 @@ export default function UserBookingsDrawer({
               type="submit"
               disabled={isPending}
               className="px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-colors disabled:opacity-60"
-              style={{ backgroundColor: "#4F46E5" }}
+              style={{ backgroundColor: "#1C3157" }}
             >
               {isPending ? "…" : "Look up"}
             </button>

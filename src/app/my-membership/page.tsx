@@ -18,7 +18,7 @@ export default function MyMembershipPage() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-200 mb-4">
             <Crown size={26} className="text-white" />
           </div>
-          <h1 className="text-2xl font-black text-gray-900">My Membership</h1>
+          <h1 className="font-serif-tc text-2xl font-black text-gray-900">My Membership</h1>
           <p className="text-sm text-gray-500 mt-1.5 leading-snug">
             Enter the phone number you used when subscribing to check your status.
           </p>

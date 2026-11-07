@@ -1,5 +1,6 @@
 "use client";
 
+import SiteHeader from "@/app/components/SiteHeader";
 import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Gem, Loader2, Star } from "lucide-react";
@@ -130,7 +131,7 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
     body = (
       <form onSubmit={submit} className={`${card} flex flex-col gap-5`}>
         <div>
-          <h1 className="text-2xl font-black text-gray-900">{t("fbTitle")}</h1>
+          <h1 className="font-serif-tc text-2xl font-black text-gray-900">{t("fbTitle")}</h1>
           <p className="text-sm text-gray-600 mt-1">
             {info.student_name} · {info.coach_name} · {new Date(info.start_time).toLocaleDateString(locale === "en" ? "en-US" : "zh-TW", { timeZone: "Asia/Taipei", month: "long", day: "numeric" })}
           </p>
@@ -158,16 +159,8 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F6F7FB" }}>
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
-            <span className="text-sm font-black text-gray-900">Artecks Academy</span>
-          </Link>
-          <LanguageToggle />
-        </div>
-      </header>
+    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+      <SiteHeader />
       <main className="max-w-lg mx-auto px-4 py-8">{body}</main>
     </div>
   );
