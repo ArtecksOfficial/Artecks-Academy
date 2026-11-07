@@ -2,6 +2,7 @@
 // ─── HomePageContent ──────────────────────────────────────────────────────────
 // Client component — receives server-fetched data and renders with live i18n.
 
+import AuthButton from "./AuthButton";
 import BrochureBanner from "./BrochureBanner";
 import { MapPin, Clock, Users, Crown, ChevronRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -217,13 +218,14 @@ export default function HomePageContent({ sessions, provider }: Props) {
     .slice(0, 9);
   const plan = provider?.plans[0] ?? null;
 
-  const navLinks = [
-    { label: locale === "zh" ? "首頁" : "Home", id: "home" },
-    { label: locale === "zh" ? "概覽" : "Overview", id: "overview" },
-    { label: t("navWhyChess"), id: "why-chess" },
-    { label: t("navTestimonials"), id: "testimonials" },
-    { label: locale === "zh" ? "聯絡我們" : "Contacts", id: "line-contact" },
+  const zh = locale === "zh";
+  const navLinks: { label: string; href?: string; id?: string }[] = [
+    { label: zh ? "教練與課程" : "Coaches & programs", id: "coaches-programs" },
+    { label: zh ? "預約課程" : "Book", href: "/book" },
+    { label: zh ? "課程套票" : "Packages", href: "/packages" },
+    { label: zh ? "🏆 排行榜" : "🏆 Leaderboard", href: "/leaderboard" },
     { label: t("navFaq"), id: "faq" },
+    { label: zh ? "聯絡我們" : "Contact", id: "line-contact" },
   ];
 
   return (
@@ -241,20 +243,22 @@ export default function HomePageContent({ sessions, provider }: Props) {
               <MapPin size={11} className="text-indigo-500" />
               <span className="font-semibold text-indigo-600">{t("locationLabel")}</span>
             </div>
+            <AuthButton locale={locale} />
             <LanguageToggle />
-
           </div>
         </div>
 
         {/* ── Anchor nav ── */}
         <div className="border-t border-gray-100 bg-white">
           <div className="max-w-6xl mx-auto px-3 sm:px-5 flex items-center gap-1 overflow-x-auto scrollbar-none">
-            {navLinks.map(({ label, id }) => (
-              <button
-                key={id}
-                onClick={() => scrollTo(id)}
-                className="flex-shrink-0 text-xs font-semibold text-gray-500 hover:text-indigo-600 px-3 py-2.5 transition-colors whitespace-nowrap"
-              >
+            {navLinks.map(({ label, href, id }) => href ? (
+              <a key={label} href={href}
+                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-indigo-600 px-3 py-2.5 transition-colors whitespace-nowrap">
+                {label}
+              </a>
+            ) : (
+              <button key={label} onClick={() => scrollTo(id!)}
+                className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-indigo-600 px-3 py-2.5 transition-colors whitespace-nowrap">
                 {label}
               </button>
             ))}
@@ -324,18 +328,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
             >
               {t("heroBookCta")}
             </a>
-            <a
-              href="/packages"
-              className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-white bg-white/10 hover:bg-white/20 border border-white/30 px-6 py-3 rounded-2xl transition-colors"
-            >
-              {t("pkgNav")}
-            </a>
-            <a
-              href="/leaderboard"
-              className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-white bg-white/10 hover:bg-white/20 border border-white/30 px-6 py-3 rounded-2xl transition-colors"
-            >
-              🏆 {t("lbNav")}
-            </a>
           </div>
           <p className="text-xs text-indigo-200/80 -mt-4">{t("heroTrialNote")}</p>
 
@@ -361,8 +353,8 @@ export default function HomePageContent({ sessions, provider }: Props) {
         <div id="overview" style={{ scrollMarginTop: "120px" }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 -mt-4">
           {[
             { icon: "♟", stat: locale === "zh" ? "專業教練" : "Expert Coaches", sub: locale === "zh" ? "Artecks 認證" : "Artecks Certified" },
-            { icon: "🧒", stat: locale === "zh" ? "5 歲以上" : "Ages 5 & Up", sub: locale === "zh" ? "從零開始" : "Absolute beginners welcome" },
-            { icon: "👥", stat: locale === "zh" ? "小班教學" : "Max 8 Students", sub: locale === "zh" ? "每位教練最多 8 人" : "Per coach, every class" },
+            { icon: "🧒", stat: locale === "zh" ? "1–9 年級" : "Grades 1–9", sub: locale === "zh" ? "從零開始" : "Absolute beginners welcome" },
+            { icon: "👥", stat: locale === "zh" ? "一對一 · 小班" : "1-on-1 & Small Groups", sub: locale === "zh" ? "依年齡與程度配對" : "Matched by age and level" },
             { icon: "🇬🇧", stat: locale === "zh" ? "全英語授課" : "100% English", sub: locale === "zh" ? "林口唯一英語棋課" : "Only English chess in Linkou" },
           ].map(({ icon, stat, sub }) => (
             <div key={stat} className="bg-white rounded-2xl border border-gray-200 px-4 py-4 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow">
@@ -375,26 +367,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
 
         {/* ── Coaches & programs (from the printed brochure) ── */}
         <BrochureBanner locale={locale} />
-
-        {/* ── English Callout ── */}
-        <section className="rounded-3xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)" }}>
-          <div aria-hidden="true" style={{
-            position: "absolute", top: "-60px", right: "-60px", width: "300px", height: "300px",
-            background: "radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)", pointerEvents: "none",
-          }} />
-          <div className="relative p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="text-6xl flex-shrink-0 select-none">🇬🇧</div>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-emerald-400 bg-emerald-900/50 border border-emerald-700/50 px-2.5 py-1 rounded-full uppercase tracking-wide">
-                  {locale === "zh" ? "林口唯一" : "Linkou Exclusive"}
-                </span>
-              </div>
-              <h3 className="text-2xl font-black text-white">{t("englishCalloutTitle")}</h3>
-              <p className="text-sm text-slate-300 leading-relaxed max-w-xl">{t("englishCalloutDesc")}</p>
-            </div>
-          </div>
-        </section>
 
         {/* ── Why Chess ── */}
         <section id="why-chess" style={{ scrollMarginTop: "120px" }}>

@@ -42,7 +42,7 @@ type L = "en" | "zh";
 const tx = (v: string | { en: string; zh: string }, l: L) => (typeof v === "string" ? v : v[l]);
 
 const WHY = [
-  { icon: "📖", en: "English-language learning through meaningful activities", zh: "透過有意義的活動自然學英文" },
+  { icon: "🇬🇧", en: "Chess lessons taught fully in English", zh: "全英語授課的西洋棋課" },
   { icon: "♞", en: "Chess instruction tailored to each student's level", zh: "依每位學生程度量身教學" },
   { icon: "👥", en: "Individual attention and small-group learning", zh: "一對一關注與小班學習" },
   { icon: "💡", en: "Strategic thinking, communication and problem-solving", zh: "培養策略思考、溝通與解決問題能力" },

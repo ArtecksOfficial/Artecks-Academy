@@ -2,6 +2,7 @@
 // ─── Kids' XP leaderboard — by age group, this month / all time ──────────────
 // Opted-in kids only, nicknames only. Parents manage their kids below.
 
+import AuthButton from "@/app/components/AuthButton";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Loader2, Trophy } from "lucide-react";
@@ -21,7 +22,7 @@ const MEDAL = ["🥇", "🥈", "🥉"];
 const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500";
 
 export default function LeaderboardClient() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const { user, isLoading } = useAuth();
   const [period, setPeriod] = useState<"month" | "all">("month");
   const [board, setBoard] = useState<Board | null>(null);
@@ -53,7 +54,7 @@ export default function LeaderboardClient() {
             <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
             <span className="text-sm font-black text-gray-900">Artecks Academy</span>
           </Link>
-          <LanguageToggle />
+          <div className="flex items-center gap-2"><AuthButton locale={locale} /><LanguageToggle /></div>
         </div>
       </header>
 

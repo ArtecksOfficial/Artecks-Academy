@@ -1,6 +1,7 @@
 "use client";
 // ─── Lesson packages — pick a package, use gems (≤10%), order, pay by transfer ─
 
+import AuthButton from "@/app/components/AuthButton";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { CheckCircle, Gem, Loader2, Package } from "lucide-react";
@@ -114,7 +115,7 @@ export default function PackagesClient() {
             <span className="text-sm font-black text-gray-900">Artecks Academy</span>
           </Link>
           <div className="flex items-center gap-3">
-            {mine && <span className="text-xs font-bold text-violet-600 inline-flex items-center gap-1"><Gem size={13} /> {mine.gems.toLocaleString()}</span>}
+            <AuthButton locale={locale} />
             <LanguageToggle />
           </div>
         </div>
