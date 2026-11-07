@@ -25,7 +25,7 @@ const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 tex
 export default function LeaderboardClient() {
   const { t, locale } = useLanguage();
   const { user, isLoading } = useAuth();
-  const [period, setPeriod] = useState<"month" | "all">("month");
+  const [period, setPeriod] = useState<"month" | "all">("all");
   const [board, setBoard] = useState<Board | null>(null);
   const [group, setGroup] = useState("8-10");
   const [kids, setKids] = useState<Kid[] | null>(null);
