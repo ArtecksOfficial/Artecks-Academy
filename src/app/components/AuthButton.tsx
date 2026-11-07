@@ -64,24 +64,12 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
 
   if (!user) {
     return (
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => router.push("/login")}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
-            dark
-              ? "text-white/70 hover:text-white"
-              : "text-gray-600 hover:text-indigo-600 border border-gray-200 hover:border-indigo-200"
-          }`}
-        >
-          {zh ? "登入" : "Log in"}
-        </button>
-        <button
-          onClick={() => router.push("/signup")}
-          className="text-xs font-bold bg-indigo-500 hover:bg-indigo-400 text-white px-3 py-1.5 rounded-full transition-colors"
-        >
-          {zh ? "註冊" : "Sign up"}
-        </button>
-      </div>
+      <button
+        onClick={() => router.push(`/login?next=${encodeURIComponent(window.location.pathname)}`)}
+        className="text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5 rounded-full transition-colors whitespace-nowrap"
+      >
+        {zh ? "登入 / 註冊" : "Log in"}
+      </button>
     );
   }
 
@@ -91,10 +79,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
     <div className="flex items-center gap-2">
       {wallet && (
         <>
-          <span className="hidden sm:flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 text-xs font-bold px-2.5 py-1 rounded-full">
-            ⭐ {wallet.xp.toLocaleString()} XP
-          </span>
-          <span className="hidden sm:flex items-center gap-1 bg-violet-50 text-violet-600 border border-violet-200 text-xs font-bold px-2.5 py-1 rounded-full">
+          <span className="flex items-center gap-1 bg-violet-50 text-violet-600 border border-violet-200 text-xs font-bold px-2.5 py-1 rounded-full">
             💎 {wallet.gems.toLocaleString()}
           </span>
         </>
@@ -135,17 +120,20 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
             )}
             {wallet && (
               <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-3">
-                <span className="text-xs font-bold text-amber-600">⭐ {wallet.xp.toLocaleString()} XP</span>
                 <span className="text-xs font-bold text-violet-600">💎 {wallet.gems.toLocaleString()}</span>
               </div>
             )}
-            <a
-              href="/bookings/mine"
-              onClick={() => setMenuOpen(false)}
-              className="block px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 transition-colors"
-            >
-              {zh ? "我的預約" : "My Bookings"}
-            </a>
+            {[
+              ["/account", zh ? "我的帳戶" : "My account"],
+              ["/bookings/mine", zh ? "我的預約" : "My bookings"],
+              ["/packages", zh ? "我的套票" : "My packages"],
+              ["/leaderboard", zh ? "我的孩子 · 排行榜" : "My kids · Leaderboard"],
+            ].map(([href, label]) => (
+              <a key={href} href={href} onClick={() => setMenuOpen(false)}
+                className="block px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 transition-colors">
+                {label}
+              </a>
+            ))}
             <button
               onClick={async () => {
                 setMenuOpen(false);

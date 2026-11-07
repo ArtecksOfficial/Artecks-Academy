@@ -3,6 +3,7 @@
 // One merged calendar across coaches. Parents never pick a coach: every
 // booking waits for the owner, who assigns the coach and place.
 
+import AuthButton from "@/app/components/AuthButton";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -178,7 +179,7 @@ export default function BookPage() {
             <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
             <span className="text-sm font-black text-gray-900">Artecks Academy</span>
           </Link>
-          <LanguageToggle />
+          <div className="flex items-center gap-2"><AuthButton locale={locale} /><LanguageToggle /></div>
         </div>
       </header>
 
