@@ -76,10 +76,13 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
   const displayName = user.first_name || user.username;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5 sm:gap-2">
       {wallet && (
         <>
-          <span className="flex items-center gap-1 bg-violet-50 text-violet-600 border border-violet-200 text-xs font-bold px-2.5 py-1 rounded-full">
+          <span title={zh ? "我的經驗值" : "My XP"} className="flex items-center gap-1 bg-[#0E1E3A]/5 text-[#13223F] border border-[#0E1E3A]/15 text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
+            ⚡ {wallet.xp.toLocaleString()} XP
+          </span>
+          <span title={zh ? "寶石" : "Gems"} className="flex items-center gap-1 bg-violet-50 text-violet-600 border border-violet-200 text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
             💎 {wallet.gems.toLocaleString()}
           </span>
         </>
@@ -101,7 +104,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
           >
             {displayName[0]?.toUpperCase()}
           </span>
-          {displayName}
+          <span className="hidden sm:inline max-w-[8rem] truncate">{displayName}</span>
           <svg className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
@@ -120,6 +123,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
             )}
             {wallet && (
               <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-3">
+                <span className="text-xs font-bold text-[#13223F]">⚡ {wallet.xp.toLocaleString()} XP</span>
                 <span className="text-xs font-bold text-violet-600">💎 {wallet.gems.toLocaleString()}</span>
               </div>
             )}

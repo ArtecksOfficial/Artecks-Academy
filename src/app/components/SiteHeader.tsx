@@ -59,9 +59,9 @@ export default function SiteHeader() {
       <div className="max-w-6xl mx-auto px-3 sm:px-5 py-3 flex items-center justify-between gap-3">
         <Link href="/" onClick={goHome} className="flex items-center gap-2.5 min-w-0">
           <img src="/logo.png" alt="" className="h-8 w-auto" />
-          <span className="text-sm font-black text-[#13223F] leading-none whitespace-nowrap">Artecks Academy</span>
+          <span className="hidden min-[420px]:inline text-sm font-black text-[#13223F] leading-none whitespace-nowrap">Artecks Academy</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           <AuthButton locale={locale} />
           <LanguageToggle />
         </div>
