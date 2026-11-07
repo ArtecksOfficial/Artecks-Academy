@@ -4,6 +4,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { MouseEvent } from "react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import AuthButton from "./AuthButton";
 
@@ -12,7 +13,18 @@ export default function SiteHeader() {
   const zh = locale === "zh";
   const path = usePathname() || "/";
 
+  // On the homepage, "Home" (and the logo) scroll to the very top and clear any #section.
+  function goHome(e: MouseEvent) {
+    if (path !== "/") return;
+    e.preventDefault();
+    let reduce = false;
+    try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { /* noop */ }
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    if (window.location.hash) window.history.replaceState(null, "", "/");
+  }
+
   const links = [
+    { href: "/", label: zh ? "首頁" : "Home" },
     { href: "/#coaches-programs", label: zh ? "教練與課程" : "Coaches & programs" },
     { href: "/book", label: zh ? "預約課程" : "Book" },
     { href: "/packages", label: zh ? "課程套票" : "Packages" },
@@ -24,7 +36,7 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#E2DDD2]">
       <div className="max-w-6xl mx-auto px-3 sm:px-5 py-3 flex items-center justify-between gap-3">
-        <Link href="/" className="flex items-center gap-2.5 min-w-0">
+        <Link href="/" onClick={goHome} className="flex items-center gap-2.5 min-w-0">
           <img src="/logo.png" alt="" className="h-8 w-auto" />
           <span className="text-sm font-black text-[#13223F] leading-none whitespace-nowrap">Artecks Academy</span>
         </Link>
@@ -36,9 +48,9 @@ export default function SiteHeader() {
       <nav aria-label={zh ? "主選單" : "Main"} className="border-t border-[#EEEAE1]">
         <div className="max-w-6xl mx-auto px-3 sm:px-5 flex items-center gap-1 overflow-x-auto scrollbar-none">
           {links.map(({ href, label }) => {
-            const active = !href.startsWith("/#") && path.startsWith(href);
+            const active = href === "/" ? path === "/" : !href.startsWith("/#") && path.startsWith(href);
             return (
-              <Link key={href} href={href} aria-current={active ? "page" : undefined}
+              <Link key={href} href={href} onClick={href === "/" ? goHome : undefined} aria-current={active ? "page" : undefined}
                 className={`relative flex-shrink-0 text-xs font-semibold px-3 py-2.5 whitespace-nowrap transition-colors ${
                   active ? "text-[#13223F]" : "text-[#5B6478] hover:text-[#A07C34]"}`}>
                 {label}
