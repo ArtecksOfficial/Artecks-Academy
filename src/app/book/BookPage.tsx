@@ -1,9 +1,7 @@
 "use client";
 // ─── Slot booking — area → 60-min slot → details → pay / pending ─────────────
-// One merged calendar across coaches. The backend picks the coach (child's
-// existing coach → preferred coach → least-booked that week). New families
-// wait for the owner's confirmation before paying; returning families go
-// straight to the pay page.
+// One merged calendar across coaches. Parents never pick a coach: every
+// booking waits for the owner, who assigns the coach and place.
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
@@ -60,7 +58,6 @@ export default function BookPage() {
   const router = useRouter();
   const [areas, setAreas] = useState<string[] | null>(null);
   const [area, setArea] = useState<string>("");
-  const [coach, setCoach] = useState<string>("");
   const [data, setData] = useState<SlotResp | null>(null);
   const [loading, setLoading] = useState(false);
   const [day, setDay] = useState<string>("");
@@ -90,13 +87,12 @@ export default function BookPage() {
     setLoading(true);
     setSlot("");
     const p = new URLSearchParams({ area, days: "14" });
-    if (coach) p.set("coach", coach);
     fetch(`/api/slots?${p.toString()}`).then((r) => r.json()).then((d: SlotResp) => {
       setData(d);
       const first = d.slots?.[0];
       setDay(first ? tpeDayKey(first.start) : "");
     }).catch(() => setData(null)).finally(() => setLoading(false));
-  }, [area, coach]);
+  }, [area]);
 
   const byDay = useMemo(() => {
     const m = new Map<string, { start: string; end: string }[]>();
@@ -119,7 +115,6 @@ export default function BookPage() {
         body: JSON.stringify({
           start: slot,
           area,
-          coach: coach ? Number(coach) : null,
           parent_name: String(f.get("parent_name") || "").trim(),
           parent_phone: String(f.get("parent_phone") || "").trim(),
           contact_method: contactMethod,
@@ -199,7 +194,7 @@ export default function BookPage() {
               )}
               <div className="flex flex-wrap gap-2">
                 {areas?.map((a) => (
-                  <button key={a} type="button" onClick={() => { setArea(a); setCoach(""); }} aria-pressed={area === a}
+                  <button key={a} type="button" onClick={() => setArea(a)} aria-pressed={area === a}
                     className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                       area === a ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
                     <MapPin size={13} /> {a}
@@ -215,16 +210,6 @@ export default function BookPage() {
                   <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400">{t("bookPickTime")}</h2>
                   {data && <span className="text-xs text-gray-500">NT$ {data.price_twd.toLocaleString()} {t("bookPerLesson")} · {data.slot_minutes} min</span>}
                 </div>
-
-                {data && data.coaches.length > 1 && (
-                  <label className="block mb-3">
-                    <span className={label}>{t("bookPreferCoach")}</span>
-                    <select value={coach} onChange={(e) => setCoach(e.target.value)} className={input}>
-                      <option value="">{t("bookCoachAny")}</option>
-                      {data.coaches.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </select>
-                  </label>
-                )}
 
                 {loading && <Loader2 className="animate-spin text-gray-300 my-4" size={20} />}
                 {!loading && data && data.slots.length === 0 && (
