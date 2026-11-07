@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { CheckCircle, Clock, Loader2, MapPin } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useAuth } from "@/app/components/AuthContext";
+import { authHeaders } from "@/lib/auth-client";
 
 interface SlotResp {
   price_twd: number;
@@ -68,6 +70,18 @@ export default function BookPage() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<{ start: string } | null>(null);
   const [ref, setRef] = useState("");
+  const { user } = useAuth();
+  const [credits, setCredits] = useState(0);
+  const [useCredit, setUseCredit] = useState(true);
+
+  useEffect(() => {
+    if (!user) { setCredits(0); return; }
+    fetch("/api/packages/mine", { headers: authHeaders() })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setCredits(d?.credits?.private ?? 0))
+      .catch(() => {});
+  }, [user]);
+  const payWithCredit = credits > 0 && useCredit;
 
   useEffect(() => {
     // Referral links look like /book?ref=ABC1234
@@ -111,8 +125,9 @@ export default function BookPage() {
     try {
       const res = await fetch("/api/slots/book", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...authHeaders() },
         body: JSON.stringify({
+          use_package: payWithCredit,
           start: slot,
           area,
           parent_name: String(f.get("parent_name") || "").trim(),
@@ -246,6 +261,11 @@ export default function BookPage() {
                 <Link href="/request" className="block mt-4 text-xs font-semibold text-gray-500 hover:text-indigo-600">
                   {t("bookCantFind")}
                 </Link>
+                {credits === 0 && (
+                  <Link href="/packages" className="block mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-500">
+                    {t("bookPackagesLink")}
+                  </Link>
+                )}
               </section>
             )}
 
@@ -318,11 +338,20 @@ export default function BookPage() {
                   <span>{t("consentLabel")}</span>
                 </label>
 
+                {credits > 0 && (
+                  <label className="flex items-center gap-3 rounded-2xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-900 cursor-pointer">
+                    <input type="checkbox" checked={useCredit} onChange={(e) => setUseCredit(e.target.checked)}
+                      className="accent-emerald-600 w-4 h-4 flex-shrink-0" />
+                    <span className="font-semibold">{t("bookUseCredit")}</span>
+                    <span className="ml-auto text-xs">{credits} {t("bookCreditsLeft")}</span>
+                  </label>
+                )}
+
                 {error && <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
 
                 <button type="submit" disabled={sending}
                   className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg">
-                  {sending ? t("bookSending") : `${t("bookSubmit")} · NT$ ${(data?.price_twd ?? 0).toLocaleString()}`}
+                  {sending ? t("bookSending") : payWithCredit ? t("bookSubmitCredit") : `${t("bookSubmit")} · NT$ ${(data?.price_twd ?? 0).toLocaleString()}`}
                 </button>
               </form>
             )}

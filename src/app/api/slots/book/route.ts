@@ -6,9 +6,10 @@ const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
 export async function POST(req: NextRequest) {
   try {
     const fwd = req.headers.get("x-forwarded-for");
+    const auth = req.headers.get("authorization");
     const res = await fetch(`${BACKEND}/api/academy/slots/book/`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...(fwd ? { "X-Forwarded-For": fwd } : {}) },
+      headers: { "Content-Type": "application/json", ...(fwd ? { "X-Forwarded-For": fwd } : {}), ...(auth ? { Authorization: auth } : {}) },
       body: await req.text(),
       cache: "no-store",
     });

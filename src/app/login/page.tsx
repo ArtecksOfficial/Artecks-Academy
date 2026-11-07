@@ -4,6 +4,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/app/components/AuthContext";
+import LineLoginButton from "@/app/components/LineLoginButton";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -38,6 +39,13 @@ export default function LoginPage() {
           </Link>
           <h1 className="text-2xl font-bold text-white">Welcome back</h1>
           <p className="text-white/50 text-sm mt-1">Sign in to your Artecks Academy account</p>
+        </div>
+
+        <LineLoginButton
+          label="Continue with LINE · 使用 LINE 登入"
+        />
+        <div className="flex items-center gap-3 my-5 text-xs text-white/30">
+          <span className="flex-1 h-px bg-white/10" /> or email <span className="flex-1 h-px bg-white/10" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
