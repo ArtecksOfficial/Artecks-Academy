@@ -46,6 +46,24 @@ export default function BrochureBanner({ locale }: { locale: string }) {
 
   const pages: { key: string; label: string; node: ReactNode }[] = [
     {
+      key: "why",
+      label: l === "zh" ? "為什麼" : "Why us",
+      node: (
+        <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full">
+          <Title kicker={l === "zh" ? "林口 · 台北" : "Linkou · Taipei"}
+            gold={l === "zh" ? "為什麼選擇 " : "Why "} rest="Artecks Academy?" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {WHY.map((w) => (
+              <div key={w.en} className="rounded-2xl bg-white/5 border border-white/10 px-5 py-4 flex items-center gap-4">
+                <span className="text-2xl" aria-hidden="true">{w.icon}</span>
+                <p className="text-sm sm:text-base font-semibold text-slate-100">{w[l]}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    {
       key: "programs",
       label: l === "zh" ? "課程" : "Programs",
       node: (
@@ -67,24 +85,6 @@ export default function BrochureBanner({ locale }: { locale: string }) {
           <p className="text-center text-xs font-bold uppercase tracking-wider" style={{ color: GOLD }}>
             {l === "zh" ? "5 堂與 10 堂套票（買 10 送 1）" : "5 & 10-lesson packages (buy 10, get 1 free)"}
           </p>
-        </div>
-      ),
-    },
-    {
-      key: "why",
-      label: l === "zh" ? "為什麼" : "Why us",
-      node: (
-        <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full">
-          <Title kicker={l === "zh" ? "林口 · 台北" : "Linkou · Taipei"}
-            gold={l === "zh" ? "為什麼選擇 " : "Why "} rest="Artecks Academy?" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {WHY.map((w) => (
-              <div key={w.en} className="rounded-2xl bg-white/5 border border-white/10 px-5 py-4 flex items-center gap-4">
-                <span className="text-2xl" aria-hidden="true">{w.icon}</span>
-                <p className="text-sm sm:text-base font-semibold text-slate-100">{w[l]}</p>
-              </div>
-            ))}
-          </div>
         </div>
       ),
     },
