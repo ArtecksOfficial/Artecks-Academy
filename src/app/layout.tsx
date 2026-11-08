@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter, Noto_Serif_TC } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
@@ -11,14 +11,6 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-});
-
-const serifTc = Noto_Serif_TC({
-  variable: "--font-serif-tc",
-  subsets: ["latin"],
-  weight: ["700", "900"],
-  display: "swap",
-  preload: false,
 });
 
 const inter = Inter({
@@ -39,8 +31,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-TW" suppressHydrationWarning>
+      <head>
+        {/* Noto Serif TC is loaded by the browser, not next/font: its CJK build pulls
+            hundreds of font slices at build time and one failed fetch breaks the Vercel build. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&display=swap" />
+      </head>
       <body
-        className={`${jakarta.variable} ${inter.variable} ${serifTc.variable} antialiased`}
+        className={`${jakarta.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
       <Suspense fallback={null}><PageViewTracker /></Suspense>

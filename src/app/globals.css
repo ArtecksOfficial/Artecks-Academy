@@ -3,4 +3,4 @@
 @tailwind utilities;
 
 /* Headline serif (matches the printed brochure) */
-.font-serif-tc { font-family: var(--font-serif-tc), "Noto Serif TC", "Songti TC", serif; }
+.font-serif-tc { font-family: "Noto Serif TC", "Songti TC", serif; }
