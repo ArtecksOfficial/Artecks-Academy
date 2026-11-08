@@ -16,11 +16,6 @@ const COACHES = [
     founder: true,
   },
   {
-    name: "Michael Ladror", photo: "/coaches/michael-ladror.jpg",
-    lang: { en: "English", zh: "英文" },
-    spec: { en: "English-immersion board game and chess coaching", zh: "全英語桌遊與西洋棋教學" },
-  },
-  {
     name: "Allen Hsieh", photo: "/coaches/allen-hsieh.jpg",
     lang: { en: "English & Mandarin", zh: "英文、中文" },
     spec: { en: "Interactive chess coaching & tactical analysis · 15K+ YouTube community", zh: "互動式教學與戰術分析 · YouTube 1.5 萬訂閱" },
@@ -76,7 +71,7 @@ export default function BrochureBanner({ locale }: { locale: string }) {
         <div className="flex flex-col gap-6">
           <Title kicker={l === "zh" ? "為孩子找到合適的教練" : "Find the right coach for your child"}
             gold={l === "zh" ? "認識" : "Meet Our "} rest={l === "zh" ? "我們的教練" : "Coaches"} />
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-3xl mx-auto w-full">
             {COACHES.map((c) => (
               <article key={c.name} className="rounded-2xl bg-white/5 border border-white/10 p-3 sm:p-4 flex flex-col gap-3">
                 <div className="relative aspect-[6/7] rounded-xl overflow-hidden bg-white" style={{ boxShadow: `0 0 0 2px ${GOLD}66` }}>
@@ -88,7 +83,7 @@ export default function BrochureBanner({ locale }: { locale: string }) {
                   )}
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-black uppercase tracking-wide" style={{ color: GOLD }}>{c.name}</h3>
+                  <h3 className="text-[11px] sm:text-base font-black uppercase tracking-wide break-words" style={{ color: GOLD }}>{c.name}</h3>
                   <p className="mt-1 text-[11px] sm:text-xs font-semibold text-slate-200">🗣 {c.lang[l]}</p>
                   <p className="mt-1 text-[11px] sm:text-xs text-slate-300 leading-relaxed">{c.spec[l]}</p>
                 </div>
