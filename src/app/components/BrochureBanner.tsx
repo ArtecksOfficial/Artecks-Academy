@@ -8,25 +8,6 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 
 const GOLD = "#C9A35F";
 
-const COACHES = [
-  {
-    name: "Issac Chang", photo: "/coaches/issac-chang.jpg",
-    lang: { en: "English & Mandarin", zh: "英文、中文" },
-    spec: { en: "2024 National Champion (Open) · Coaching since 2024", zh: "2024 全國冠軍（公開組）· 2024 年起執教" },
-    founder: true,
-  },
-  {
-    name: "Allen Hsieh", photo: "/coaches/allen-hsieh.jpg",
-    lang: { en: "English & Mandarin", zh: "英文、中文" },
-    spec: { en: "Interactive chess coaching & tactical analysis · 15K+ YouTube community", zh: "互動式教學與戰術分析 · YouTube 1.5 萬訂閱" },
-  },
-  {
-    name: "Jared Bullock", photo: "/coaches/jared-bullock.jpg",
-    lang: { en: "English", zh: "英文" },
-    spec: { en: "Youth beginner chess & interactive play", zh: "兒童入門西洋棋與互動遊戲" },
-  },
-] as const;
-
 const PROGRAMS = [
   { icon: "♟\uFE0E", title: { en: "Private coaching", zh: "一對一" }, fmt: "1-on-1", price: "NT$1,200" },
   { icon: "♞", title: { en: "Paired lessons", zh: "一對二" }, fmt: "1-on-2", price: { en: "NT$1,000 each", zh: "每人 NT$1,000" } },
@@ -64,35 +45,6 @@ export default function BrochureBanner({ locale }: { locale: string }) {
   const touchX = useRef<number | null>(null);
 
   const pages: { key: string; label: string; node: ReactNode }[] = [
-    {
-      key: "coaches",
-      label: l === "zh" ? "教練" : "Coaches",
-      node: (
-        <div className="flex flex-col gap-6">
-          <Title kicker={l === "zh" ? "為孩子找到合適的教練" : "Find the right coach for your child"}
-            gold={l === "zh" ? "認識" : "Meet Our "} rest={l === "zh" ? "我們的教練" : "Coaches"} />
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-3xl mx-auto w-full">
-            {COACHES.map((c) => (
-              <article key={c.name} className="rounded-2xl bg-white/5 border border-white/10 p-3 sm:p-4 flex flex-col gap-3">
-                <div className="relative aspect-[6/7] rounded-xl overflow-hidden bg-white" style={{ boxShadow: `0 0 0 2px ${GOLD}66` }}>
-                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover object-top" />
-                  {"founder" in c && c.founder && (
-                    <span className="absolute top-2 left-2 text-[10px] font-black uppercase tracking-wide px-2 py-0.5 rounded-full text-[#0b1a33]" style={{ background: GOLD }}>
-                      {l === "zh" ? "創辦人" : "Founder"}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <h3 className="text-[11px] sm:text-base font-black uppercase tracking-wide break-words" style={{ color: GOLD }}>{c.name}</h3>
-                  <p className="mt-1 text-[11px] sm:text-xs font-semibold text-slate-200">🗣 {c.lang[l]}</p>
-                  <p className="mt-1 text-[11px] sm:text-xs text-slate-300 leading-relaxed">{c.spec[l]}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      ),
-    },
     {
       key: "programs",
       label: l === "zh" ? "課程" : "Programs",
