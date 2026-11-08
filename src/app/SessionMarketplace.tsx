@@ -31,17 +31,6 @@ const COACHES = [
     avatar: "IC",
     color: "#1C3157",
   },
-  {
-    id: "michael",
-    name: "Michael Ladror",
-    nameZH: "麥可老師",
-    title: "Chess Instructor",
-    rating: 4.9,
-    reviews: 18,
-    bio: "Experienced instructor specialising in tactics, strategy, and helping beginners build a solid foundation.",
-    avatar: "ML",
-    color: "#0EA5E9",
-  },
 ];
 
 // ── Timezone helpers ──────────────────────────────────────────────────────────
