@@ -14,6 +14,8 @@ const ALLOWED = [
   /^availability$/,
   /^availability\/\d+$/,
   /^feedback$/,
+  /^arena$/,
+  /^arena\/\d+\/results$/,
 ];
 
 type Ctx = { params: Promise<{ path: string[] }> };
