@@ -13,7 +13,7 @@ import { authHeaders } from "@/lib/auth-client";
 import LineLoginButton from "@/app/components/LineLoginButton";
 
 interface Row { rank: number; name: string; xp: number; mine: boolean }
-interface Board { period: string; prize: string; lesson_xp: number; groups: { key: string; label: string; rows: Row[] }[] }
+interface Board { period: string; prize: string; lesson_xp: number; arena_xp?: { participation: number; win: number; podium: number[] }; groups: { key: string; label: string; rows: Row[] }[] }
 interface Kid {
   id: number; first_name: string; nickname: string; leaderboard_opt_in: boolean;
   age: number; age_group: string; display_name: string; xp_month: number; xp_total: number;
@@ -102,6 +102,15 @@ export default function LeaderboardClient() {
           <h2 className="text-sm font-black text-gray-900">{t("lbHowTitle")}</h2>
           <ul className="mt-3 flex flex-col gap-1.5 text-sm text-gray-700">
             <li className="flex justify-between"><span>{t("lbHow1")}</span><b className="text-indigo-700">+{board?.lesson_xp ?? 100} XP</b></li>
+            {board?.arena_xp && (
+              <>
+                <li className="flex justify-between"><span>{t("lbHowArena")}</span><b className="text-indigo-700">+{board.arena_xp.participation} XP</b></li>
+                <li className="flex justify-between"><span>{t("lbHowArenaWin")}</span><b className="text-indigo-700">+{board.arena_xp.win} XP</b></li>
+                {board.arena_xp.podium.length > 0 && (
+                  <li className="flex justify-between"><span>{t("lbHowArenaPodium")}</span><b className="text-indigo-700">{board.arena_xp.podium.map((x) => `+${x}`).join(" / ")} XP</b></li>
+                )}
+              </>
+            )}
             <li className="flex justify-between"><span>{t("lbHow2")}</span><b className="text-indigo-700">+XP</b></li>
             <li className="text-gray-400">{t("lbHow3")}</li>
           </ul>
