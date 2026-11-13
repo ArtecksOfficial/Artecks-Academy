@@ -11,7 +11,6 @@ import AuthButton from "@/app/components/AuthButton";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import { authHeaders } from "@/lib/auth-client";
 import { getKidSession, KidSession } from "@/lib/kid-mode";
-import KidModeCard from "./KidModeCard";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 
 interface Kid { id: number; first_name: string; display_name: string; age: number; xp_month: number; xp_total: number; leaderboard_opt_in: boolean; linked?: boolean }
@@ -172,7 +171,16 @@ export default function AccountClient() {
               )}
             </section>
 
-            {kids !== null && <KidModeCard kids={kids} zh={zh} onKidsChanged={loadKids} />}
+            {/* Everything editable (kids, Kid Mode PIN, teen links, name, password) is on the settings page. */}
+            <Link href="/settings" className={`${card} flex items-center justify-between gap-4 hover:border-indigo-300 transition-colors`}>
+              <span>
+                <span className="block text-sm font-black text-gray-900">{zh ? "設定" : "Settings"}</span>
+                <span className="block mt-0.5 text-xs text-gray-500">
+                  {zh ? "孩子、兒童模式與家長 PIN、姓名、密碼、語言" : "Kids, Kid Mode and parent PIN, name, password, language"}
+                </span>
+              </span>
+              <span className="text-sm font-bold text-indigo-600" aria-hidden>→</span>
+            </Link>
           </>
         )}
       </main>

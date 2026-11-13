@@ -11,7 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, LogOut, MessageCircle,
-  Package, Swords, Trophy, UserRound, Users, type LucideIcon,
+  Package, Settings, Swords, Trophy, UserRound, Users, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "./AuthContext";
 import { getAccessToken } from "@/lib/auth-client";
@@ -28,6 +28,7 @@ const GROUPS: Group[] = [
       { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
       { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
       { href: "/account", en: "Account & gems", zh: "帳戶與寶石", icon: UserRound },
+      { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
     ],
   },
   {
