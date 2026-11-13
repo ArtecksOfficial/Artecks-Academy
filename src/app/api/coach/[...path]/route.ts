@@ -15,6 +15,7 @@ const ALLOWED = [
   /^availability\/\d+$/,
   /^feedback$/,
   /^arena$/,
+  /^packages$/,
   /^arena\/\d+\/results$/,
 ];
 
