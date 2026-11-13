@@ -5,6 +5,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
 import KidModeBar from "@/app/components/KidModeBar";
+import SiteSidebar from "@/app/components/SiteSidebar";
 import PageViewTracker from '@/components/PageViewTracker'
 import { Analytics } from '@vercel/analytics/next';
 
@@ -47,6 +48,7 @@ export default function RootLayout({
       <Suspense fallback={null}><PageViewTracker /></Suspense>
         <AuthProvider>
           <LanguageProvider>
+            <SiteSidebar />
             <KidModeBar />
             {children}
           </LanguageProvider>

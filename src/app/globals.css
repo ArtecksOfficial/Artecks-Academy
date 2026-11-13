@@ -4,3 +4,9 @@
 
 /* Headline serif (matches the printed brochure) */
 .font-serif-tc { font-family: "Noto Serif TC", "Songti TC", serif; }
+
+/* Left sidebar (SiteSidebar): on wide screens every page is shifted right by its width. */
+:root { --sidebar-w: 15rem; }
+@media (min-width: 1024px) {
+  body { padding-left: var(--sidebar-w); }
+}
