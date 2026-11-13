@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
+import KidModeBar from "@/app/components/KidModeBar";
 import PageViewTracker from '@/components/PageViewTracker'
 import { Analytics } from '@vercel/analytics/next';
 
@@ -45,7 +46,10 @@ export default function RootLayout({
       >
       <Suspense fallback={null}><PageViewTracker /></Suspense>
         <AuthProvider>
-          <LanguageProvider>{children}</LanguageProvider>
+          <LanguageProvider>
+            <KidModeBar />
+            {children}
+          </LanguageProvider>
         </AuthProvider>
         <Analytics />
       </body>

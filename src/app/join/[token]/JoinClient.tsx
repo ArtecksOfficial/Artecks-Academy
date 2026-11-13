@@ -1,5 +1,8 @@
 "use client";
 // ─── Family invite: an existing family claims their kids + XP in one step ────
+// The same /join/<token> address also serves teen links (a parent links a
+// 13–17-year-old's own account): if the token is not a family invite we look
+// it up as a teen link and show TeenLinkJoin instead.
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -10,6 +13,7 @@ import LineLoginButton from "@/app/components/LineLoginButton";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import TeenLinkJoin, { StudentLink } from "./TeenLinkJoin";
 
 interface Kid { id: number; first_name: string; age: number; past_xp: number }
 interface Invite { parent_name: string; claimed: boolean; claimed_by_me: boolean; kids: Kid[] }
@@ -26,16 +30,30 @@ export default function JoinClient({ token }: { token: string }) {
   const [picks, setPicks] = useState<Record<number, Pick>>({});
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [teenLink, setTeenLink] = useState<StudentLink | null>(null);
 
   useEffect(() => {
+    let stale = false;
+    const tryTeenLink = () =>
+      fetch(`/api/student-links/${token}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d: StudentLink | null) => {
+          if (stale) return;
+          if (d?.kind === "student_link") setTeenLink(d);
+          else setInv("missing");
+        })
+        .catch(() => { if (!stale) setInv("missing"); });
+
     fetch(`/api/invites/${token}`, { headers: authHeaders() })
       .then((r) => (r.ok ? r.json() : null))
       .then((d: Invite | null) => {
-        if (!d || !Array.isArray(d.kids)) { setInv("missing"); return; }
+        if (stale) return;
+        if (!d || !Array.isArray(d.kids)) return tryTeenLink();
         setInv(d);
         setPicks(Object.fromEntries(d.kids.map((k) => [k.id, { opt_in: true, nickname: "" }])));
       })
-      .catch(() => setInv("missing"));
+      .catch(() => { if (!stale) setInv("missing"); });
+    return () => { stale = true; };
   }, [token, user]);
 
   async function claim() {
@@ -59,13 +77,14 @@ export default function JoinClient({ token }: { token: string }) {
     <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
       <SiteHeader />
       <main className="max-w-lg mx-auto px-4 py-10 flex flex-col gap-5">
-        {inv === null && <Loader2 className="animate-spin text-gray-300 mx-auto" size={24} />}
-        {inv === "missing" && (
+        {teenLink && <TeenLinkJoin token={token} link={teenLink} zh={zh} />}
+        {!teenLink && inv === null && <Loader2 className="animate-spin text-gray-300 mx-auto" size={24} />}
+        {!teenLink && inv === "missing" && (
           <p className="text-center text-sm text-gray-600">
             {zh ? "找不到這個邀請連結。請用 LINE 聯絡我們。" : "We couldn't find this invite. Please message us on LINE."}
           </p>
         )}
-        {inv && inv !== "missing" && (
+        {!teenLink && inv && inv !== "missing" && (
           <>
             <div>
               <p className="text-xs font-bold tracking-[0.2em] text-[#A07C34] uppercase">Artecks Academy</p>

@@ -2,7 +2,7 @@
 // ─── My account — one place for a family's gems, lessons left and kids' XP ───
 
 import SiteHeader from "@/app/components/SiteHeader";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Gem, Loader2, Package, Trophy } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
@@ -10,8 +10,10 @@ import { useAuth } from "@/app/components/AuthContext";
 import AuthButton from "@/app/components/AuthButton";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import { authHeaders } from "@/lib/auth-client";
+import { getKidSession, KidSession } from "@/lib/kid-mode";
+import KidModeCard from "./KidModeCard";
 
-interface Kid { id: number; first_name: string; display_name: string; age: number; xp_month: number; xp_total: number; leaderboard_opt_in: boolean }
+interface Kid { id: number; first_name: string; display_name: string; age: number; xp_month: number; xp_total: number; leaderboard_opt_in: boolean; linked?: boolean }
 interface Mine { gems: number; gem_value_twd: number; credits: Record<"private" | "pair" | "group", number> }
 
 const card = "rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm";
@@ -23,12 +25,23 @@ export default function AccountClient() {
   const [mine, setMine] = useState<Mine | null>(null);
   const [kids, setKids] = useState<Kid[] | null>(null);
 
+  // Set while this device is in Kid Mode: the page then shows no money or settings.
+  const [kidSession, setKidSession] = useState<KidSession | null>(null);
+  useEffect(() => { setKidSession(getKidSession()); }, []);
+
+  const loadKids = useCallback(() => {
+    fetch("/api/students", { headers: authHeaders() })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((d) => setKids(Array.isArray(d) ? d : []))
+      .catch(() => setKids([]));
+  }, []);
+
   useEffect(() => {
     if (!user) return;
-    const h = { headers: authHeaders() };
-    fetch("/api/packages/mine", h).then((r) => (r.ok ? r.json() : null)).then(setMine).catch(() => {});
-    fetch("/api/students", h).then((r) => (r.ok ? r.json() : [])).then((d) => setKids(Array.isArray(d) ? d : [])).catch(() => setKids([]));
-  }, [user]);
+    loadKids();
+    if (getKidSession()) return; // packages are not reachable in Kid Mode
+    fetch("/api/packages/mine", { headers: authHeaders() }).then((r) => (r.ok ? r.json() : null)).then(setMine).catch(() => {});
+  }, [user, loadKids]);
 
   const credits = mine?.credits;
   const totalCredits = credits ? credits.private + credits.pair + credits.group : 0;
@@ -49,6 +62,21 @@ export default function AccountClient() {
             </p>
             <LineLoginButton next="/account" label={zh ? "使用 LINE 登入" : "Continue with LINE"} />
             <Link href="/login?next=/account" className="text-center text-sm font-bold text-indigo-600">{zh ? "用 Email 登入" : "Log in with email"}</Link>
+          </section>
+        ) : kidSession ? (
+          <section className={card}>
+            <h2 className="text-sm font-black text-gray-900">{zh ? `兒童模式 · ${kidSession.first_name}` : `Kid Mode · ${kidSession.first_name}`}</h2>
+            <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+              {zh
+                ? "這台裝置目前是兒童模式。家長請在頁面上方輸入 PIN 離開，才能查看寶石、套票和帳戶設定。"
+                : "This device is in Kid Mode. Parents: enter your PIN in the bar at the top of the page to see gems, packages and account settings."}
+            </p>
+            {(kids ?? []).filter((k) => k.id === kidSession.id).map((k) => (
+              <p key={k.id} className="mt-4 rounded-2xl bg-gray-50 px-4 py-3 text-sm text-gray-700">
+                <b className="text-amber-600">{k.xp_month}</b> {zh ? "本月 XP" : "XP this month"} · {k.xp_total} {zh ? "總計" : "total"}
+              </p>
+            ))}
+            <Link href="/leaderboard" className="mt-4 inline-block text-sm font-bold text-indigo-600">{zh ? "看排行榜 →" : "See the leaderboard →"}</Link>
           </section>
         ) : (
           <>
@@ -124,6 +152,8 @@ export default function AccountClient() {
                 </ul>
               )}
             </section>
+
+            {kids !== null && <KidModeCard kids={kids} zh={zh} onKidsChanged={loadKids} />}
           </>
         )}
       </main>

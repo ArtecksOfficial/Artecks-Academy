@@ -44,10 +44,17 @@ export function saveAuth(access: string, refresh: string, user: AuthUser): void 
   }
 }
 
+/** Swap the stored tokens (entering or leaving Kid Mode) without touching the stored user. */
+export function saveTokens(access: string, refresh: string): void {
+  localStorage.setItem(ACCESS_KEY, access);
+  localStorage.setItem(REFRESH_KEY, refresh);
+}
+
 export function clearAuth(): void {
   localStorage.removeItem(ACCESS_KEY);
   localStorage.removeItem(REFRESH_KEY);
   localStorage.removeItem(USER_KEY);
+  localStorage.removeItem("artecks_kid_mode");
   // Don't clear artecks_account_id — wallet component may still use it
 }
 

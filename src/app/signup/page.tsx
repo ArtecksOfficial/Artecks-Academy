@@ -1,9 +1,17 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
 
 type Step = "form" | "check-email";
+
+const AGE_GATE_KEY = "artecks_age_gate";
+
+const FIELD_MESSAGES: Record<string, string> = {
+  birth_year_required: "Please choose your birth year.",
+  birth_year_invalid: "Please choose a valid birth year.",
+  guardian_consent_required: "A parent or guardian needs to agree before you can create an account.",
+};
 
 export default function SignupPage() {
   const [step, setStep] = useState<Step>("form");
@@ -15,6 +23,20 @@ export default function SignupPage() {
   const [error, setError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
+  // Age gate: everyone is asked their birth year, with no hint about which
+  // answers are allowed. Under 13 cannot make an account (a parent adds them
+  // as a kid profile); 13–17 need the guardian-consent box.
+  const [birthYear, setBirthYear] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [needsGuardian, setNeedsGuardian] = useState(false);
+  const thisYear = new Date().getFullYear();
+  const age = birthYear ? thisYear - Number(birthYear) : null;
+  const isTeen = age !== null && age >= 13 && age < 18;
+
+  useEffect(() => {
+    // Once blocked, changing the year and trying again in the same visit is not offered.
+    try { if (sessionStorage.getItem(AGE_GATE_KEY)) setNeedsGuardian(true); } catch {}
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -30,6 +52,8 @@ export default function SignupPage() {
         username,
         email,
         password,
+        birth_year: Number(birthYear),
+        guardian_consent: isTeen && consent,
       }),
     });
 
@@ -45,9 +69,35 @@ export default function SignupPage() {
     // Map Django validation errors
     const errs: Record<string, string> = {};
     for (const [key, val] of Object.entries(data)) {
-      errs[key] = Array.isArray(val) ? (val as string[])[0] : String(val);
+      const msg = Array.isArray(val) ? (val as string[])[0] : String(val);
+      errs[key] = FIELD_MESSAGES[msg] ?? msg;
+    }
+    if (errs.birth_year === "guardian_account_required") {
+      try { sessionStorage.setItem(AGE_GATE_KEY, "1"); } catch {}
+      setNeedsGuardian(true);
+      return;
     }
     setError(errs);
+  }
+
+  if (needsGuardian) {
+    return (
+      <div className="min-h-screen bg-[#0f0d2a] flex items-center justify-center px-4">
+        <div className="w-full max-w-sm text-center">
+          <h1 className="text-2xl font-bold text-white mb-3">Ask a parent or guardian</h1>
+          <p className="text-white/60 text-sm leading-relaxed mb-8">
+            We can&apos;t create this account. A parent or guardian can sign up and add you to their
+            account, and then you can play from there.
+          </p>
+          <Link
+            href="/"
+            className="inline-block bg-indigo-500 hover:bg-indigo-400 text-white font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
+          >
+            Back to Artecks Academy
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   if (step === "check-email") {
@@ -160,6 +210,38 @@ export default function SignupPage() {
             />
             {error.password && <p className="text-red-400 text-xs mt-1">{error.password}</p>}
           </div>
+
+          <div>
+            <label htmlFor="birth-year" className="block text-sm font-medium text-white/70 mb-1.5">Birth year</label>
+            <select
+              id="birth-year"
+              required
+              value={birthYear}
+              onChange={(e) => setBirthYear(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+            >
+              <option value="" className="text-gray-900">Select year</option>
+              {Array.from({ length: 100 }, (_, i) => thisYear - i).map((y) => (
+                <option key={y} value={y} className="text-gray-900">{y}</option>
+              ))}
+            </select>
+            {error.birth_year && <p className="text-red-400 text-xs mt-1">{error.birth_year}</p>}
+          </div>
+
+          {isTeen && (
+            <div>
+              <label className="flex items-start gap-3 text-sm text-white/70 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-indigo-500"
+                />
+                <span>My parent or guardian knows about this account and agrees to me creating it.</span>
+              </label>
+              {error.guardian_consent && <p className="text-red-400 text-xs mt-1">{error.guardian_consent}</p>}
+            </div>
+          )}
 
           <button
             type="submit"

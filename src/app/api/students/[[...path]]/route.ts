@@ -1,4 +1,4 @@
-// /api/students[/<id>] → Django /api/academy/students/[<id>/]  (parent's JWT forwarded)
+// /api/students[/<id>[/link-invite|/link]] → Django /api/academy/students/...  (parent's JWT forwarded)
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
@@ -6,7 +6,12 @@ type Ctx = { params: Promise<{ path?: string[] }> };
 
 async function forward(req: NextRequest, ctx: Ctx, method: string) {
   const sub = ((await ctx.params).path ?? []).join("/");
-  if (!/^(|\d+)$/.test(sub)) return NextResponse.json({ detail: "Not found." }, { status: 404 });
+  // Teen account link: POST <id>/link-invite makes the link, DELETE <id>/link removes it.
+  const isLinkInvite = /^\d+\/link-invite$/.test(sub);
+  const isLink = /^\d+\/link$/.test(sub);
+  if (isLinkInvite ? method !== "POST" : isLink ? method !== "DELETE" : !/^(|\d+)$/.test(sub)) {
+    return NextResponse.json({ detail: "Not found." }, { status: 404 });
+  }
   if ((method === "PATCH" || method === "DELETE") && !sub) return NextResponse.json({ detail: "Not found." }, { status: 404 });
   const auth = req.headers.get("authorization");
   try {
