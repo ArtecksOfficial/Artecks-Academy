@@ -46,6 +46,7 @@ export default function SiteHeader() {
 
   const links = [
     { href: "/", label: zh ? "首頁" : "Home" },
+    { href: "/dashboard", label: zh ? "學習總覽" : "Dashboard" },
     { href: "/#coaches-programs", label: zh ? "教練與課程" : "Coaches & programs" },
     { href: "/book", label: zh ? "預約課程" : "Book" },
     { href: "/packages", label: zh ? "課程套票" : "Packages" },
@@ -55,7 +56,8 @@ export default function SiteHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#E2DDD2]">
+    // Top bar for phones and tablets only: from `lg` up, SiteSidebar is the navigation.
+    <header className="lg:hidden sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#E2DDD2]">
       <div className="max-w-6xl mx-auto px-3 sm:px-5 py-3 flex items-center justify-between gap-3">
         <Link href="/" onClick={goHome} className="flex items-center gap-2.5 min-w-0">
           <img src="/logo.png" alt="" className="h-8 w-auto" />
