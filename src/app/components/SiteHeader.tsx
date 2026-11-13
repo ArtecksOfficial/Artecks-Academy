@@ -53,6 +53,7 @@ export default function SiteHeader() {
     { href: "/leaderboard", label: zh ? "排行榜" : "Leaderboard" },
     { href: "/#faq", label: zh ? "常見問題" : "FAQ" },
     { href: "/#line-contact", label: zh ? "聯絡我們" : "Contact" },
+    { href: "/settings", label: zh ? "設定" : "Settings" },
   ];
 
   return (

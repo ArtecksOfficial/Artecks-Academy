@@ -144,7 +144,7 @@ async function send(path: string, method: string, body?: object) {
   }).catch(() => null);
 }
 
-function KidCard({ kid, onChange }: { kid: Kid; onChange: () => void }) {
+export function KidCard({ kid, onChange }: { kid: Kid; onChange: () => void }) {
   const { t } = useLanguage();
   const [nickname, setNickname] = useState(kid.nickname);
   const [busy, setBusy] = useState(false);
@@ -183,7 +183,7 @@ function KidCard({ kid, onChange }: { kid: Kid; onChange: () => void }) {
   );
 }
 
-function AddKid({ onAdded }: { onAdded: () => void }) {
+export function AddKid({ onAdded }: { onAdded: () => void }) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
