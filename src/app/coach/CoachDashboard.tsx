@@ -10,6 +10,7 @@ import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import ArenaPanel from "./ArenaPanel";
+import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 
 interface Student {
   id: number;
@@ -79,7 +80,9 @@ export default function CoachDashboard() {
   const { t, locale } = useLanguage();
   const [status, setStatus] = useState<Status>("loading");
   const [coachName, setCoachName] = useState("");
-  const [tab, setTab] = useState<"sessions" | "availability" | "feedback" | "arena">("sessions");
+  const [tab, setTab] = useState<"sessions" | "packages" | "availability" | "feedback" | "arena">("sessions");
+  // Packages tab: how many classes each of this coach's students has left.
+  const [packages, setPackages] = useState<TrackerPackage[] | null>(null);
   const [fb, setFb] = useState<{ count: number; avg_rating: number | null; avg_enjoyment: number | null; comments: string[]; comments_hidden_until: number } | null>(null);
   const [sessions, setSessions] = useState<CoachSession[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -105,6 +108,12 @@ export default function CoachDashboard() {
     }
     load().catch(() => setStatus("not_coach"));
   }, [isLoading, user, load]);
+
+  // Reload whenever the tab is opened, so counts are right after marking a class attended.
+  useEffect(() => {
+    if (tab !== "packages" || status !== "ready") return;
+    api<{ packages: TrackerPackage[] }>("packages").then((r) => setPackages(r.ok && r.data ? r.data.packages : []));
+  }, [tab, status]);
 
   async function markAttended(bookingId: number) {
     setError(null);
@@ -189,7 +198,7 @@ export default function CoachDashboard() {
           <>
             <h1 className="font-serif-tc text-2xl font-black text-gray-900 mb-5">{coachName}</h1>
             <div className="flex flex-wrap gap-2 mb-5" role="tablist">
-              {(["sessions", "availability", "feedback", "arena"] as const).map((k) => (
+              {(["sessions", "packages", "availability", "feedback", "arena"] as const).map((k) => (
                 <button
                   key={k}
                   role="tab"
@@ -199,7 +208,7 @@ export default function CoachDashboard() {
                     tab === k ? "bg-indigo-600 text-white" : "bg-white border border-gray-200 text-gray-600"
                   }`}
                 >
-                  {k === "sessions" ? t("coachTabSessions") : k === "availability" ? t("coachTabAvailability") : k === "feedback" ? t("coachTabFeedback") : t("coachTabArena")}
+                  {k === "sessions" ? t("coachTabSessions") : k === "packages" ? t("coachTabPackages") : k === "availability" ? t("coachTabAvailability") : k === "feedback" ? t("coachTabFeedback") : t("coachTabArena")}
                 </button>
               ))}
             </div>
@@ -236,6 +245,12 @@ export default function CoachDashboard() {
                   <blockquote key={i} className="rounded-2xl bg-white border border-gray-200 p-4 text-sm text-gray-700 leading-relaxed">“{c}”</blockquote>
                 ))}
               </div>
+            )}
+
+            {tab === "packages" && (
+              packages === null
+                ? <p className="text-sm text-gray-400">…</p>
+                : <PackageTracker packages={packages} zh={locale === "zh"} forCoach />
             )}
 
             {tab === "arena" && <ArenaPanel t={t} />}

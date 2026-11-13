@@ -4,7 +4,7 @@
 import SiteHeader from "@/app/components/SiteHeader";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Gem, Loader2, Package, Trophy } from "lucide-react";
+import { CalendarCheck, Gem, Loader2, Package, Trophy } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { useAuth } from "@/app/components/AuthContext";
 import AuthButton from "@/app/components/AuthButton";
@@ -12,6 +12,7 @@ import LineLoginButton from "@/app/components/LineLoginButton";
 import { authHeaders } from "@/lib/auth-client";
 import { getKidSession, KidSession } from "@/lib/kid-mode";
 import KidModeCard from "./KidModeCard";
+import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 
 interface Kid { id: number; first_name: string; display_name: string; age: number; xp_month: number; xp_total: number; leaderboard_opt_in: boolean; linked?: boolean }
 interface Mine { gems: number; gem_value_twd: number; credits: Record<"private" | "pair" | "group", number> }
@@ -24,6 +25,7 @@ export default function AccountClient() {
   const { user, isLoading } = useAuth();
   const [mine, setMine] = useState<Mine | null>(null);
   const [kids, setKids] = useState<Kid[] | null>(null);
+  const [tracker, setTracker] = useState<TrackerPackage[] | null>(null);
 
   // Set while this device is in Kid Mode: the page then shows no money or settings.
   const [kidSession, setKidSession] = useState<KidSession | null>(null);
@@ -41,6 +43,10 @@ export default function AccountClient() {
     loadKids();
     if (getKidSession()) return; // packages are not reachable in Kid Mode
     fetch("/api/packages/mine", { headers: authHeaders() }).then((r) => (r.ok ? r.json() : null)).then(setMine).catch(() => {});
+    fetch("/api/packages/tracker", { headers: authHeaders() })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setTracker(d && Array.isArray(d.packages) ? d.packages : []))
+      .catch(() => setTracker([]));
   }, [user, loadKids]);
 
   const credits = mine?.credits;
@@ -123,6 +129,19 @@ export default function AccountClient() {
                 <Link href="/bookings/mine" className="flex-1 text-center rounded-xl border border-gray-200 text-sm font-bold text-gray-700 py-2.5">{zh ? "我的預約" : "My bookings"}</Link>
               </div>
             </section>
+
+            {/* Class tracker: every package, class by class */}
+            {tracker !== null && tracker.length > 0 && (
+              <section className={card}>
+                <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2">
+                  <CalendarCheck size={16} className="text-indigo-600" /> {zh ? "上課進度" : "Class tracker"}
+                </h2>
+                <p className="mt-1 mb-4 text-xs text-gray-500">
+                  {zh ? "每上完一堂，這裡會顯示套票還剩幾堂。" : "After every class, see how many are left in the package."}
+                </p>
+                <PackageTracker packages={tracker} zh={zh} />
+              </section>
+            )}
 
             {/* Kids & XP */}
             <section className={card}>

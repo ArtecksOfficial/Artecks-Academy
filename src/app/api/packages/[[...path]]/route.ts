@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
-const ALLOWED = /^(|mine|buy|\d+\/transfer-notice|\d+\/cancel)$/;
+const ALLOWED = /^(|mine|tracker|buy|\d+\/transfer-notice|\d+\/cancel)$/;
 
 async function forward(req: NextRequest, path: string[] | undefined, method: "GET" | "POST") {
   const sub = (path ?? []).join("/");
