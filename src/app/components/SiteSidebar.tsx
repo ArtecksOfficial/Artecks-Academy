@@ -18,6 +18,7 @@ import { useAuth } from "./AuthContext";
 import { getAccessToken } from "@/lib/auth-client";
 import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import LegalLinks from "./LegalLinks";
 
 interface Item { href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; guardianOnly?: boolean }
 interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
@@ -123,6 +124,7 @@ export default function SiteSidebar() {
             </div>
           );
         })}
+        <LegalLinks className="mt-5 px-3 text-[11px] text-white/40" />
       </nav>
 
       <div className="border-t border-white/10 p-3 flex flex-col gap-2">

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
+import LegalLinks from "@/app/components/LegalLinks";
 
 type Step = "form" | "check-email";
 
@@ -251,6 +252,8 @@ export default function SignupPage() {
             {loading ? "Creating account…" : "Create account"}
           </button>
         </form>
+
+        <p className="text-center mt-4"><LegalLinks className="justify-center text-xs text-white/40" /></p>
 
         <p className="text-center text-sm text-white/40 mt-6">
           Already have an account?{" "}

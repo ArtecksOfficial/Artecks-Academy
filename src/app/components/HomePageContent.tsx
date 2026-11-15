@@ -3,6 +3,7 @@
 // Client component — receives server-fetched data and renders with live i18n.
 
 import SiteHeader from "@/app/components/SiteHeader";
+import LegalLinks from "@/app/components/LegalLinks";
 import HeroBoard from "./HeroBoard";
 import AuthButton from "./AuthButton";
 import BrochureBanner from "./BrochureBanner";
@@ -381,6 +382,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
             <span className="font-bold text-gray-500">Artecks Academy</span>
             <span>· Linkou, New Taipei</span>
           </div>
+          <LegalLinks />
 
         </footer>
 
