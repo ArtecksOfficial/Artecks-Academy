@@ -1,7 +1,8 @@
 "use client";
 // ─── Left sidebar (desktop) — the main navigation on wide screens ────────────
 // Same shape as the other Artecks sites (chess.artecks.com): brand at the top,
-// grouped links with icons, wallet and account at the bottom.
+// grouped links with icons, account and wallet (XP, gems) at the bottom.
+// Language is changed in Settings (and in the top bar on phones), not here.
 // Below the `lg` breakpoint the sidebar is hidden and SiteHeader (the top bar)
 // takes over; on `lg` and up SiteHeader hides and the page is shifted right
 // by the sidebar's width (see globals.css, --sidebar-w).
@@ -16,7 +17,7 @@ import {
 import { useAuth } from "./AuthContext";
 import { getAccessToken } from "@/lib/auth-client";
 import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
-import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface Item { href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; guardianOnly?: boolean }
 interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
@@ -129,14 +130,6 @@ export default function SiteSidebar() {
           <div className="h-10 rounded-lg bg-white/5 animate-pulse" />
         ) : user ? (
           <>
-            {wallet && (
-              <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-                <span className="rounded-lg bg-white/5 px-2.5 py-2 text-center" title={zh ? "我的經驗值" : "My XP"}>⚡ {wallet.xp.toLocaleString()} XP</span>
-                <Link href="/account" className="rounded-lg bg-white/5 px-2.5 py-2 text-center text-[#E7C98A] hover:bg-white/10" title={zh ? "家庭寶石" : "Family gems"}>
-                  💎 {wallet.gems.toLocaleString()}
-                </Link>
-              </div>
-            )}
             <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
               <span className="h-8 w-8 shrink-0 rounded-full bg-[#C49A4A] text-[#0E1E3A] text-sm font-black flex items-center justify-center">
                 {name[0]?.toUpperCase() ?? "?"}
@@ -149,6 +142,14 @@ export default function SiteSidebar() {
                 </button>
               )}
             </div>
+            {wallet && (
+              <div className="grid grid-cols-2 gap-2 text-xs font-bold">
+                <span className="rounded-lg bg-white/5 px-2.5 py-2 text-center" title={zh ? "我的經驗值" : "My XP"}>⚡ {wallet.xp.toLocaleString()} XP</span>
+                <Link href="/account" className="rounded-lg bg-white/5 px-2.5 py-2 text-center text-[#E7C98A] hover:bg-white/10" title={zh ? "家庭寶石" : "Family gems"}>
+                  💎 {wallet.gems.toLocaleString()}
+                </Link>
+              </div>
+            )}
           </>
         ) : (
           <>
@@ -160,7 +161,6 @@ export default function SiteSidebar() {
             </Link>
           </>
         )}
-        <div className="flex justify-center pt-1"><LanguageToggle /></div>
       </div>
     </aside>
   );

@@ -1,7 +1,8 @@
 "use client";
 // ─── Language Context ─────────────────────────────────────────────────────────
 // Provides locale state + t() translation helper throughout the app.
-// Persists locale choice to localStorage across sessions.
+// Persists locale choice to localStorage across sessions; with no saved choice,
+// the first visit follows the browser language.
 
 import {
   createContext,
@@ -31,11 +32,18 @@ const LanguageContext = createContext<LanguageContextValue>({
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("zh");
 
-  // Hydrate from localStorage on mount
+  // Hydrate from localStorage (or the browser language) on mount
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored === "en" || stored === "zh") setLocaleState(stored);
+      if (stored === "en" || stored === "zh") { setLocaleState(stored); return; }
+    } catch {}
+    // No saved choice: follow the browser. Chinese browsers get zh, everyone else en.
+    // Not saved, so an explicit choice (Settings, top bar) always wins later.
+    try {
+      const langs = navigator.languages?.length ? navigator.languages : [navigator.language];
+      const first = (langs[0] || "").toLowerCase();
+      if (first && !first.startsWith("zh")) setLocaleState("en");
     } catch {}
   }, []);
 
