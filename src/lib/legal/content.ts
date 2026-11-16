@@ -149,10 +149,10 @@ const refund: LegalDoc = {
     {
       heading: { zh: "一、上課前取消或改期", en: "1. Cancelling or rescheduling before a lesson" },
       body: [
-        // DECISION: is any notice period required (e.g. 24 hours)? The draft assumes none.
-        { zh: "在課程開始前取消的，您可以選擇全額退款或免費改期，不收取手續費。", en: "If you cancel before a lesson starts, you can choose a full refund or a free reschedule. There is no fee." },
-        // DECISION: how are no-shows treated? The draft counts them as used.
-        { zh: "未事先通知而缺席的課程，視為已使用。", en: "A lesson missed without telling us beforehand counts as used." },
+        // Decided 2026-11-16: 24-hour notice.
+        { zh: "在課程開始前 24 小時以前取消的，您可以選擇全額退款或免費改期，不收取手續費。", en: "If you cancel at least 24 hours before a lesson starts, you can choose a full refund or a free reschedule. There is no fee." },
+        // Decided 2026-11-16: late cancellations and no-shows count as used (the coach has kept the slot).
+        { zh: "距離上課不到 24 小時才取消，或未事先通知而缺席的課程，視為已使用，因為教練已為您保留該時段。", en: "A lesson cancelled less than 24 hours before it starts, or missed without telling us, counts as used, because the coach has kept that time for you." },
       ],
     },
     {
@@ -160,8 +160,8 @@ const refund: LegalDoc = {
       body: [
         { zh: "套票尚未使用任何一堂課的，可申請全額退款。", en: "A package with no lessons used can be refunded in full." },
         { zh: "已開始使用的套票，我們會依已上課的堂數按套票的每堂價格扣除後，退還其餘未使用堂數的費用。", en: "For a package that has been started, we deduct the lessons already taken at the package's per-lesson price and refund the rest." },
-        // DECISION: gems earned from refunded lessons are removed (matches the open "Refund → revoke gems" task).
-        { zh: "因退款的課程而取得的寶石將一併扣回。", en: "Gems earned from lessons that are refunded are removed." },
+        // Decided 2026-11-16: gems from lessons actually attended are kept; only gems tied to refunded lessons are removed.
+        { zh: "已上課所獲得的寶石不受退款影響；僅與退款課程相關的寶石將一併扣回。", en: "Gems you earned from lessons you attended are not affected by a refund. Only gems tied to the refunded lessons are removed." },
       ],
     },
     {
