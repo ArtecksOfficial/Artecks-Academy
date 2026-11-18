@@ -49,7 +49,7 @@ const GROUPS: Group[] = [
     items: [
       { href: CHESS_URL, en: "Play chess", zh: "線上下棋", icon: Swords, external: true },
       { href: "/coach", en: "For coaches", zh: "教練專區", icon: GraduationCap, guardianOnly: true },
-      { href: TEACH_LINE_URL, en: "Teach with us", zh: "加入教練團隊", icon: Languages, external: true, newTab: true, guardianOnly: true },
+      { href: TEACH_LINE_URL, en: "Teach with us", zh: "加入師資團隊", icon: Languages, external: true, newTab: true, guardianOnly: true },
       { href: "/#faq", en: "FAQ", zh: "常見問題", icon: HelpCircle },
       { href: "/#line-contact", en: "Contact", zh: "聯絡我們", icon: MessageCircle },
     ],

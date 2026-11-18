@@ -1,5 +1,5 @@
 "use client";
-// Homepage band inviting English-speaking chess coaches to apply over LINE.
+// Homepage band inviting teachers who teach in English (chess or other subjects) to apply over LINE.
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { TEACH_LINE_URL } from "@/lib/teach";
@@ -13,12 +13,12 @@ export default function TeachWithUs() {
       className="rounded-2xl bg-[#0E1E3A] px-6 py-8 sm:px-10 sm:py-9 flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
       <div className="flex-1">
         <h2 id="teach-title" className="font-serif-tc text-2xl sm:text-3xl font-black text-white">
-          {zh ? "也想用英文教西洋棋嗎？" : "Want to teach in English too?"}
+          {zh ? "也想用英文教學嗎？" : "Want to teach in English too?"}
         </h2>
         <p className="mt-2 text-sm text-[#C9D2E3] leading-relaxed max-w-xl">
           {zh
-            ? "我們正在尋找能用英文教孩子下西洋棋的教練。在 LINE 傳訊息給我們，介紹一下您自己，我們會盡快回覆。"
-            : "We're looking for coaches who can teach kids chess in English. Send us a message on LINE about yourself and we'll get back to you."}
+            ? "我們正在尋找能用英文教孩子的老師，西洋棋或其他科目都歡迎。在 LINE 傳訊息給我們，介紹一下您自己和您教的科目，我們會盡快回覆。"
+            : "We're looking for teachers who can teach kids in English, whether that's chess or another subject. Send us a message on LINE about yourself and what you teach, and we'll get back to you."}
         </p>
       </div>
       <a href={TEACH_LINE_URL} target="_blank" rel="noopener noreferrer"
