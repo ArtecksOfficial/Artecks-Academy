@@ -12,15 +12,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, LogOut, MessageCircle,
-  Package, Settings, Swords, Trophy, UserRound, Users, type LucideIcon,
+  Languages, Package, Settings, Swords, Trophy, UserRound, Users, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "./AuthContext";
 import { getAccessToken } from "@/lib/auth-client";
 import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LegalLinks from "./LegalLinks";
+import { teachLineUrl } from "@/lib/teach";
 
-interface Item { href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; guardianOnly?: boolean }
+// Placeholder href: the real LINE link depends on the language, so it is built at render time.
+const TEACH_HREF = "line:teach";
+
+interface Item { href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean }
 interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
 
 const GROUPS: Group[] = [
@@ -48,6 +52,7 @@ const GROUPS: Group[] = [
     items: [
       { href: CHESS_URL, en: "Play chess", zh: "線上下棋", icon: Swords, external: true },
       { href: "/coach", en: "For coaches", zh: "教練專區", icon: GraduationCap, guardianOnly: true },
+      { href: TEACH_HREF, en: "Teach with us", zh: "加入教練團隊", icon: Languages, external: true, newTab: true, guardianOnly: true },
       { href: "/#faq", en: "FAQ", zh: "常見問題", icon: HelpCircle },
       { href: "/#line-contact", en: "Contact", zh: "聯絡我們", icon: MessageCircle },
     ],
@@ -115,7 +120,8 @@ export default function SiteSidebar() {
                   return (
                     <li key={item.href}>
                       {item.external
-                        ? <a href={item.href} className={cls}>{inner}</a>
+                        ? <a href={item.href === TEACH_HREF ? teachLineUrl(zh) : item.href} className={cls}
+                            {...(item.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{inner}</a>
                         : <Link href={item.href} aria-current={active ? "page" : undefined} className={cls}>{inner}</Link>}
                     </li>
                   );

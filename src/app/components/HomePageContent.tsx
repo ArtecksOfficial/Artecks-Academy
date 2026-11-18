@@ -4,6 +4,7 @@
 
 import SiteHeader from "@/app/components/SiteHeader";
 import LegalLinks from "@/app/components/LegalLinks";
+import TeachWithUs from "@/app/components/TeachWithUs";
 import HeroBoard from "./HeroBoard";
 import AuthButton from "./AuthButton";
 import BrochureBanner from "./BrochureBanner";
@@ -353,6 +354,9 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </div>
           </div>
         </section>
+
+        {/* ── Teach with us ── */}
+        <TeachWithUs />
 
         {/* ── FAQ ── */}
         <section id="faq" style={{ scrollMarginTop: "120px" }}>
