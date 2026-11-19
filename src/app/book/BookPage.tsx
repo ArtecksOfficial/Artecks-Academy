@@ -8,7 +8,7 @@ import AuthButton from "@/app/components/AuthButton";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CheckCircle, Clock, Loader2, MapPin } from "lucide-react";
+import { CheckCircle, Clock, Gem, Loader2, MapPin } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useAuth } from "@/app/components/AuthContext";
@@ -17,6 +17,8 @@ import { authHeaders } from "@/lib/auth-client";
 interface SlotResp {
   price_twd: number;
   slot_minutes: number;
+  max_gems?: number;
+  gem_value_twd?: number;
   coaches: { id: number; name: string; title: string }[];
   slots: { start: string; end: string }[];
 }
@@ -59,6 +61,7 @@ function fmtFull(iso: string, locale: string) {
 
 export default function BookPage() {
   const { t, locale } = useLanguage();
+  const zh = locale === "zh";
   const router = useRouter();
   const [areas, setAreas] = useState<string[] | null>(null);
   const [area, setArea] = useState<string>("");
@@ -75,15 +78,22 @@ export default function BookPage() {
   const { user } = useAuth();
   const [credits, setCredits] = useState(0);
   const [useCredit, setUseCredit] = useState(true);
+  const [gems, setGems] = useState(0);
+  const [useGems, setUseGems] = useState(true);
 
   useEffect(() => {
-    if (!user) { setCredits(0); return; }
+    if (!user) { setCredits(0); setGems(0); return; }
     fetch("/api/packages/mine", { headers: authHeaders() })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => setCredits(d?.credits?.private ?? 0))
+      .then((d) => { setCredits(d?.credits?.private ?? 0); setGems(d?.gems ?? 0); })
       .catch(() => {});
   }, [user]);
   const payWithCredit = credits > 0 && useCredit;
+  // Family gems take up to the server's cap off a single lesson (the server re-checks).
+  const gemsAvailable = Math.min(gems, data?.max_gems ?? 0);
+  const gemsToUse = !payWithCredit && useGems ? gemsAvailable : 0;
+  const gemDiscount = gemsToUse * (data?.gem_value_twd ?? 3);
+  const priceToPay = Math.max(0, (data?.price_twd ?? 0) - gemDiscount);
 
   useEffect(() => {
     // Referral links look like /book?ref=ABC1234
@@ -130,6 +140,7 @@ export default function BookPage() {
         headers: { "Content-Type": "application/json", ...authHeaders() },
         body: JSON.stringify({
           use_package: payWithCredit,
+          gems: gemsToUse,
           start: slot,
           area,
           parent_name: String(f.get("parent_name") || "").trim(),
@@ -341,11 +352,24 @@ export default function BookPage() {
                   </label>
                 )}
 
+                {!payWithCredit && gemsAvailable > 0 && (
+                  <label className="flex items-center gap-3 rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3 text-sm text-[#13223F] cursor-pointer">
+                    <input type="checkbox" checked={useGems} onChange={(e) => setUseGems(e.target.checked)}
+                      className="accent-[#C49A4A] w-4 h-4 flex-shrink-0" />
+                    <Gem size={15} className="text-[#A07C34] flex-shrink-0" />
+                    <span className="font-semibold">
+                      {zh ? `使用 ${gemsAvailable} 顆寶石折抵 NT$ ${(gemsAvailable * (data?.gem_value_twd ?? 3)).toLocaleString()}`
+                          : `Use ${gemsAvailable} gems for NT$ ${(gemsAvailable * (data?.gem_value_twd ?? 3)).toLocaleString()} off`}
+                    </span>
+                    <span className="ml-auto text-xs text-[#5B6478]">{zh ? `共 ${gems} 顆` : `${gems} gems`}</span>
+                  </label>
+                )}
+
                 {error && <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
 
                 <button type="submit" disabled={sending}
                   className="w-full rounded-2xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg">
-                  {sending ? t("bookSending") : payWithCredit ? t("bookSubmitCredit") : `${t("bookSubmit")} · NT$ ${(data?.price_twd ?? 0).toLocaleString()}`}
+                  {sending ? t("bookSending") : payWithCredit ? t("bookSubmitCredit") : `${t("bookSubmit")} · NT$ ${priceToPay.toLocaleString()}`}
                 </button>
               </form>
             )}

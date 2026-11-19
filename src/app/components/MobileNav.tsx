@@ -63,7 +63,7 @@ export default function MobileNav() {
       : { href: "/book", en: "Book", zh: "預約", icon: CalendarPlus },
     { href: CHESS_URL, en: "Play chess", zh: "下棋", icon: Swords, external: true, primary: true },
     user && !kidMode
-      ? { href: "/dashboard", en: "Family", zh: "家庭", icon: LayoutDashboard }
+      ? { href: "/dashboard", en: "Learning", zh: "學習", icon: LayoutDashboard }
       : user
         ? { href: "/account", en: "Me", zh: "我的", icon: LayoutDashboard }
         : { href: `/login?next=${encodeURIComponent(path)}`, en: "Log in", zh: "登入", icon: LogIn },
