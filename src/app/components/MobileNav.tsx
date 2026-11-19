@@ -174,7 +174,7 @@ export default function MobileNav() {
                 <button type="button" onClick={() => { setOpen(false); switchTo(mode === "coach" ? "parent" : "coach"); }}
                   className="flex items-center justify-center gap-2 rounded-xl border border-[#C49A4A]/50 py-2.5 text-sm font-bold text-[#E7C98A]">
                   <ArrowLeftRight size={15} aria-hidden />
-                  {mode === "coach" ? (zh ? "切換到家長模式" : "Switch to parent mode") : (zh ? "切換到教練模式" : "Switch to coach mode")}
+                  {mode === "coach" ? (zh ? "切換到學習" : "Switch to learning") : (zh ? "切換到教學" : "Switch to teaching")}
                 </button>
               )}
               {user ? (

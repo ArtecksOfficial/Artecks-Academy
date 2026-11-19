@@ -12,7 +12,7 @@ export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: b
 
 export const GROUPS: Group[] = [
   {
-    en: "My family", zh: "我的家庭", signedInOnly: true,
+    en: "My learning", zh: "我的學習", signedInOnly: true,
     items: [
       { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
       { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
