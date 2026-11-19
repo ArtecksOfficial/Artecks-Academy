@@ -8,6 +8,7 @@ const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
 
 const ALLOWED = [
   /^me$/,
+  /^apply$/,
   /^sessions$/,
   /^sessions\/\d+$/,
   /^bookings\/\d+\/(attend|report)$/,

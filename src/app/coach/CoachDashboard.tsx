@@ -12,6 +12,7 @@ import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import ArenaPanel from "./ArenaPanel";
 import CoachCalendar from "./CoachCalendar";
 import HomeworkPanel from "./HomeworkPanel";
+import ProfilePanel from "./ProfilePanel";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 
 interface Student {
@@ -82,7 +83,7 @@ export default function CoachDashboard() {
   const { t, locale } = useLanguage();
   const [status, setStatus] = useState<Status>("loading");
   const [coachName, setCoachName] = useState("");
-  const [tab, setTab] = useState<"sessions" | "homework" | "packages" | "availability" | "feedback" | "arena">("sessions");
+  const [tab, setTab] = useState<"sessions" | "homework" | "packages" | "availability" | "feedback" | "arena" | "profile">("sessions");
   // Packages tab: how many classes each of this coach's students has left.
   const [packages, setPackages] = useState<TrackerPackage[] | null>(null);
   const [fb, setFb] = useState<{ count: number; avg_rating: number | null; avg_enjoyment: number | null; comments: string[]; comments_hidden_until: number } | null>(null);
@@ -90,11 +91,14 @@ export default function CoachDashboard() {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  const [approval, setApproval] = useState<"approved" | "pending" | "rejected">("approved");
+
   const load = useCallback(async () => {
-    const me = await api<{ name: string }>("me");
+    const me = await api<{ name: string; approval_status?: "approved" | "pending" | "rejected" }>("me");
     if (me.status === 401) return setStatus("anon");
     if (!me.ok) return setStatus("not_coach");
     setCoachName(me.data?.name ?? "");
+    setApproval(me.data?.approval_status ?? "approved");
     const [s, a, f] = await Promise.all([api<CoachSession[]>("sessions"), api<Slot[]>("availability"), api<typeof fb>("feedback")]);
     setSessions(s.data ?? []);
     setSlots(a.data ?? []);
@@ -193,14 +197,27 @@ export default function CoachDashboard() {
         {status === "not_coach" && (
           <div className="rounded-3xl bg-white border border-amber-200 p-8 text-center">
             <p className="text-sm text-amber-800">{t("coachNotCoach")}</p>
+            <Link href="/teach" className="mt-4 inline-block rounded-xl bg-indigo-600 text-white font-bold px-6 py-3 text-sm">
+              {locale === "zh" ? "申請成為老師" : "Sign up as a teacher"}
+            </Link>
           </div>
         )}
 
         {status === "ready" && (
           <>
             <h1 className="font-serif-tc text-2xl font-black text-gray-900 mb-5">{coachName}</h1>
+            {approval === "pending" && (
+              <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                <p className="font-bold">{locale === "zh" ? "⏳ 等待審核中" : "⏳ Waiting for approval"}</p>
+                <p className="mt-1">
+                  {locale === "zh"
+                    ? "家長暫時還看不到你。先在「我的檔案」完成介紹，並在「可上課時間」設定時間、地點與休假；審核通過後就會出現在網站和預約行事曆上。"
+                    : "Parents can't see you yet. Finish your Profile and set your hours, places and days off under Availability. Once approved, you'll appear on the site and in the booking calendar."}
+                </p>
+              </div>
+            )}
             <div className="flex flex-wrap gap-2 mb-5" role="tablist">
-              {(["sessions", "homework", "packages", "availability", "feedback", "arena"] as const).map((k) => (
+              {(["sessions", "homework", "availability", "profile", "packages", "feedback", "arena"] as const).map((k) => (
                 <button
                   key={k}
                   role="tab"
@@ -210,7 +227,7 @@ export default function CoachDashboard() {
                     tab === k ? "bg-indigo-600 text-white" : "bg-white border border-gray-200 text-gray-600"
                   }`}
                 >
-                  {k === "sessions" ? t("coachTabSessions") : k === "homework" ? (locale === "zh" ? "作業" : "Homework") : k === "packages" ? t("coachTabPackages") : k === "availability" ? t("coachTabAvailability") : k === "feedback" ? t("coachTabFeedback") : t("coachTabArena")}
+                  {k === "profile" ? (locale === "zh" ? "我的檔案" : "Profile") : k === "sessions" ? t("coachTabSessions") : k === "homework" ? (locale === "zh" ? "作業" : "Homework") : k === "packages" ? t("coachTabPackages") : k === "availability" ? t("coachTabAvailability") : k === "feedback" ? t("coachTabFeedback") : t("coachTabArena")}
                 </button>
               ))}
             </div>
@@ -258,6 +275,8 @@ export default function CoachDashboard() {
             {tab === "arena" && <ArenaPanel t={t} />}
 
             {tab === "homework" && <HomeworkPanel zh={locale === "zh"} />}
+
+            {tab === "profile" && <ProfilePanel zh={locale === "zh"} onSaved={(name) => setCoachName(name)} />}
 
             {tab === "availability" && (
               <div className="flex flex-col gap-6">

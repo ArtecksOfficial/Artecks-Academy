@@ -4,7 +4,7 @@ import {
   Languages, Package, Settings, Swords, Trophy, UserRound, Users, type LucideIcon,
 } from "lucide-react";
 import { CHESS_URL } from "@/lib/kid-mode";
-import { TEACH_LINE_URL } from "@/lib/teach";
+import { TEACH_URL } from "@/lib/teach";
 
 export interface Item { href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean }
 export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
@@ -35,7 +35,7 @@ export const GROUPS: Group[] = [
     items: [
       { href: CHESS_URL, en: "Play chess", zh: "線上下棋", icon: Swords, external: true },
       { href: "/coach", en: "For coaches", zh: "教練專區", icon: GraduationCap, guardianOnly: true },
-      { href: TEACH_LINE_URL, en: "Teach with us", zh: "加入師資團隊", icon: Languages, external: true, newTab: true, guardianOnly: true },
+      { href: TEACH_URL, en: "Teach with us", zh: "加入師資團隊", icon: Languages, guardianOnly: true },
       { href: "/#faq", en: "FAQ", zh: "常見問題", icon: HelpCircle },
       { href: "/#line-contact", en: "Contact", zh: "聯絡我們", icon: MessageCircle },
     ],
