@@ -14,6 +14,7 @@ import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import TeenLinkJoin, { StudentLink } from "./TeenLinkJoin";
+import { routes } from "@/lib/platform";
 
 interface Kid { id: number; first_name: string; age: number; past_xp: number }
 interface Invite { parent_name: string; claimed: boolean; claimed_by_me: boolean; kids: Kid[] }
@@ -71,7 +72,7 @@ export default function JoinClient({ token }: { token: string }) {
       : (zh ? "出了點問題，請再試一次。" : "Something went wrong. Please try again."));
   }
 
-  const here = `/join/${token}`;
+  const here = routes.join(token);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>

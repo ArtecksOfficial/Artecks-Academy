@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 import { startLineLogin } from "@/lib/line-login";
+import { IS_NATIVE_BUILD } from "@/lib/platform";
 
 export default function LineLoginButton({ next, label, className = "" }: { next?: string; label: string; className?: string }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  // Hidden in the iOS app for now: LINE's OAuth redirect lands in Safari, not
+  // the app, and offering a third-party login also triggers App Store
+  // guideline 4.8 (Sign in with Apple or an equivalent). Email login remains.
+  if (IS_NATIVE_BUILD) return null;
   return (
     <div className={className}>
       <button

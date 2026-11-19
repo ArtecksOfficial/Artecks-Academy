@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { getAccessToken } from "@/lib/auth-client";
+import { publicOrigin } from "@/lib/platform";
 import { useLanguage, LanguageToggle } from "@/lib/i18n/LanguageContext";
 
 interface SessionData {
@@ -46,9 +47,8 @@ function ShareButtons({ studentName, bookingId }: { studentName: string; booking
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
-  const url = typeof window !== "undefined"
-    ? `${window.location.origin}/report/${bookingId}`
-    : `https://academy.artecks.com/report/${bookingId}`;
+  // Share links always point at the web site (the iOS app's origin isn't public).
+  const url = `${publicOrigin()}/report/${bookingId}`;
 
   const text = encodeURIComponent(`${studentName} 的 Artecks Academy 課後學習報告 📋`);
   const encodedUrl = encodeURIComponent(url);

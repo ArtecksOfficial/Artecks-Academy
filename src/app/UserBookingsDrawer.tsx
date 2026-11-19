@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { X, Phone, ChevronRight, Clock, MapPin, Star } from "lucide-react";
 import type { MyBooking } from "@/lib/api";
+import { routes } from "@/lib/platform";
 
 const TZ = "Asia/Taipei";
 
@@ -52,7 +53,7 @@ function BookingCard({ booking }: { booking: MyBooking }) {
   const hasRewards = (booking.xp_awarded ?? 0) > 0 || (booking.coins_awarded ?? 0) > 0;
   return (
     <a
-      href={`/report/${booking.id}`}
+      href={routes.report(booking.id)}
       className="block rounded-2xl border border-gray-200 bg-white hover:border-indigo-300 hover:shadow-sm transition-all overflow-hidden group"
     >
       {/* Top bar */}

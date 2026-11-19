@@ -1,3 +1,6 @@
+// Session OG image. Served by opengraph-image/route.web.tsx (web build only):
+// a metadata file (opengraph-image.tsx) ignores pageExtensions and would
+// break the iOS static export.
 // ─── Dynamic OG Image for Session Pages ───────────────────────────────────────
 // Next.js App Router file-based image generation.
 // Renders a 1200×630 share card used by LINE, Facebook, Twitter, etc.

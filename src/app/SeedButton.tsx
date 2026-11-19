@@ -2,7 +2,7 @@
 
 import { useTransition, useState } from "react";
 import { Plus, Loader2, AlertCircle } from "lucide-react";
-import { seedTestSession } from "./actions";
+import { seedTestSession } from "@/lib/academy-client";
 
 export function SeedButton({ label }: { label: string }) {
   const [isPending, startTransition] = useTransition();

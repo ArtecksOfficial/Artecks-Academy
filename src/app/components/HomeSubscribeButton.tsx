@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { ArrowRight, Loader2, Crown, X, Phone } from "lucide-react";
-import { createSubscriptionCheckoutAction } from "@/app/session/[id]/actions";
+import { createSubscriptionCheckoutAction } from "@/lib/academy-client";
+import { publicOrigin } from "@/lib/platform";
 
 interface Props {
   planId: string;
@@ -35,7 +36,7 @@ export default function HomeSubscribeButton({ planId, discountPercent }: Props) 
     setStep("loading");
 
     try {
-      const origin = window.location.origin;
+      const origin = publicOrigin();
       const result = await createSubscriptionCheckoutAction({
         plan_id: planId,
         customer_phone: trimmedPhone,
