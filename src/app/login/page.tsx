@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/app/components/AuthContext";
 import LineLoginButton from "@/app/components/LineLoginButton";
+import GoogleLoginButton, { GoogleProvider } from "@/app/components/GoogleLoginButton";
+import { saveAuth } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -29,6 +31,25 @@ export default function LoginPage() {
     }
   }
 
+  async function handleGoogle(accessToken: string) {
+    setError("");
+    setLoading(true);
+    const res = await fetch("/api/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ access_token: accessToken }),
+    }).catch(() => null);
+    const d = res ? await res.json().catch(() => ({})) : {};
+    if (res?.ok && d.access && d.refresh && d.user) {
+      saveAuth(d.access, d.refresh, d.user);
+      const next = new URLSearchParams(window.location.search).get("next") ?? "";
+      window.location.assign(next.startsWith("/") && !next.startsWith("//") ? next : "/");
+      return;
+    }
+    setLoading(false);
+    setError(d.detail || "Google sign-in didn't work. Please try again.");
+  }
+
   return (
     <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
       {/* Logo */}
@@ -39,13 +60,6 @@ export default function LoginPage() {
           </Link>
           <h1 className="text-2xl font-bold text-white">Welcome back</h1>
           <p className="text-white/50 text-sm mt-1">Sign in to your Artecks Academy account</p>
-        </div>
-
-        <LineLoginButton
-          label="Continue with LINE · 使用 LINE 登入"
-        />
-        <div className="flex items-center gap-3 my-5 text-xs text-white/30">
-          <span className="flex-1 h-px bg-white/10" /> or email <span className="flex-1 h-px bg-white/10" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -92,6 +106,16 @@ export default function LoginPage() {
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
+
+        <div className="flex items-center gap-3 my-5 text-xs text-white/30">
+          <span className="flex-1 h-px bg-white/10" /> or · 或 <span className="flex-1 h-px bg-white/10" />
+        </div>
+        <div className="space-y-3">
+          <GoogleProvider>
+            <GoogleLoginButton onToken={handleGoogle} onError={setError} />
+          </GoogleProvider>
+          <LineLoginButton label="Log in with LINE · 使用 LINE 登入" />
+        </div>
 
         <p className="text-center text-sm text-white/40 mt-6">
           Don&apos;t have an account?{" "}
