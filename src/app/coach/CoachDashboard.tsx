@@ -6,6 +6,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { announceCoachTab } from "@/app/components/ModeContext";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
@@ -53,6 +55,8 @@ interface Slot {
 }
 
 type Status = "loading" | "anon" | "not_coach" | "ready";
+const COACH_TABS = ["sessions", "homework", "availability", "profile", "packages", "feedback", "arena"] as const;
+type CoachTab = (typeof COACH_TABS)[number];
 
 async function api<T>(path: string, init?: RequestInit): Promise<{ ok: boolean; status: number; data: T | null }> {
   const res = await fetch(`/api/coach/${path}`, {
@@ -83,7 +87,22 @@ export default function CoachDashboard() {
   const { t, locale } = useLanguage();
   const [status, setStatus] = useState<Status>("loading");
   const [coachName, setCoachName] = useState("");
-  const [tab, setTab] = useState<"sessions" | "homework" | "packages" | "availability" | "feedback" | "arena" | "profile">("sessions");
+  const [tab, setTabState] = useState<CoachTab>("sessions");
+  // The tab lives in the URL (/coach?tab=homework) so the coach-mode menu can link to it.
+  const search = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  useEffect(() => {
+    const q = search.get("tab") as CoachTab | null;
+    const next = q && COACH_TABS.includes(q) ? q : "sessions";
+    setTabState(next);
+    announceCoachTab(next);
+  }, [search]);
+  const setTab = (k: CoachTab) => {
+    setTabState(k);
+    announceCoachTab(k);
+    router.replace(`${pathname}?tab=${k}`, { scroll: false });
+  };
   // Packages tab: how many classes each of this coach's students has left.
   const [packages, setPackages] = useState<TrackerPackage[] | null>(null);
   const [fb, setFb] = useState<{ count: number; avg_rating: number | null; avg_enjoyment: number | null; comments: string[]; comments_hidden_until: number } | null>(null);
@@ -217,7 +236,7 @@ export default function CoachDashboard() {
               </div>
             )}
             <div className="flex flex-wrap gap-2 mb-5" role="tablist">
-              {(["sessions", "homework", "availability", "profile", "packages", "feedback", "arena"] as const).map((k) => (
+              {COACH_TABS.map((k) => (
                 <button
                   key={k}
                   role="tab"

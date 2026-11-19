@@ -10,14 +10,15 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LogOut } from "lucide-react";
+import { ArrowLeftRight, LogOut } from "lucide-react";
 import { useAuth } from "./AuthContext";
 import { getAccessToken } from "@/lib/auth-client";
 import { getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LegalLinks from "./LegalLinks";
 import NotificationBell from "./NotificationBell";
-import { GROUPS } from "@/lib/nav";
+import { COACH_GROUPS, GROUPS, type Item } from "@/lib/nav";
+import { useMode } from "./ModeContext";
 
 export default function SiteSidebar() {
   const { locale } = useLanguage();
@@ -27,6 +28,7 @@ export default function SiteSidebar() {
   const { user, isLoading, logout } = useAuth();
   const [wallet, setWallet] = useState<{ xp: number; gems: number } | null>(null);
   const [kidMode, setKidMode] = useState(false);
+  const { isCoach, mode, switchTo, coachTab } = useMode();
 
   useEffect(() => { setKidMode(getKidSession() !== null); }, [path, user]);
 
@@ -40,8 +42,12 @@ export default function SiteSidebar() {
       .catch(() => {});
   }, [user]);
 
-  const isActive = (href: string) =>
-    href.startsWith("/#") || href.startsWith("http") ? false : href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+  const isActive = (href: string, item?: Item) =>
+    item?.tab ? path === "/coach" && coachTab === item.tab
+      : href.startsWith("/#") || href.startsWith("http") ? false : href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+  // Coaches switch with the mode button, so "For coaches" only shows for others.
+  const groups = mode === "coach" ? COACH_GROUPS
+    : GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => !(isCoach && i.href === "/coach")) }));
 
   const name = user ? (user.first_name || user.username || user.email) : "";
 
@@ -59,7 +65,10 @@ export default function SiteSidebar() {
       </Link>
 
       <nav className="flex-1 overflow-y-auto px-3 pb-4">
-        {GROUPS.map((group) => {
+        {mode === "coach" && (
+          <p className="mx-3 mb-3 rounded-lg bg-[#C49A4A]/15 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#E7C98A]">{zh ? "教練模式" : "Coach mode"}</p>
+        )}
+        {groups.map((group) => {
           if (group.signedInOnly && !user) return null;
           const items = group.items.filter((i) => !(kidMode && i.guardianOnly));
           if (items.length === 0) return null;
@@ -68,7 +77,7 @@ export default function SiteSidebar() {
               <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">{zh ? group.zh : group.en}</p>
               <ul className="flex flex-col gap-0.5">
                 {items.map((item) => {
-                  const active = isActive(item.href);
+                  const active = isActive(item.href, item);
                   const cls = `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
                     active ? "bg-white/10 text-white" : "text-white/70 hover:bg-white/5 hover:text-white"}`;
                   const inner = (
@@ -98,6 +107,13 @@ export default function SiteSidebar() {
           <div className="h-10 rounded-lg bg-white/5 animate-pulse" />
         ) : user ? (
           <>
+            {isCoach && !kidMode && (
+              <button type="button" onClick={() => switchTo(mode === "coach" ? "parent" : "coach")}
+                className="flex items-center justify-center gap-2 rounded-lg border border-[#C49A4A]/50 py-2 text-xs font-bold text-[#E7C98A] hover:bg-[#C49A4A]/10">
+                <ArrowLeftRight size={14} aria-hidden />
+                {mode === "coach" ? (zh ? "切換到家長模式" : "Switch to parent mode") : (zh ? "切換到教練模式" : "Switch to coach mode")}
+              </button>
+            )}
             <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
               <span className="h-8 w-8 shrink-0 rounded-full bg-[#C49A4A] text-[#0E1E3A] text-sm font-black flex items-center justify-center">
                 {name[0]?.toUpperCase() ?? "?"}

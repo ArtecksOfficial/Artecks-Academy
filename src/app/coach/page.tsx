@@ -1,4 +1,5 @@
 // ─── /coach — coach dashboard (own sessions, students, availability) ─────────
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import CoachDashboard from "./CoachDashboard";
 
@@ -8,5 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <CoachDashboard />;
+  // useSearchParams (?tab=) needs a Suspense boundary.
+  return <Suspense fallback={null}><CoachDashboard /></Suspense>;
 }
