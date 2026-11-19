@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type MouseEvent } from "react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import AuthButton from "./AuthButton";
+import NotificationBell from "./NotificationBell";
 
 export default function SiteHeader() {
   const { locale } = useLanguage();
@@ -47,6 +48,7 @@ export default function SiteHeader() {
   const links = [
     { href: "/", label: zh ? "首頁" : "Home" },
     { href: "/dashboard", label: zh ? "學習總覽" : "Dashboard" },
+    { href: "/achievements", label: zh ? "家長成就" : "Achievements" },
     { href: "/#coaches-programs", label: zh ? "教練與課程" : "Coaches & programs" },
     { href: "/book", label: zh ? "預約課程" : "Book" },
     { href: "/packages", label: zh ? "課程套票" : "Packages" },
@@ -65,6 +67,7 @@ export default function SiteHeader() {
           <span className="hidden min-[420px]:inline text-sm font-black text-[#13223F] leading-none whitespace-nowrap">Artecks Academy</span>
         </Link>
         <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <NotificationBell />
           <AuthButton locale={locale} />
           <LanguageToggle />
         </div>

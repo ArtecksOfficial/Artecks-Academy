@@ -11,7 +11,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, LogOut, MessageCircle,
+  Award, BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, LogOut, MessageCircle,
   Languages, Package, Settings, Swords, Trophy, UserRound, Users, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "./AuthContext";
@@ -19,6 +19,7 @@ import { getAccessToken } from "@/lib/auth-client";
 import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LegalLinks from "./LegalLinks";
+import NotificationBell from "./NotificationBell";
 import { TEACH_LINE_URL } from "@/lib/teach";
 
 interface Item { href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean }
@@ -30,6 +31,7 @@ const GROUPS: Group[] = [
     items: [
       { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
       { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
+      { href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true },
       { href: "/account", en: "Account & gems", zh: "帳戶與寶石", icon: UserRound },
       { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
     ],
@@ -140,6 +142,7 @@ export default function SiteSidebar() {
                 {name[0]?.toUpperCase() ?? "?"}
               </span>
               <span className="min-w-0 flex-1 truncate text-sm font-semibold">{name}</span>
+              {!kidMode && <NotificationBell variant="dark" align="left" />}
               {!kidMode && (
                 <button type="button" onClick={async () => { await logout(); router.push("/"); }}
                   className="rounded-lg p-2 text-white/50 hover:bg-white/10 hover:text-white" aria-label={zh ? "登出" : "Log out"} title={zh ? "登出" : "Log out"}>
