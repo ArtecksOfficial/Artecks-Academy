@@ -169,6 +169,8 @@ export interface MyBooking {
   xp_awarded: number;
   coins_awarded: number;
   applied_discount_amount: number;
+  gems_used?: number;
+  gem_discount_twd?: number;
   artecks_account_id: string | null;
   created_at: string;
 }

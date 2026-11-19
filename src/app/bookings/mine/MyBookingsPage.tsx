@@ -65,6 +65,9 @@ function BookingCard({ booking }: { booking: MyBooking }) {
             {booking.applied_discount_amount > 0 ? (
               <span className="ml-1.5 text-emerald-600 font-semibold">(member discount applied)</span>
             ) : null}
+            {(booking.gem_discount_twd ?? 0) > 0 ? (
+              <span className="ml-1.5 text-[#A07C34] font-semibold">(−NT${booking.gem_discount_twd} with {booking.gems_used} gems)</span>
+            ) : null}
           </p>
         )}
       </div>
