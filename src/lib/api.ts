@@ -173,15 +173,6 @@ export interface MyBooking {
   created_at: string;
 }
 
-export async function fetchMyBookings(phone: string): Promise<MyBooking[]> {
-  const res = await fetch(
-    `${BASE}/bookings/mine/?phone=${encodeURIComponent(phone)}`,
-    { cache: "no-store" }
-  );
-  if (!res.ok) return [];
-  return res.json();
-}
-
 // ── Provider plans (public, no account_id required) ───────────────────────────
 
 export async function fetchProviderPlans(

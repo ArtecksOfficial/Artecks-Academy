@@ -66,7 +66,7 @@ export default function SiteSidebar() {
 
       <nav className="flex-1 overflow-y-auto px-3 pb-4">
         {mode === "coach" && (
-          <p className="mx-3 mb-3 rounded-lg bg-[#C49A4A]/15 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#E7C98A]">{zh ? "教練模式" : "Coach mode"}</p>
+          <p className="mx-3 mb-3 rounded-lg bg-[#C49A4A]/15 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#E7C98A]">{zh ? "教學中" : "Teaching"}</p>
         )}
         {groups.map((group) => {
           if (group.signedInOnly && !user) return null;
@@ -111,7 +111,7 @@ export default function SiteSidebar() {
               <button type="button" onClick={() => switchTo(mode === "coach" ? "parent" : "coach")}
                 className="flex items-center justify-center gap-2 rounded-lg border border-[#C49A4A]/50 py-2 text-xs font-bold text-[#E7C98A] hover:bg-[#C49A4A]/10">
                 <ArrowLeftRight size={14} aria-hidden />
-                {mode === "coach" ? (zh ? "切換到家長模式" : "Switch to parent mode") : (zh ? "切換到教練模式" : "Switch to coach mode")}
+                {mode === "coach" ? (zh ? "切換到學習" : "Switch to learning") : (zh ? "切換到教學" : "Switch to teaching")}
               </button>
             )}
             <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">

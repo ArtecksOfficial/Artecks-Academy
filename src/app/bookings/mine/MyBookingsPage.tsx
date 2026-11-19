@@ -86,6 +86,7 @@ export default function MyBookingsPage() {
   const zh = locale === "zh";
   const { user, isLoading } = useAuth();
   const [phone, setPhone] = useState("");
+  const [student, setStudent] = useState("");
   const [bookings, setBookings] = useState<MyBooking[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -104,11 +105,11 @@ export default function MyBookingsPage() {
   async function handleLookup(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = phone.trim();
-    if (!trimmed) { setError(zh ? "請輸入電話號碼。" : "Please enter your phone number."); return; }
+    if (!trimmed || !student.trim()) { setError(zh ? "請輸入電話號碼和孩子的名字。" : "Enter your phone number and your child's name."); return; }
     setLoading(true); setError(null);
     try {
-      const res = await fetch(`/api/my-bookings?phone=${encodeURIComponent(trimmed)}`);
-      if (!res.ok) { setError(zh ? "找不到這個號碼的預約。" : "Could not find bookings for that number."); setBookings(null); return; }
+      const res = await fetch(`/api/my-bookings?phone=${encodeURIComponent(trimmed)}&student=${encodeURIComponent(student.trim())}`);
+      if (!res.ok) { setError(zh ? "找不到符合的預約。" : "Could not find bookings for that phone number and name."); setBookings(null); return; }
       const data = await res.json();
       setBookings(Array.isArray(data) ? data : (data.bookings ?? []));
     } catch {
@@ -144,12 +145,14 @@ export default function MyBookingsPage() {
               <p className="font-black text-sm text-[#13223F]">{zh ? "查詢你的課程" : "Look up your lessons"}</p>
             </div>
             <p className="text-xs text-[#5B6478] mb-4">
-              {zh ? "輸入預約時使用的電話號碼，或" : "Enter the phone number you used when booking, or "}
+              {zh ? "輸入預約時使用的電話號碼和孩子的名字，或" : "Enter the phone number and child's name you used when booking, or "}
               <Link href="/login?next=/bookings/mine" className="font-bold text-[#A07C34]">{zh ? "登入" : "log in"}</Link>
               {zh ? "直接查看。" : " to see them straight away."}
             </p>
-            <form onSubmit={handleLookup} className="flex gap-2">
-              <input type="tel" placeholder="+886 9xx xxx xxx" value={phone} onChange={(e) => setPhone(e.target.value)}
+            <form onSubmit={handleLookup} className="flex flex-col sm:flex-row gap-2">
+              <input type="tel" aria-label={zh ? "電話號碼" : "Phone number"} placeholder="+886 9xx xxx xxx" value={phone} onChange={(e) => setPhone(e.target.value)}
+                className="flex-1 rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#E7C98A]" />
+              <input type="text" aria-label={zh ? "孩子的名字" : "Child's name"} placeholder={zh ? "孩子的名字" : "Child's name"} value={student} onChange={(e) => setStudent(e.target.value)}
                 className="flex-1 rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#E7C98A]" />
               <button type="submit" disabled={loading}
                 className="px-4 py-2.5 rounded-xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-50 text-white text-sm font-bold flex items-center gap-1.5">
