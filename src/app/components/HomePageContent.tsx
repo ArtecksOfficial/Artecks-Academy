@@ -224,7 +224,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
 
   const zh = locale === "zh";
   const navLinks: { label: string; href?: string; id?: string }[] = [
-    { label: zh ? "教練與課程" : "Coaches & programs", id: "coaches-programs" },
+    { label: zh ? "教練與課程" : "Coaches & programs", href: "/coaches" },
     { label: zh ? "預約課程" : "Book", href: "/book" },
     { label: zh ? "課程套票" : "Packages", href: "/packages" },
     { label: zh ? "🏆 排行榜" : "🏆 Leaderboard", href: "/leaderboard" },
