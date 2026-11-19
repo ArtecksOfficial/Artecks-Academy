@@ -20,13 +20,14 @@ interface Kid {
   id: number; first_name: string; display_name: string; age: number;
   xp_total: number; xp_month: number;
   xp_weeks: { week_start: string; xp: number }[];
-  xp_by_source: { lesson: number; bonus: number; chess: number; arena: number };
+  xp_by_source: { lesson: number; bonus: number; chess: number; arena: number; homework?: number };
   lessons_attended: number; lessons_this_month: number;
   last_lesson: Lesson | null; next_lesson: Lesson | null;
   skills: { tag: string; count: number }[];
   latest_note: (Lesson & { text: string; skill_tags: string[] }) | null;
   chess: { elo: number; best_elo: number; wins: number; losses: number; draws: number; last_played: string | null } | null;
 }
+interface Homework { id: number; title: string; details: string; due_date: string | null }
 interface Dashboard { family: { gems: number; classes_left: number; active_packages: number }; kids: Kid[] }
 
 const TZ = "Asia/Taipei";
@@ -39,12 +40,21 @@ export default function DashboardClient() {
   const [data, setData] = useState<Dashboard | null | "error">(null);
   const [tracker, setTracker] = useState<TrackerPackage[]>([]);
   const [kidMode, setKidMode] = useState(false);
+  // Open homework per child (from the kids list), keyed by child id.
+  const [homework, setHomework] = useState<Record<number, Homework[]>>({});
 
   useEffect(() => {
     if (!user) return;
     if (getKidSession()) { setKidMode(true); return; }
     const h = { headers: authHeaders() };
     fetch("/api/dashboard", h).then((r) => (r.ok ? r.json() : Promise.reject())).then(setData).catch(() => setData("error"));
+    fetch("/api/students", h).then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!Array.isArray(d)) return;
+        const map: Record<number, Homework[]> = {};
+        for (const k of d) if (Array.isArray(k.homework)) map[k.id] = k.homework;
+        setHomework(map);
+      }).catch(() => {});
     fetch("/api/packages/tracker", h).then((r) => (r.ok ? r.json() : null))
       .then((d) => setTracker(d && Array.isArray(d.packages) ? d.packages : [])).catch(() => {});
   }, [user]);
@@ -95,7 +105,7 @@ export default function DashboardClient() {
                 <Link href="/leaderboard" className="mt-3 inline-block text-sm font-bold text-[#A07C34]">{zh ? "新增孩子 →" : "Add a child →"}</Link>
               </section>
             ) : (
-              data.kids.map((k) => <KidCard key={k.id} kid={k} zh={zh} fmtDay={fmtDay} fmtTime={fmtTime} />)
+              data.kids.map((k) => <KidCard key={k.id} kid={k} zh={zh} fmtDay={fmtDay} fmtTime={fmtTime} homework={homework[k.id] ?? []} />)
             )}
 
             {tracker.length > 0 && (
@@ -127,11 +137,12 @@ function Tile({ icon, label, value, hint, href }: { icon: React.ReactNode; label
     : <Link href={href} className={`${cls} hover:border-[#C49A4A] transition-colors`}>{body}</Link>;
 }
 
-function KidCard({ kid, zh, fmtDay, fmtTime }: { kid: Kid; zh: boolean; fmtDay: (s: string) => string; fmtTime: (s: string) => string }) {
+function KidCard({ kid, zh, fmtDay, fmtTime, homework }: { kid: Kid; zh: boolean; fmtDay: (s: string) => string; fmtTime: (s: string) => string; homework: Homework[] }) {
   const sources = [
     { key: "lesson", label: zh ? "上課" : "Lessons", xp: kid.xp_by_source.lesson },
     { key: "chess", label: zh ? "線上下棋" : "Chess site", xp: kid.xp_by_source.chess },
     { key: "arena", label: "Arena", xp: kid.xp_by_source.arena },
+    { key: "homework", label: zh ? "作業" : "Homework", xp: kid.xp_by_source.homework ?? 0 },
     { key: "bonus", label: zh ? "教練加分" : "Coach bonus", xp: kid.xp_by_source.bonus },
   ].filter((s) => s.xp > 0);
   const games = kid.chess ? kid.chess.wins + kid.chess.losses + kid.chess.draws : 0;
@@ -187,6 +198,33 @@ function KidCard({ kid, zh, fmtDay, fmtTime }: { kid: Kid; zh: boolean; fmtDay: 
               <p className="mt-2 text-xs text-gray-500">{zh ? "教練寫下課後紀錄後，主題會出現在這裡。" : "Topics appear here once a coach writes a lesson report."}</p>
             )}
           </div>
+
+          {homework.length > 0 && (
+            <div className="rounded-2xl border border-[#E7C98A] bg-[#FBF5E8] p-4">
+              <h3 className="text-xs font-bold text-[#A07C34]">
+                📝 {zh ? `作業（${homework.length}）` : `Homework (${homework.length})`}
+              </h3>
+              <ul className="mt-2 flex flex-col gap-2">
+                {homework.map((h) => {
+                  const late = h.due_date && h.due_date < new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date());
+                  return (
+                    <li key={h.id} className="text-sm text-[#13223F]">
+                      <span className="font-semibold">{h.title}</span>
+                      {h.due_date && (
+                        <span className={`ml-2 text-xs ${late ? "font-semibold text-red-600" : "text-[#5B6478]"}`}>
+                          {zh ? "截止 " : "due "}{fmtDay(h.due_date + "T12:00:00+08:00")}{late ? (zh ? "（已過期）" : " (overdue)") : ""}
+                        </span>
+                      )}
+                      {h.details && <p className="mt-0.5 whitespace-pre-line text-xs text-[#5B6478]">{h.details}</p>}
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="mt-2 text-[11px] text-[#5B6478]">
+                {zh ? "教練會在下次上課時確認完成，孩子和你都會得到獎勵。" : "The coach ticks it done at the next lesson. Your child gets XP and you get gems."}
+              </p>
+            </div>
+          )}
 
           {kid.latest_note && (
             <div className="rounded-2xl bg-[#F6F4EF] p-4">
