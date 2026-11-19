@@ -63,6 +63,8 @@ const iosConfig: NextConfig = {
   trailingSlash: true,
   pageExtensions: ["ios.tsx", "ios.ts", "tsx", "ts", "jsx", "js"],
   images: { unoptimized: true },
+  // Skip .next/dev/types from `next dev` (web target) — see tsconfig.ios.json.
+  typescript: { tsconfigPath: "tsconfig.ios.json" },
   env: {
     NEXT_PUBLIC_BUILD_TARGET: "ios",
   },
