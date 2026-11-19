@@ -46,6 +46,13 @@ export default function CoachesClient({ coaches }: { coaches: Omit<Coach, "line_
                         {c.title && <p className="text-xs font-semibold text-[#A07C34]">{c.title}</p>}
                       </div>
                     </div>
+                    {c.subjects && (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {c.subjects.split(/[,，、]/).map((x) => x.trim()).filter(Boolean).map((x) => (
+                          <span key={x} className="rounded-full bg-[#FBF5E8] px-2.5 py-0.5 text-[11px] font-bold text-[#A07C34]">{x}</span>
+                        ))}
+                      </div>
+                    )}
                     {c.bio && <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-[#5B6478]">{c.bio}</p>}
                   </li>
                 );

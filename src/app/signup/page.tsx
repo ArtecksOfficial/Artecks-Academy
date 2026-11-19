@@ -16,6 +16,12 @@ const FIELD_MESSAGES: Record<string, string> = {
 
 export default function SignupPage() {
   const [step, setStep] = useState<Step>("form");
+  // Keep ?next= (e.g. /teach) so signing in afterwards returns there.
+  const [loginHref, setLoginHref] = useState("/login");
+  useEffect(() => {
+    const next = new URLSearchParams(window.location.search).get("next") ?? "";
+    if (next.startsWith("/") && !next.startsWith("//")) setLoginHref(`/login?next=${encodeURIComponent(next)}`);
+  }, []);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -115,7 +121,7 @@ export default function SignupPage() {
             Click the link in the email to activate your account, then come back here to sign in.
           </p>
           <Link
-            href="/login"
+            href={loginHref}
             className="inline-block bg-indigo-500 hover:bg-indigo-400 text-white font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
           >
             Go to sign in
@@ -257,7 +263,7 @@ export default function SignupPage() {
 
         <p className="text-center text-sm text-white/40 mt-6">
           Already have an account?{" "}
-          <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+          <Link href={loginHref} className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
             Sign in
           </Link>
         </p>

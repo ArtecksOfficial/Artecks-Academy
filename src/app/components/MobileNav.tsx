@@ -7,15 +7,16 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CalendarPlus, Home, LayoutDashboard, LogIn, LogOut, Menu, Swords, Trophy, X, type LucideIcon } from "lucide-react";
+import { ArrowLeftRight, BookOpenCheck, CalendarDays, CalendarPlus, ClipboardList, Home, LayoutDashboard, LogIn, LogOut, Menu, Swords, Trophy, UserCog, X, type LucideIcon } from "lucide-react";
 import { useAuth } from "./AuthContext";
 import LegalLinks from "./LegalLinks";
 import { getAccessToken } from "@/lib/auth-client";
 import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
-import { GROUPS } from "@/lib/nav";
+import { COACH_GROUPS, GROUPS, type Item } from "@/lib/nav";
+import { useMode } from "./ModeContext";
 
-interface Tab { href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; primary?: boolean }
+interface Tab { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; primary?: boolean }
 
 export default function MobileNav() {
   const { locale } = useLanguage();
@@ -26,6 +27,7 @@ export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const [kidMode, setKidMode] = useState(false);
   const [wallet, setWallet] = useState<{ xp: number; gems: number } | null>(null);
+  const { isCoach, mode, switchTo, coachTab } = useMode();
 
   useEffect(() => { setKidMode(getKidSession() !== null); setOpen(false); }, [path, user]);
 
@@ -48,7 +50,13 @@ export default function MobileNav() {
       .catch(() => {});
   }, [open, user]);
 
-  const tabs: Tab[] = [
+  const coachTabs: Tab[] = [
+    { href: "/coach?tab=sessions", tab: "sessions", en: "Sessions", zh: "課程", icon: ClipboardList },
+    { href: "/coach?tab=homework", tab: "homework", en: "Homework", zh: "作業", icon: BookOpenCheck },
+    { href: "/coach?tab=availability", tab: "availability", en: "Calendar", zh: "行事曆", icon: CalendarDays, primary: true },
+    { href: "/coach?tab=profile", tab: "profile", en: "Profile", zh: "檔案", icon: UserCog },
+  ];
+  const parentTabs: Tab[] = [
     { href: "/", en: "Home", zh: "首頁", icon: Home },
     kidMode
       ? { href: "/leaderboard", en: "Leaderboard", zh: "排行榜", icon: Trophy }
@@ -60,9 +68,13 @@ export default function MobileNav() {
         ? { href: "/account", en: "Me", zh: "我的", icon: LayoutDashboard }
         : { href: `/login?next=${encodeURIComponent(path)}`, en: "Log in", zh: "登入", icon: LogIn },
   ];
+  const tabs = mode === "coach" ? coachTabs : parentTabs;
+  const groups = mode === "coach" ? COACH_GROUPS
+    : GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => !(isCoach && i.href === "/coach")) }));
 
-  const isActive = (href: string) =>
-    href.startsWith("http") || href.startsWith("/#") ? false : href === "/" ? path === "/" : path === href || path.startsWith(href.split("?")[0] + "/") || path === href.split("?")[0];
+  const isActive = (href: string, item?: Item | Tab) =>
+    item?.tab ? path === "/coach" && coachTab === item.tab
+    : href.startsWith("http") || href.startsWith("/#") ? false : href === "/" ? path === "/" : path === href || path.startsWith(href.split("?")[0] + "/") || path === href.split("?")[0];
 
   const name = user ? (user.first_name || user.username || user.email) : "";
 
@@ -72,7 +84,7 @@ export default function MobileNav() {
         className="lg:hidden fixed inset-x-0 bottom-0 z-50 border-t border-[#E2DDD2] bg-white/95 backdrop-blur pb-[env(safe-area-inset-bottom)]">
         <ul className="mx-auto grid max-w-lg grid-cols-5">
           {tabs.map((t) => {
-            const active = isActive(t.href);
+            const active = isActive(t.href, t);
             const inner = t.primary ? (
               <>
                 <span className="-mt-5 flex h-12 w-12 items-center justify-center rounded-full bg-[#13223F] text-[#E7C98A] shadow-lg ring-4 ring-white">
@@ -131,7 +143,7 @@ export default function MobileNav() {
             </div>
 
             <div className="px-3">
-              {GROUPS.map((group) => {
+              {groups.map((group) => {
                 if (group.signedInOnly && !user) return null;
                 const items = group.items.filter((i) => !(kidMode && i.guardianOnly));
                 if (!items.length) return null;
@@ -140,7 +152,7 @@ export default function MobileNav() {
                     <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">{zh ? group.zh : group.en}</p>
                     <ul className="grid grid-cols-2 gap-1">
                       {items.map((item) => {
-                        const active = isActive(item.href);
+                        const active = isActive(item.href, item);
                         const cls = `flex items-center gap-2.5 rounded-xl px-3 py-3 text-sm font-semibold ${active ? "bg-white/10 text-white" : "text-white/80 active:bg-white/10"}`;
                         const inner = <><item.icon size={17} aria-hidden className={active ? "text-[#E7C98A]" : "text-white/50"} /><span className="truncate">{zh ? item.zh : item.en}</span></>;
                         return (
@@ -158,6 +170,13 @@ export default function MobileNav() {
             </div>
 
             <div className="mt-4 border-t border-white/10 px-5 pt-4 flex flex-col gap-3">
+              {isCoach && !kidMode && (
+                <button type="button" onClick={() => { setOpen(false); switchTo(mode === "coach" ? "parent" : "coach"); }}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-[#C49A4A]/50 py-2.5 text-sm font-bold text-[#E7C98A]">
+                  <ArrowLeftRight size={15} aria-hidden />
+                  {mode === "coach" ? (zh ? "切換到家長模式" : "Switch to parent mode") : (zh ? "切換到教練模式" : "Switch to coach mode")}
+                </button>
+              )}
               {user ? (
                 !kidMode && (
                   <button type="button" onClick={async () => { await logout(); setOpen(false); router.push("/"); }}
