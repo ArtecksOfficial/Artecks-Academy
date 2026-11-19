@@ -5,6 +5,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
 import KidModeBar from "@/app/components/KidModeBar";
+import AgeGate from "@/app/components/AgeGate";
 import SiteSidebar from "@/app/components/SiteSidebar";
 import MobileNav from "@/app/components/MobileNav";
 import { AchievementsProvider } from "@/app/components/AchievementsContext";
@@ -48,6 +49,7 @@ export default function RootLayout({
         className={`${jakarta.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
+        <AgeGate />
       <Suspense fallback={null}><PageViewTracker /></Suspense>
         <AuthProvider>
           <LanguageProvider>
