@@ -10,3 +10,12 @@
 @media (min-width: 1024px) {
   body { padding-left: var(--sidebar-w); }
 }
+
+/* Parent achievements: unlock pop-up and bell */
+@keyframes ach-pop-in { from { transform: translateY(16px) scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ach-icon-bounce { 0% { transform: scale(.4) rotate(-12deg); } 60% { transform: scale(1.12) rotate(4deg); } 100% { transform: none; } }
+@keyframes ach-bell { 0%, 100% { transform: rotate(0); } 15% { transform: rotate(14deg); } 30% { transform: rotate(-12deg); } 45% { transform: rotate(8deg); } 60% { transform: rotate(-4deg); } }
+.ach-pop { animation: ach-pop-in .28s ease-out; }
+.ach-pop-icon { animation: ach-icon-bounce .6s .1s ease-out both; }
+.ach-bell-ring { animation: ach-bell 1.2s ease-in-out 2; transform-origin: top center; }
+@media (prefers-reduced-motion: reduce) { .ach-pop, .ach-pop-icon, .ach-bell-ring { animation: none; } }

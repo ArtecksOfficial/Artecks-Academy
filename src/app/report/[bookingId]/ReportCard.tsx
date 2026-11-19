@@ -3,7 +3,8 @@
 // Receives pre-fetched data as props from the server page.
 // Rendered client-side so the language toggle + share buttons work.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAccessToken } from "@/lib/auth-client";
 import { useLanguage, LanguageToggle } from "@/lib/i18n/LanguageContext";
 
 interface SessionData {
@@ -110,6 +111,15 @@ export default function ReportCard({
   const { t, locale } = useLanguage();
   const hasReport = !!report;
   const hasRewards = rewardsCredited && hasReport;
+
+  // Signed-in parent reading their own report → counts toward the Progress Tracker badge.
+  useEffect(() => {
+    if (!hasReport) return;
+    const token = getAccessToken();
+    if (!token) return;
+    fetch(`/api/report-seen/${encodeURIComponent(bookingId)}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } })
+      .catch(() => {});
+  }, [hasReport, bookingId]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-900 via-indigo-800 to-violet-900 py-8 px-4">
