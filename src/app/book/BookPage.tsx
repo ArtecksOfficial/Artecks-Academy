@@ -63,6 +63,8 @@ export default function BookPage() {
   const { t, locale } = useLanguage();
   const zh = locale === "zh";
   const router = useRouter();
+  const [subjects, setSubjects] = useState<{ key: string; en: string; zh: string; price_twd: number }[]>([]);
+  const [subject, setSubject] = useState("chess");
   const [areas, setAreas] = useState<string[] | null>(null);
   const [area, setArea] = useState<string>("");
   const [data, setData] = useState<SlotResp | null>(null);
@@ -88,7 +90,8 @@ export default function BookPage() {
       .then((d) => { setCredits(d?.credits?.private ?? 0); setGems(d?.gems ?? 0); })
       .catch(() => {});
   }, [user]);
-  const payWithCredit = credits > 0 && useCredit;
+  // Lesson packages are chess packages for now.
+  const payWithCredit = subject === "chess" && credits > 0 && useCredit;
   // Family gems take up to the server's cap off a single lesson (the server re-checks).
   const gemsAvailable = Math.min(gems, data?.max_gems ?? 0);
   const gemsToUse = !payWithCredit && useGems ? gemsAvailable : 0;
@@ -102,23 +105,34 @@ export default function BookPage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/slots").then((r) => r.json()).then((a: string[]) => {
+    // /book?subject=english opens straight on English
+    const want = new URLSearchParams(window.location.search).get("subject") ?? "";
+    fetch("/api/slots?subjects=1").then((r) => r.json()).then((list) => {
+      if (!Array.isArray(list)) return;
+      setSubjects(list);
+      if (list.some((x: { key: string }) => x.key === want)) setSubject(want);
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    setAreas(null); setArea(""); setData(null); setSlot("");
+    fetch(`/api/slots?subject=${subject}`).then((r) => r.json()).then((a: string[]) => {
       setAreas(Array.isArray(a) ? a : []);
       if (Array.isArray(a) && a.length === 1) setArea(a[0]);
     }).catch(() => setAreas([]));
-  }, []);
+  }, [subject]);
 
   useEffect(() => {
     if (!area) return;
     setLoading(true);
     setSlot("");
-    const p = new URLSearchParams({ area, days: "14" });
+    const p = new URLSearchParams({ area, days: "14", subject });
     fetch(`/api/slots?${p.toString()}`).then((r) => r.json()).then((d: SlotResp) => {
       setData(d);
       const first = d.slots?.[0];
       setDay(first ? tpeDayKey(first.start) : "");
     }).catch(() => setData(null)).finally(() => setLoading(false));
-  }, [area]);
+  }, [area, subject]);
 
   const byDay = useMemo(() => {
     const m = new Map<string, { start: string; end: string }[]>();
@@ -141,6 +155,7 @@ export default function BookPage() {
         body: JSON.stringify({
           use_package: payWithCredit,
           gems: gemsToUse,
+          subject,
           start: slot,
           area,
           parent_name: String(f.get("parent_name") || "").trim(),
@@ -202,6 +217,23 @@ export default function BookPage() {
               <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("bookTitle")}</h1>
               <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t("bookSub")}</p>
             </div>
+
+            {/* Subject */}
+            {subjects.length > 1 && (
+              <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">{zh ? "想學什麼？" : "What would you like to learn?"}</h2>
+                <div className="grid grid-cols-2 gap-2 sm:max-w-md">
+                  {subjects.map((x) => (
+                    <button key={x.key} type="button" onClick={() => setSubject(x.key)} aria-pressed={subject === x.key}
+                      className={`rounded-2xl px-4 py-3 text-left transition-colors ${
+                        subject === x.key ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
+                      <span className="block text-sm font-bold">{zh ? x.zh : x.en}</span>
+                      <span className={`block text-xs mt-0.5 ${subject === x.key ? "text-[#E7C98A]" : "text-gray-500"}`}>NT$ {x.price_twd.toLocaleString()} / {zh ? "堂" : "lesson"}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Area */}
             <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
@@ -266,7 +298,7 @@ export default function BookPage() {
                 <Link href="/request" className="block mt-4 text-xs font-semibold text-gray-500 hover:text-[#8A6A2C]">
                   {t("bookCantFind")}
                 </Link>
-                {credits === 0 && (
+                {subject === "chess" && credits === 0 && (
                   <Link href="/packages" className="block mt-2 text-xs font-bold text-[#A07C34] hover:text-[#8A6A2C]">
                     {t("bookPackagesLink")}
                   </Link>
@@ -343,7 +375,7 @@ export default function BookPage() {
                   <span>{t("consentLabel")}</span>
                 </label>
 
-                {credits > 0 && (
+                {subject === "chess" && credits > 0 && (
                   <label className="flex items-center gap-3 rounded-2xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-900 cursor-pointer">
                     <input type="checkbox" checked={useCredit} onChange={(e) => setUseCredit(e.target.checked)}
                       className="accent-emerald-600 w-4 h-4 flex-shrink-0" />
