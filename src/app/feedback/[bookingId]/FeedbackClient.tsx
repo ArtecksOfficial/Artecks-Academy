@@ -102,19 +102,19 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
         <h1 className="text-xl font-black text-gray-900">{t("fbThanksTitle")}</h1>
         <p className="text-sm text-gray-600 mt-2">{t("fbThanksBody")}</p>
         {result && result.credited > 0 && (
-          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-violet-50 text-violet-700 font-bold text-sm px-4 py-2">
+          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#FBF5E8] text-[#A07C34] font-bold text-sm px-4 py-2">
             <Gem size={15} /> +{result.credited} {t("fbGems")}
           </p>
         )}
         {unclaimed && (
-          <div className="mt-5 rounded-2xl bg-violet-50 border border-violet-100 p-4">
-            <p className="text-sm text-violet-900 font-semibold">{t("fbClaimPrompt").replace("{n}", String(info.gems))}</p>
+          <div className="mt-5 rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] p-4">
+            <p className="text-sm text-[#13223F] font-semibold">{t("fbClaimPrompt").replace("{n}", String(info.gems))}</p>
             {user ? (
-              <button onClick={claim} className="mt-3 rounded-xl bg-violet-600 text-white text-sm font-bold px-5 py-2.5">{t("fbClaim")}</button>
+              <button onClick={claim} className="mt-3 rounded-xl bg-[#13223F] text-white text-sm font-bold px-5 py-2.5">{t("fbClaim")}</button>
             ) : (
               <div className="mt-3 flex justify-center gap-2">
-                <Link href={`/login?next=${encodeURIComponent(self)}`} className="rounded-xl bg-violet-600 text-white text-sm font-bold px-5 py-2.5">{t("coachLogin")}</Link>
-                <Link href={`/signup?next=${encodeURIComponent(self)}`} className="rounded-xl bg-white border border-violet-200 text-violet-700 text-sm font-bold px-5 py-2.5">{t("fbSignup")}</Link>
+                <Link href={`/login?next=${encodeURIComponent(self)}`} className="rounded-xl bg-[#13223F] text-white text-sm font-bold px-5 py-2.5">{t("coachLogin")}</Link>
+                <Link href={`/signup?next=${encodeURIComponent(self)}`} className="rounded-xl bg-white border border-[#E7C98A] text-[#A07C34] text-sm font-bold px-5 py-2.5">{t("fbSignup")}</Link>
               </div>
             )}
           </div>
@@ -135,7 +135,7 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
           <p className="text-sm text-gray-600 mt-1">
             {info.student_name} · {info.coach_name} · {new Date(info.start_time).toLocaleDateString(locale === "en" ? "en-US" : "zh-TW", { timeZone: "Asia/Taipei", month: "long", day: "numeric" })}
           </p>
-          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-violet-50 text-violet-700 font-semibold text-xs px-3 py-1.5">
+          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#FBF5E8] text-[#A07C34] font-semibold text-xs px-3 py-1.5">
             <Gem size={13} /> {t("fbReward").replace("{n}", String(info.gems))}
           </p>
         </div>
@@ -145,13 +145,13 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
           <span className="block text-xs font-semibold text-gray-600 mb-1.5">{t("fbComment")}</span>
           <textarea value={comment} onChange={(e) => setComment(e.target.value)} rows={4} maxLength={3000}
             placeholder={t("fbCommentPlaceholder")}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-indigo-500" />
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A]" />
           <span className="text-[11px] text-gray-400">{comment.trim().length}/20+</span>
         </label>
         <p className="text-xs text-gray-500">{t("fbPrivacy")}</p>
         {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
         <button type="submit" disabled={sending}
-          className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-black py-4">
+          className="w-full rounded-2xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-60 text-white font-black py-4">
           {sending ? "…" : t("fbSubmit")}
         </button>
       </form>
@@ -159,7 +159,7 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
       <main className="max-w-lg mx-auto px-4 py-8">{body}</main>
     </div>

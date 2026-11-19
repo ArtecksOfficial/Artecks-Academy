@@ -18,9 +18,9 @@ export default function CoachesClient({ coaches }: { coaches: Omit<Coach, "line_
   const zh = locale === "zh";
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-12">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-12">
         <header>
           <p className="text-sm font-semibold text-[#A07C34]">{zh ? "林口 · 台北 · 1–9 年級" : "Linkou & Taipei · Grades 1–9"}</p>
           <h1 className="mt-1 font-serif-tc text-3xl sm:text-4xl font-black text-[#13223F]">{zh ? "教練與課程" : "Coaches & programs"}</h1>

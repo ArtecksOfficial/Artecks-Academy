@@ -129,7 +129,7 @@ export default function ArenaPanel({ t }: { t: T }) {
                     checked={row.played}
                     disabled={locked}
                     onChange={(e) => edit(k.id, { played: e.target.checked })}
-                    className="h-5 w-5 accent-indigo-600"
+                    className="h-5 w-5 accent-[#13223F]"
                   />
                   <span className="text-sm text-gray-800 truncate">
                     <strong>{k.name}</strong> <span className="text-gray-400">· {k.age}</span>
@@ -160,7 +160,7 @@ export default function ArenaPanel({ t }: { t: T }) {
                         {rules.podium.map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
                       </select>
                     </label>
-                    <span className="text-sm font-black text-indigo-700 tabular-nums ml-auto">+{xpFor(rules, row)} XP</span>
+                    <span className="text-sm font-black text-[#A07C34] tabular-nums ml-auto">+{xpFor(rules, row)} XP</span>
                   </>
                 )}
               </li>
@@ -173,7 +173,7 @@ export default function ArenaPanel({ t }: { t: T }) {
         <button
           onClick={save}
           disabled={saving || playedCount === 0}
-          className="rounded-xl bg-indigo-600 text-white text-sm font-bold px-5 py-2.5 disabled:opacity-40"
+          className="rounded-xl bg-[#13223F] text-white text-sm font-bold px-5 py-2.5 disabled:opacity-40"
         >
           {saving ? "…" : t("arenaSave").replace("{n}", String(playedCount))}
         </button>

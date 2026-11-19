@@ -33,7 +33,7 @@ const CONTACTS: { value: ContactMethod; key: DictionaryKey; placeholder: Diction
 ];
 
 const input =
-  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100";
+  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#C49A4A] focus:ring-2 focus:ring-[#E7C98A]";
 const label = "block text-xs font-semibold text-gray-600 mb-1.5";
 
 export default function RequestForm() {
@@ -92,7 +92,7 @@ export default function RequestForm() {
         <div className="text-4xl mb-3">♟️</div>
         <h2 className="text-xl font-black text-gray-900">{t("reqDoneTitle")}</h2>
         <p className="text-sm text-gray-600 mt-2 leading-relaxed">{t("reqDoneBody")}</p>
-        <Link href="/" className="inline-block mt-6 text-sm font-bold text-indigo-600 hover:text-indigo-700">
+        <Link href="/" className="inline-block mt-6 text-sm font-bold text-[#A07C34] hover:text-[#8A6A2C]">
           ← {t("reqBackHome")}
         </Link>
       </div>
@@ -126,7 +126,7 @@ export default function RequestForm() {
                 onClick={() => setContactMethod(c.value)}
                 aria-pressed={contactMethod === c.value}
                 className={`rounded-xl py-2.5 text-xs font-semibold transition-colors ${
-                  contactMethod === c.value ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  contactMethod === c.value ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
                 {t(c.key)}
@@ -168,9 +168,9 @@ export default function RequestForm() {
           <div className="flex flex-col gap-2">
             {LEVELS.map((l) => (
               <label key={l.value} className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm cursor-pointer transition-colors ${
-                level === l.value ? "border-indigo-500 bg-indigo-50 text-indigo-900" : "border-gray-200 text-gray-700 hover:border-gray-300"
+                level === l.value ? "border-[#13223F] bg-[#FBF5E8] text-[#13223F]" : "border-gray-200 text-gray-700 hover:border-gray-300"
               }`}>
-                <input type="radio" name="level" value={l.value} checked={level === l.value} onChange={() => setLevel(l.value)} className="accent-indigo-600" />
+                <input type="radio" name="level" value={l.value} checked={level === l.value} onChange={() => setLevel(l.value)} className="accent-[#13223F]" />
                 {t(l.key)}
               </label>
             ))}
@@ -193,7 +193,7 @@ export default function RequestForm() {
                   onClick={() => toggleWindow(w.value)}
                   aria-pressed={on}
                   className={`rounded-xl px-3 py-2.5 text-xs font-semibold transition-colors ${
-                    on ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    on ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
                   {t(w.key)}
@@ -213,7 +213,7 @@ export default function RequestForm() {
       </section>
 
       <label className="flex items-start gap-3 rounded-2xl bg-white border border-gray-200 px-4 py-4 text-sm text-gray-700 leading-relaxed cursor-pointer">
-        <input type="checkbox" name="account_consent" required className="mt-0.5 accent-indigo-600 w-4 h-4 flex-shrink-0" />
+        <input type="checkbox" name="account_consent" required className="mt-0.5 accent-[#13223F] w-4 h-4 flex-shrink-0" />
         <span>{t("consentLabel")}</span>
       </label>
 
@@ -224,7 +224,7 @@ export default function RequestForm() {
       <button
         type="submit"
         disabled={state === "sending"}
-        className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg"
+        className="w-full rounded-2xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg"
       >
         {state === "sending" ? t("reqSending") : t("reqSubmit")}
       </button>

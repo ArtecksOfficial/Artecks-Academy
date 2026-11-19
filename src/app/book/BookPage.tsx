@@ -36,7 +36,7 @@ const LEVELS: { value: string; key: DictionaryKey }[] = [
 ];
 
 const input =
-  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100";
+  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#C49A4A] focus:ring-2 focus:ring-[#E7C98A]";
 const label = "block text-xs font-semibold text-gray-600 mb-1.5";
 
 function tpeDayKey(iso: string) {
@@ -173,17 +173,17 @@ export default function BookPage() {
   const contact = CONTACTS.find((c) => c.value === contactMethod)!;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
 
-      <main className="max-w-2xl mx-auto px-4 py-8 sm:py-12 flex flex-col gap-5">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         {pending ? (
           <div className="rounded-3xl bg-white border border-gray-200 p-8 text-center shadow-sm">
             <CheckCircle size={44} className="mx-auto text-emerald-500 mb-3" />
             <h1 className="text-xl font-black text-gray-900">{t("bookPendingTitle")}</h1>
-            <p className="text-sm font-semibold text-indigo-600 mt-2">{fmtFull(pending.start, locale)} · {area}</p>
+            <p className="text-sm font-semibold text-[#A07C34] mt-2">{fmtFull(pending.start, locale)} · {area}</p>
             <p className="text-sm text-gray-600 mt-3 leading-relaxed">{t("bookPendingBody")}</p>
-            <Link href="/" className="inline-block mt-6 text-sm font-bold text-indigo-600">← {t("reqBackHome")}</Link>
+            <Link href="/" className="inline-block mt-6 text-sm font-bold text-[#A07C34]">← {t("reqBackHome")}</Link>
           </div>
         ) : (
           <>
@@ -198,14 +198,14 @@ export default function BookPage() {
               {areas === null && <Loader2 className="animate-spin text-gray-300" size={18} />}
               {areas?.length === 0 && (
                 <p className="text-sm text-gray-600">
-                  {t("bookNoAreas")} <Link href="/request" className="font-bold text-indigo-600">→</Link>
+                  {t("bookNoAreas")} <Link href="/request" className="font-bold text-[#A07C34]">→</Link>
                 </p>
               )}
               <div className="flex flex-wrap gap-2">
                 {areas?.map((a) => (
                   <button key={a} type="button" onClick={() => setArea(a)} aria-pressed={area === a}
                     className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                      area === a ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
+                      area === a ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
                     <MapPin size={13} /> {a}
                   </button>
                 ))}
@@ -231,9 +231,9 @@ export default function BookPage() {
                       {[...byDay.keys()].map((k) => (
                         <button key={k} type="button" role="tab" aria-selected={day === k} onClick={() => { setDay(k); setSlot(""); }}
                           className={`flex-shrink-0 rounded-2xl px-3.5 py-2 text-xs font-bold transition-colors ${
-                            day === k ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
+                            day === k ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
                           {fmtDay(k, locale)}
-                          <span className={`block text-[10px] font-semibold ${day === k ? "text-indigo-100" : "text-gray-400"}`}>
+                          <span className={`block text-[10px] font-semibold ${day === k ? "text-[#E7C98A]" : "text-gray-400"}`}>
                             {byDay.get(k)!.length}
                           </span>
                         </button>
@@ -243,8 +243,8 @@ export default function BookPage() {
                       {(byDay.get(day) ?? []).map((s) => (
                         <button key={s.start} type="button" onClick={() => setSlot(s.start)} aria-pressed={slot === s.start}
                           className={`rounded-xl py-3 text-sm font-bold transition-colors border ${
-                            slot === s.start ? "bg-indigo-600 text-white border-indigo-600"
-                              : "bg-white text-indigo-700 border-indigo-200 hover:border-indigo-400"}`}>
+                            slot === s.start ? "bg-[#13223F] text-white border-[#13223F]"
+                              : "bg-white text-[#A07C34] border-[#E7C98A] hover:border-[#C49A4A]"}`}>
                           {fmtTime(s.start)}
                         </button>
                       ))}
@@ -252,11 +252,11 @@ export default function BookPage() {
                   </>
                 )}
 
-                <Link href="/request" className="block mt-4 text-xs font-semibold text-gray-500 hover:text-indigo-600">
+                <Link href="/request" className="block mt-4 text-xs font-semibold text-gray-500 hover:text-[#8A6A2C]">
                   {t("bookCantFind")}
                 </Link>
                 {credits === 0 && (
-                  <Link href="/packages" className="block mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-500">
+                  <Link href="/packages" className="block mt-2 text-xs font-bold text-[#A07C34] hover:text-[#8A6A2C]">
                     {t("bookPackagesLink")}
                   </Link>
                 )}
@@ -266,11 +266,11 @@ export default function BookPage() {
             {/* Details */}
             {slot && (
               <form onSubmit={submit} className="rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm flex flex-col gap-4">
-                <div className="flex items-center justify-between gap-3 rounded-2xl bg-indigo-50 px-4 py-3">
-                  <span className="flex items-center gap-2 text-sm font-bold text-indigo-900">
+                <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#FBF5E8] px-4 py-3">
+                  <span className="flex items-center gap-2 text-sm font-bold text-[#13223F]">
                     <Clock size={15} /> {fmtFull(slot, locale)} · {area}
                   </span>
-                  <button type="button" onClick={() => setSlot("")} className="text-xs font-semibold text-indigo-600">{t("bookChange")}</button>
+                  <button type="button" onClick={() => setSlot("")} className="text-xs font-semibold text-[#A07C34]">{t("bookChange")}</button>
                 </div>
 
                 <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400">{t("bookDetails")}</h2>
@@ -290,7 +290,7 @@ export default function BookPage() {
                     {CONTACTS.map((c) => (
                       <button key={c.value} type="button" onClick={() => setContactMethod(c.value)} aria-pressed={contactMethod === c.value}
                         className={`rounded-xl py-2.5 text-xs font-semibold transition-colors ${
-                          contactMethod === c.value ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                          contactMethod === c.value ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
                         {t(c.key)}
                       </button>
                     ))}
@@ -317,7 +317,7 @@ export default function BookPage() {
                     {LEVELS.map((l) => (
                       <button key={l.value} type="button" onClick={() => setLevel(l.value)} aria-pressed={level === l.value}
                         className={`rounded-xl px-3 py-2.5 text-xs font-semibold text-left transition-colors ${
-                          level === l.value ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                          level === l.value ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
                         {t(l.key)}
                       </button>
                     ))}
@@ -328,7 +328,7 @@ export default function BookPage() {
                   <textarea id="notes" name="notes" rows={2} maxLength={2000} className={input} />
                 </div>
                 <label className="flex items-start gap-3 rounded-2xl bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
-                  <input type="checkbox" name="account_consent" required className="mt-0.5 accent-indigo-600 w-4 h-4 flex-shrink-0" />
+                  <input type="checkbox" name="account_consent" required className="mt-0.5 accent-[#13223F] w-4 h-4 flex-shrink-0" />
                   <span>{t("consentLabel")}</span>
                 </label>
 
@@ -344,7 +344,7 @@ export default function BookPage() {
                 {error && <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
 
                 <button type="submit" disabled={sending}
-                  className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg">
+                  className="w-full rounded-2xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg">
                   {sending ? t("bookSending") : payWithCredit ? t("bookSubmitCredit") : `${t("bookSubmit")} · NT$ ${(data?.price_twd ?? 0).toLocaleString()}`}
                 </button>
               </form>

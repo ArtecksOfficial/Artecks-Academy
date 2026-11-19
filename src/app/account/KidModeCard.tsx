@@ -13,7 +13,7 @@ import { authHeaders } from "@/lib/auth-client";
 export interface AccountKid { id: number; first_name: string; age: number; linked?: boolean; kid_login?: string | null }
 
 const card = "rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm";
-const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500";
+const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A]";
 const TEEN_MIN_AGE = 13;
 
 async function call(path: string, method: "GET" | "POST" | "DELETE", body?: unknown) {
@@ -112,7 +112,7 @@ function KidLoginRow({ kid, zh, onChanged }: { kid: AccountKid; zh: boolean; onC
               autoComplete="new-password" className={`mt-1 ${input}`} />
           </label>
           <div className="flex gap-2">
-            <button type="submit" disabled={busy} className="flex-1 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50">
+            <button type="submit" disabled={busy} className="flex-1 rounded-xl bg-[#13223F] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50">
               {busy ? "…" : zh ? "儲存" : "Save"}
             </button>
             <button type="button" onClick={() => { setEditing(false); setErr(null); setUsername(kid.kid_login ?? ""); }}
@@ -123,7 +123,7 @@ function KidLoginRow({ kid, zh, onChanged }: { kid: AccountKid; zh: boolean; onC
       ) : (
         <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" onClick={() => { setEditing(true); setSaved(false); }}
-            className="rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold text-white">
+            className="rounded-xl bg-[#13223F] px-3 py-2 text-xs font-bold text-white">
             {kid.kid_login ? (zh ? "更改帳號或密碼" : "Change username or password") : (zh ? "建立登入帳號" : "Make a login")}
           </button>
           {kid.kid_login && (
@@ -175,7 +175,7 @@ function TeenLinks({ teens, zh, onChanged }: { teens: AccountKid[]; zh: boolean;
   return (
     <section className={card}>
       <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2">
-        <Link2 size={16} className="text-indigo-600" /> {zh ? "13–17 歲：連結孩子自己的帳戶" : "Ages 13–17: link their own account"}
+        <Link2 size={16} className="text-[#A07C34]" /> {zh ? "13–17 歲：連結孩子自己的帳戶" : "Ages 13–17: link their own account"}
       </h2>
       <p className="mt-2 text-sm text-gray-600 leading-relaxed">
         {zh
@@ -196,7 +196,7 @@ function TeenLinks({ teens, zh, onChanged }: { teens: AccountKid[]; zh: boolean;
                 </span>
               ) : (
                 <button type="button" onClick={() => make(k)} disabled={busy === k.id}
-                  className="rounded-xl border border-indigo-200 bg-white px-3 py-2 text-xs font-bold text-indigo-700 disabled:opacity-60">
+                  className="rounded-xl border border-[#E7C98A] bg-white px-3 py-2 text-xs font-bold text-[#A07C34] disabled:opacity-60">
                   {busy === k.id ? "…" : links[k.id] ? (zh ? "重新產生連結" : "Make a new link") : (zh ? "產生邀請連結" : "Make an invite link")}
                 </button>
               )}
@@ -206,7 +206,7 @@ function TeenLinks({ teens, zh, onChanged }: { teens: AccountKid[]; zh: boolean;
                 <div className="flex gap-2">
                   <input readOnly value={links[k.id]} onFocus={(e) => e.target.select()} aria-label={zh ? "邀請連結" : "Invite link"}
                     className="flex-1 min-w-0 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-700" />
-                  <button type="button" onClick={() => copy(k.id)} className="inline-flex items-center gap-1 rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold text-white">
+                  <button type="button" onClick={() => copy(k.id)} className="inline-flex items-center gap-1 rounded-xl bg-[#13223F] px-3 py-2 text-xs font-bold text-white">
                     <Copy size={13} /> {copied === k.id ? (zh ? "已複製" : "Copied") : (zh ? "複製" : "Copy")}
                   </button>
                 </div>

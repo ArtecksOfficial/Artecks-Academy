@@ -108,15 +108,17 @@ export default function PackagesClient() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
 
-      <main className="max-w-2xl mx-auto px-4 py-8 sm:py-12 flex flex-col gap-5">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         <div>
           <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("pkgTitle")}</h1>
           <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t("pkgSub")}</p>
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-5 items-start">
+        <div className="flex flex-col gap-5 min-w-0">
         {/* Orders waiting for payment */}
         {pending.map((p) => <PendingOrder key={p.id} p={p} onChange={loadMine} />)}
 
@@ -129,7 +131,7 @@ export default function PackagesClient() {
                 <li key={p.id} className="flex items-center justify-between gap-3 rounded-2xl bg-gray-50 px-4 py-3">
                   <span className="text-sm font-bold text-gray-900">{t(`pkgFormat_${p.format}` as DictionaryKey)}</span>
                   <span className="text-xs text-gray-600 text-right">
-                    <b className="text-indigo-700 text-sm">{p.lessons_left}</b> / {p.lessons_total} {t("pkgLeft")}
+                    <b className="text-[#A07C34] text-sm">{p.lessons_left}</b> / {p.lessons_total} {t("pkgLeft")}
                     {p.expires_at && <span className="block">{t("pkgExpires")} {fmtDate(p.expires_at, locale)}</span>}
                   </span>
                 </li>
@@ -137,7 +139,7 @@ export default function PackagesClient() {
             </ul>
             <p className="text-xs text-gray-500 mt-3 leading-relaxed">{t("pkgHowUse")}</p>
             {(mine?.credits.private ?? 0) > 0 && (
-              <Link href="/book" className="mt-3 inline-block rounded-xl bg-indigo-600 text-white text-sm font-bold px-4 py-2.5">{t("pkgBookNow")} →</Link>
+              <Link href="/book" className="mt-3 inline-block rounded-xl bg-[#13223F] text-white text-sm font-bold px-4 py-2.5">{t("pkgBookNow")} →</Link>
             )}
           </section>
         )}
@@ -148,7 +150,7 @@ export default function PackagesClient() {
             {FORMATS.map((f) => (
               <button key={f} type="button" role="tab" aria-selected={format === f} onClick={() => { setFormat(f); setSelected(null); }}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                  format === f ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
+                  format === f ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
                 {t(`pkgFormat_${f}` as DictionaryKey)}
               </button>
             ))}
@@ -158,7 +160,7 @@ export default function PackagesClient() {
             {shown.map((p) => (
               <button key={p.id} type="button" onClick={() => setSelected(p.id)} aria-pressed={selected === p.id}
                 className={`text-left rounded-2xl border-2 p-4 transition-colors ${
-                  selected === p.id ? "border-indigo-600 bg-indigo-50" : "border-gray-200 hover:border-indigo-300"}`}>
+                  selected === p.id ? "border-[#13223F] bg-[#FBF5E8]" : "border-gray-200 hover:border-[#C49A4A]"}`}>
                 <span className="flex items-baseline gap-2">
                   <span className="text-2xl font-black text-gray-900">{p.lessons}</span>
                   <span className="text-sm font-semibold text-gray-600">{t("pkgLessons")}</span>
@@ -166,7 +168,7 @@ export default function PackagesClient() {
                     <span className="ml-auto rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5">+{p.bonus_lessons} {t("pkgFree")}</span>
                   )}
                 </span>
-                <span className="block text-lg font-black text-indigo-700 mt-2">{nt(p.price_twd)}</span>
+                <span className="block text-lg font-black text-[#A07C34] mt-2">{nt(p.price_twd)}</span>
                 <span className="block text-xs text-gray-500 mt-1">
                   {t("pkgPerLesson")} {nt(p.per_lesson_twd)} · {t("pkgValid")} {p.valid_days} {t("pkgDays")}
                 </span>
@@ -183,7 +185,7 @@ export default function PackagesClient() {
                 <h2 className="text-lg font-black text-gray-900">{t("pkgLoginTitle")}</h2>
                 <p className="text-sm text-gray-600 -mt-2">{t("pkgLoginBody")}</p>
                 <LineLoginButton next="/packages" label={t("pkgLoginLine")} />
-                <Link href="/login?next=/packages" className="text-center text-sm font-bold text-indigo-600">{t("pkgLoginEmail")}</Link>
+                <Link href="/login?next=/packages" className="text-center text-sm font-bold text-[#A07C34]">{t("pkgLoginEmail")}</Link>
               </>
             ) : (
               <>
@@ -191,25 +193,25 @@ export default function PackagesClient() {
                   <span className="font-bold text-gray-900">{t(`pkgFormat_${pkg.format}` as DictionaryKey)} × {pkg.total_lessons}</span>
                   <span className="text-gray-700">{nt(pkg.price_twd)}</span>
                 </div>
-                <div className="rounded-2xl bg-violet-50 px-4 py-3">
+                <div className="rounded-2xl bg-[#FBF5E8] px-4 py-3">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-bold text-violet-900 inline-flex items-center gap-1.5"><Gem size={14} /> {t("pkgUseGems")}</span>
-                    <span className="text-xs text-violet-700">{t("pkgYourGems")}: {(mine?.gems ?? 0).toLocaleString()}</span>
+                    <span className="font-bold text-[#13223F] inline-flex items-center gap-1.5"><Gem size={14} /> {t("pkgUseGems")}</span>
+                    <span className="text-xs text-[#A07C34]">{t("pkgYourGems")}: {(mine?.gems ?? 0).toLocaleString()}</span>
                   </div>
                   <input type="range" min={0} max={maxGems} step={1} value={gems} disabled={maxGems === 0}
-                    onChange={(e) => setGems(Number(e.target.value))} className="w-full mt-2 accent-violet-600" aria-label={t("pkgUseGems")} />
-                  <div className="flex items-center justify-between text-xs text-violet-800">
+                    onChange={(e) => setGems(Number(e.target.value))} className="w-full mt-2 accent-[#13223F]" aria-label={t("pkgUseGems")} />
+                  <div className="flex items-center justify-between text-xs text-[#13223F]">
                     <span>{gems} 💎 → − {nt(gems * gemValue)}</span>
                     <span>{t("pkgGemNote1")}{gemValue}{t("pkgGemNote2")}</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                   <span className="text-sm font-bold text-gray-900">{t("pkgTotal")}</span>
-                  <span className="text-xl font-black text-indigo-700">{nt(pkg.price_twd - gems * gemValue)}</span>
+                  <span className="text-xl font-black text-[#A07C34]">{nt(pkg.price_twd - gems * gemValue)}</span>
                 </div>
                 {error && <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
                 <button type="button" onClick={order} disabled={busy || !user}
-                  className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg">
+                  className="w-full rounded-2xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-60 text-white font-black py-4 text-base transition-colors shadow-lg">
                   {busy ? "…" : t("pkgBuy")}
                 </button>
               </>
@@ -217,15 +219,17 @@ export default function PackagesClient() {
           </section>
         )}
 
+        </div>
         {/* How to earn */}
-        <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
-          <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={15} className="text-violet-600" /> {t("pkgEarnTitle")}</h2>
+        <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm lg:sticky lg:top-6">
+          <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={15} className="text-[#A07C34]" /> {t("pkgEarnTitle")}</h2>
           <ul className="mt-3 flex flex-col gap-1.5 text-sm text-gray-700">
             {(["pkgEarn1", "pkgEarn2", "pkgEarn3", "pkgEarn4"] as DictionaryKey[]).map((k) => (
               <li key={k} className="flex gap-2"><CheckCircle size={15} className="text-emerald-500 mt-0.5 flex-shrink-0" /> {t(k)}</li>
             ))}
           </ul>
         </section>
+        </div>
       </main>
     </div>
   );
@@ -257,7 +261,7 @@ function PendingOrder({ p, onChange }: { p: Purchase; onChange: () => void }) {
         {t(`pkgFormat_${p.format}` as DictionaryKey)} × {p.lessons_total}
         {p.gems_used > 0 && <> · {p.gems_used} 💎 (−{nt(p.gem_discount_twd)})</>}
       </p>
-      <p className="text-2xl font-black text-indigo-700">{nt(p.amount_due_twd)}</p>
+      <p className="text-2xl font-black text-[#A07C34]">{nt(p.amount_due_twd)}</p>
       {p.bank && (
         <dl className="rounded-2xl bg-gray-50 px-4 py-3 text-sm grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
           <dt className="text-gray-500">{t("pkgBank")}</dt><dd className="font-semibold">{p.bank.bank_name} ({p.bank.bank_code})</dd>
@@ -273,9 +277,9 @@ function PendingOrder({ p, onChange }: { p: Purchase; onChange: () => void }) {
           <div className="flex gap-2">
             <input id={`l5-${p.id}`} value={last5} onChange={(e) => setLast5(e.target.value.replace(/\D/g, "").slice(0, 5))}
               inputMode="numeric" pattern="\d{5}" required placeholder="12345"
-              className="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-sm font-mono focus:outline-none focus:border-indigo-500" />
+              className="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-sm font-mono focus:outline-none focus:border-[#C49A4A]" />
             <button type="submit" disabled={busy || last5.length !== 5}
-              className="rounded-xl bg-indigo-600 disabled:opacity-50 text-white text-sm font-bold px-4">{t("pkgLast5Send")}</button>
+              className="rounded-xl bg-[#13223F] disabled:opacity-50 text-white text-sm font-bold px-4">{t("pkgLast5Send")}</button>
           </div>
         </form>
       )}

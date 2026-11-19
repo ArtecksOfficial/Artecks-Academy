@@ -48,7 +48,7 @@ const fmtTime = (iso: string, locale: string) =>
 
 const STATUS_STYLE: Record<TrackerLesson["status"], { dot: string; chip: string }> = {
   done: { dot: "bg-emerald-600 text-white", chip: "bg-emerald-50 text-emerald-800" },
-  upcoming: { dot: "bg-white text-indigo-700 ring-2 ring-indigo-500", chip: "bg-indigo-50 text-indigo-800" },
+  upcoming: { dot: "bg-white text-[#A07C34] ring-2 ring-[#E7C98A]", chip: "bg-[#FBF5E8] text-[#13223F]" },
   to_confirm: { dot: "bg-amber-100 text-amber-900 ring-2 ring-amber-400", chip: "bg-amber-50 text-amber-900" },
 };
 
@@ -92,7 +92,7 @@ function PackageCard({ pkg, zh, forCoach }: { pkg: TrackerPackage; zh: boolean; 
             {pkg.expires_at && <> · {zh ? "使用期限 " : "use by "}{fmtDay(pkg.expires_at, locale)}</>}
           </p>
         </div>
-        <p className={`text-right ${low ? "text-amber-700" : finished || pkg.is_expired ? "text-gray-500" : "text-indigo-700"}`}>
+        <p className={`text-right ${low ? "text-amber-700" : finished || pkg.is_expired ? "text-gray-500" : "text-[#A07C34]"}`}>
           <span className="text-3xl font-black leading-none">{pkg.left}</span>
           <span className="ml-1 text-xs font-bold">{zh ? "堂未上" : pkg.left === 1 ? "class left" : "classes left"}</span>
         </p>
@@ -179,7 +179,7 @@ function MonthCalendar({ lessons, zh }: { lessons: TrackerLesson[]; zh: boolean 
     <div className="rounded-xl border border-gray-200 p-3 self-start">
       <div className="flex items-center justify-between">
         <button type="button" onClick={() => move(-1)} className={btn} aria-label={zh ? "上個月" : "Previous month"}><ChevronLeft size={16} /></button>
-        <p className="text-xs font-bold text-gray-800 inline-flex items-center gap-1.5"><CalendarDays size={13} className="text-indigo-600" /> {label}</p>
+        <p className="text-xs font-bold text-gray-800 inline-flex items-center gap-1.5"><CalendarDays size={13} className="text-[#A07C34]" /> {label}</p>
         <button type="button" onClick={() => move(1)} className={btn} aria-label={zh ? "下個月" : "Next month"}><ChevronRight size={16} /></button>
       </div>
       <div className="mt-2 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-gray-400">

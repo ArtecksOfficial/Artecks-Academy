@@ -83,7 +83,7 @@ export default function ArtecksBalance() {
           </div>
         )}
         {wallet.gems !== undefined && (
-          <div className="flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-violet-50 border border-violet-200 text-violet-700">
+          <div className="flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-[#FBF5E8] border border-[#E7C98A] text-[#A07C34]">
             <span>💎</span>
             <span>{wallet.gems.toLocaleString()}</span>
           </div>
@@ -101,12 +101,12 @@ export default function ArtecksBalance() {
           value={input}
           onChange={e => { setInput(e.target.value); setError(""); }}
           placeholder="ACT-XXXX"
-          className={`text-xs font-mono w-28 px-2.5 py-1.5 rounded-lg border ${error ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"} focus:outline-none focus:border-indigo-400`}
+          className={`text-xs font-mono w-28 px-2.5 py-1.5 rounded-lg border ${error ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"} focus:outline-none focus:border-[#C49A4A]`}
         />
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white disabled:opacity-50 hover:bg-indigo-500 transition-colors"
+          className="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-[#13223F] text-white disabled:opacity-50 hover:bg-[#1C3157] transition-colors"
         >
           {loading ? "…" : "Link"}
         </button>
@@ -126,7 +126,7 @@ export default function ArtecksBalance() {
   return (
     <button
       onClick={openLink}
-      className="hidden sm:flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-indigo-600 transition-colors px-1"
+      className="hidden sm:flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-[#8A6A2C] transition-colors px-1"
       title="Link your Artecks account to see XP & gems"
     >
       <span>⭐</span>

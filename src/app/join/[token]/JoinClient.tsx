@@ -74,7 +74,7 @@ export default function JoinClient({ token }: { token: string }) {
   const here = `/join/${token}`;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
       <main className="max-w-lg mx-auto px-4 py-10 flex flex-col gap-5">
         {teenLink && <TeenLinkJoin token={token} link={teenLink} zh={zh} />}
@@ -106,7 +106,7 @@ export default function JoinClient({ token }: { token: string }) {
             ) : (
               <section className="rounded-3xl bg-white border border-[#E2DDD2] p-5 flex flex-col gap-4">
                 {inv.kids.map((k) => (
-                  <div key={k.id} className="rounded-2xl bg-[#F7F6F2] p-4 flex flex-col gap-3">
+                  <div key={k.id} className="rounded-2xl bg-[#F6F4EF] p-4 flex flex-col gap-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-bold text-[#13223F]">{k.first_name} · {k.age}</span>
                       {k.past_xp > 0 && <span className="text-sm font-black text-[#A07C34] tabular-nums">⚡ {k.past_xp.toLocaleString()} XP</span>}

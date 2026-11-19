@@ -47,10 +47,10 @@ export default async function PaymentResultPage({
       >
         <div className="bg-white rounded-3xl shadow-lg border border-gray-100 max-w-sm w-full overflow-hidden">
           {/* Header */}
-          <div className="px-6 py-8 text-center text-white bg-gradient-to-br from-indigo-500 to-violet-600">
+          <div className="px-6 py-8 text-center text-white bg-gradient-to-br from-[#13223F] to-[#2A4170]">
             <Crown size={48} className="mx-auto mb-3" />
             <h1 className="text-xl font-black">You&rsquo;re a Member!</h1>
-            <p className="text-sm mt-1 text-indigo-100">
+            <p className="text-sm mt-1 text-[#E7C98A]">
               Your membership is now active. Member pricing applies to every
               future booking automatically.
             </p>
@@ -60,13 +60,13 @@ export default async function PaymentResultPage({
           <div className="px-6 py-6 flex flex-col gap-4">
             {/* Linked phone callout */}
             {linkedPhone ? (
-              <div className="rounded-xl bg-indigo-50 border border-indigo-200 px-4 py-3">
+              <div className="rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <Phone size={12} className="text-indigo-600" />
-                  <p className="text-xs font-bold text-indigo-700">Membership linked to</p>
+                  <Phone size={12} className="text-[#A07C34]" />
+                  <p className="text-xs font-bold text-[#A07C34]">Membership linked to</p>
                 </div>
-                <p className="text-sm font-mono font-bold text-indigo-800">{linkedPhone}</p>
-                <p className="text-[10px] text-indigo-500 mt-1 leading-snug">
+                <p className="text-sm font-mono font-bold text-[#13223F]">{linkedPhone}</p>
+                <p className="text-[10px] text-[#A07C34] mt-1 leading-snug">
                   Enter this phone number when booking to receive your member discount automatically.
                 </p>
               </div>
@@ -84,7 +84,7 @@ export default async function PaymentResultPage({
 
             <Link
               href="/"
-              className="w-full flex items-center justify-center rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-indigo-200"
+              className="w-full flex items-center justify-center rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-[#13223F]/10"
             >
               Book a Session
             </Link>
@@ -166,7 +166,7 @@ export default async function PaymentResultPage({
           {bookingId && (
             <Link
               href={`/report/${bookingId}`}
-              className="w-full flex items-center justify-center rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-indigo-200"
+              className="w-full flex items-center justify-center rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-[#13223F]/10"
             >
               View My Booking Details
             </Link>

@@ -82,7 +82,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
           <span title={zh ? "我的經驗值" : "My XP"} className="flex items-center gap-1 bg-[#0E1E3A]/5 text-[#13223F] border border-[#0E1E3A]/15 text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
             ⚡ {wallet.xp.toLocaleString()} XP
           </span>
-          <span title={zh ? "寶石" : "Gems"} className="flex items-center gap-1 bg-violet-50 text-violet-600 border border-violet-200 text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
+          <span title={zh ? "寶石" : "Gems"} className="flex items-center gap-1 bg-[#FBF5E8] text-[#A07C34] border border-[#E7C98A] text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
             💎 {wallet.gems.toLocaleString()}
           </span>
         </>
@@ -94,12 +94,12 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
           className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
             dark
               ? "bg-white/10 hover:bg-white/20 text-white"
-              : "border border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+              : "border border-[#E7C98A] text-[#A07C34] hover:bg-[#FBF5E8]"
           }`}
         >
           <span
             className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-              dark ? "bg-indigo-400" : "bg-indigo-500"
+              dark ? "bg-[#13223F]" : "bg-[#13223F]"
             }`}
           >
             {displayName[0]?.toUpperCase()}
@@ -124,7 +124,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
             {wallet && (
               <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-3">
                 <span className="text-xs font-bold text-[#13223F]">⚡ {wallet.xp.toLocaleString()} XP</span>
-                <span className="text-xs font-bold text-violet-600">💎 {wallet.gems.toLocaleString()}</span>
+                <span className="text-xs font-bold text-[#A07C34]">💎 {wallet.gems.toLocaleString()}</span>
               </div>
             )}
             {[
@@ -134,7 +134,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
               ["/leaderboard", zh ? "我的孩子 · 排行榜" : "My kids · Leaderboard"],
             ].map(([href, label]) => (
               <a key={href} href={href} onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 transition-colors">
+                className="block px-4 py-2 text-sm text-[#A07C34] hover:bg-[#FBF5E8] transition-colors">
                 {label}
               </a>
             ))}

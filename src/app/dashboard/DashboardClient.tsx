@@ -65,7 +65,7 @@ export default function DashboardClient() {
   return (
     <div className="min-h-screen bg-[#F6F4EF]">
       <SiteHeader />
-      <main className="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-5">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         <div>
           <h1 className="font-serif-tc text-3xl font-black text-[#13223F]">{zh ? "學習總覽" : "Dashboard"}</h1>
           <p className="mt-1 text-sm text-gray-600">{zh ? "孩子的進步、上過的課，以及還剩幾堂。" : "How your kids are progressing, what they've covered, and how many classes are left."}</p>

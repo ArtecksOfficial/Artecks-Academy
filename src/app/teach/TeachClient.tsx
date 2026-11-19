@@ -50,7 +50,7 @@ export default function TeachClient() {
   return (
     <div className="min-h-screen bg-[#F6F4EF]">
       <SiteHeader />
-      <main className="max-w-3xl mx-auto px-4 py-8 flex flex-col gap-5">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         <header>
           <h1 className="font-serif-tc text-3xl font-black text-[#13223F]">{zh ? "加入師資團隊" : "Teach with Artecks Academy"}</h1>
           <p className="mt-2 text-sm text-[#5B6478] max-w-2xl">
@@ -95,7 +95,7 @@ export default function TeachClient() {
                     : (zh ? "⏳ 已收到你的申請，正在等待審核。" : "⏳ We've got your application. It's waiting for approval.")}
                 </p>
                 <p className="mt-1 text-sm text-gray-600">{zh ? "到教練專區更新檔案、設定時間與地點。" : "Update your profile and set your hours and places in the coach dashboard."}</p>
-                <Link href="/coach" className="mt-4 inline-block rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white">{zh ? "前往教練專區" : "Go to the coach dashboard"}</Link>
+                <Link href="/coach" className="mt-4 inline-block rounded-xl bg-[#13223F] px-5 py-2.5 text-sm font-bold text-white">{zh ? "前往教練專區" : "Go to the coach dashboard"}</Link>
               </>
             )}
           </section>

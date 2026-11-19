@@ -122,7 +122,7 @@ export default function ReportCard({
   }, [hasReport, bookingId]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-900 via-indigo-800 to-violet-900 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-[#0E1E3A] via-[#1C3157] to-[#13223F] py-8 px-4">
       <div className="max-w-sm mx-auto flex flex-col gap-4">
 
         {/* Academy badge + language toggle */}
@@ -137,16 +137,16 @@ export default function ReportCard({
         </div>
 
         {/* Main card */}
-        <div className="rounded-3xl bg-white shadow-2xl shadow-indigo-900/40 overflow-hidden">
+        <div className="rounded-3xl bg-white shadow-2xl shadow-black/30 overflow-hidden">
 
           {/* Card header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-white">
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-200 mb-1">
+          <div className="bg-gradient-to-r from-[#13223F] to-[#2A4170] px-6 py-5 text-white">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#E7C98A] mb-1">
               {t("reportCardLabel")}
             </p>
             <h1 className="font-serif-tc text-2xl font-black">{studentName}</h1>
             {session && (
-              <p className="text-sm text-indigo-200 mt-1">
+              <p className="text-sm text-[#E7C98A] mt-1">
                 {formatDateTW(session.start_time, locale)} · {session.location_name}
               </p>
             )}
@@ -177,7 +177,7 @@ export default function ReportCard({
                     {(report.skill_tags ?? []).map((tag: string) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-indigo-100 text-indigo-700 px-3 py-1 text-sm font-semibold"
+                        className="rounded-full bg-[#FBF5E8] text-[#A07C34] px-3 py-1 text-sm font-semibold"
                       >
                         ✦ {tag}
                       </span>
@@ -219,13 +219,13 @@ export default function ReportCard({
 
             {/* Artecks Loot Box */}
             {hasRewards && (
-              <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-5 text-white">
+              <div className="rounded-2xl bg-gradient-to-br from-[#13223F] to-[#2A4170] p-5 text-white">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl">
                     🎁
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-violet-200">
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#E7C98A]">
                       {t("lootBoxTitle")}
                     </p>
                     <p className="text-sm font-bold text-white">
@@ -239,7 +239,7 @@ export default function ReportCard({
                     <p className="text-2xl font-black text-yellow-300">
                       +{report?.xp_awarded ?? 100}
                     </p>
-                    <p className="text-xs text-violet-200 font-semibold mt-0.5">
+                    <p className="text-xs text-[#E7C98A] font-semibold mt-0.5">
                       {t("xpAwarded")}
                     </p>
                   </div>
@@ -247,14 +247,14 @@ export default function ReportCard({
                     <p className="text-2xl font-black text-yellow-300">
                       +{report?.coins_awarded ?? 30}
                     </p>
-                    <p className="text-xs text-violet-200 font-semibold mt-0.5">
+                    <p className="text-xs text-[#E7C98A] font-semibold mt-0.5">
                       {t("coinsAwarded")}
                     </p>
                   </div>
                 </div>
 
                 {artecksAccountId && (
-                  <p className="text-xs text-violet-300 mt-3 text-center">
+                  <p className="text-xs text-[#E7C98A] mt-3 text-center">
                     {t("sentTo").replace("{id}", artecksAccountId)}
                   </p>
                 )}
@@ -285,7 +285,7 @@ export default function ReportCard({
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-indigo-300">
+        <p className="text-center text-xs text-[#E7C98A]">
           academy.artecks.com · Powered by Artecks
         </p>
       </div>

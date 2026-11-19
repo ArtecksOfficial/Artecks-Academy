@@ -51,7 +51,7 @@ export default function SettingsClient() {
   return (
     <div className="min-h-screen bg-[#F6F4EF]">
       <SiteHeader />
-      <main className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-5">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         <h1 className="font-serif-tc text-3xl font-black text-[#13223F]">{zh ? "設定" : "Settings"}</h1>
 
         {isLoading ? (
@@ -68,7 +68,7 @@ export default function SettingsClient() {
             {zh ? "這台裝置目前是兒童模式。家長輸入 PIN 離開後才能變更設定。" : "This device is in Kid Mode. Parents can change settings after leaving Kid Mode with their PIN."}
           </p>
         ) : (
-          <>
+          <div className="lg:columns-2 lg:gap-5 flex flex-col gap-5 lg:block [&>*]:break-inside-avoid lg:[&>*]:mb-5">
             <ProfileSection zh={zh} />
             <PasswordSection zh={zh} />
 
@@ -100,7 +100,7 @@ export default function SettingsClient() {
                 <LogOut size={16} /> {zh ? "登出" : "Log out"}
               </button>
             </section>
-          </>
+          </div>
         )}
       </main>
     </div>

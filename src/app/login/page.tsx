@@ -30,7 +30,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0d2a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
       {/* Logo */}
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
@@ -63,14 +63,14 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white/8 transition-colors"
+              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white/8 transition-colors"
             />
           </div>
 
           <div>
             <div className="flex items-baseline justify-between mb-1.5">
               <label className="block text-sm font-medium text-white/70">Password</label>
-              <Link href="/forgot-password" className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+              <Link href="/forgot-password" className="text-xs text-[#E7C98A] hover:text-[#F3DFAE] font-medium transition-colors">
                 Forgot password? · 忘記密碼
               </Link>
             </div>
@@ -80,14 +80,14 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+            className="w-full bg-[#C49A4A] hover:bg-[#D4AE63] disabled:opacity-50 disabled:cursor-not-allowed text-[#0E1E3A] font-bold font-semibold py-3 rounded-xl transition-colors text-sm"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
@@ -95,7 +95,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-white/40 mt-6">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+          <Link href="/signup" className="text-[#E7C98A] hover:text-[#F3DFAE] font-medium transition-colors">
             Sign up
           </Link>
         </p>

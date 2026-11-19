@@ -98,7 +98,7 @@ export default function CoachCalendar({ zh, refreshKey }: { zh: boolean; refresh
         </div>
         <div className="mt-3 flex flex-wrap gap-3 text-[11px] text-gray-500">
           <span className="inline-flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-emerald-400" />{zh ? "可上課" : "Available"}</span>
-          <span className="inline-flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-indigo-500" />{zh ? "已排課" : "Lesson"}</span>
+          <span className="inline-flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-[#13223F]" />{zh ? "已排課" : "Lesson"}</span>
           <span className="inline-flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-amber-400" />{zh ? "行事曆忙碌" : "Busy (your calendar)"}</span>
           <span className="inline-flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-gray-300" />{zh ? "休假" : "Day off"}</span>
         </div>
@@ -113,13 +113,13 @@ export default function CoachCalendar({ zh, refreshKey }: { zh: boolean; refresh
             return (
               <button key={d.date} type="button" onClick={() => setPicked(d.date === picked ? null : d.date)}
                 className={`flex min-h-[3.5rem] flex-col items-start rounded-lg border p-1.5 text-left transition-colors ${
-                  d.date === picked ? "border-indigo-500 ring-2 ring-indigo-200" : "border-gray-100 hover:border-gray-300"
+                  d.date === picked ? "border-[#13223F] ring-2 ring-[#E7C98A]" : "border-gray-100 hover:border-gray-300"
                 } ${d.off ? "bg-gray-100" : "bg-white"} ${past ? "opacity-50" : ""}`}
                 aria-label={`${fmtDate(d.date)}${d.off ? (zh ? "，休假" : ", day off") : ""}`}>
-                <span className={`text-xs font-bold ${d.date === today ? "rounded-full bg-indigo-600 px-1.5 text-white" : "text-gray-700"}`}>{n}</span>
+                <span className={`text-xs font-bold ${d.date === today ? "rounded-full bg-[#13223F] px-1.5 text-white" : "text-gray-700"}`}>{n}</span>
                 <span className="mt-auto flex flex-wrap gap-0.5">
                   {!d.off && d.windows.length > 0 && <i className="h-2 w-2 rounded-full bg-emerald-400" />}
-                  {d.lessons.map((l) => <i key={l.id} className="h-2 w-2 rounded-full bg-indigo-500" />)}
+                  {d.lessons.map((l) => <i key={l.id} className="h-2 w-2 rounded-full bg-[#13223F]" />)}
                   {d.busy.length > 0 && <i className="h-2 w-2 rounded-full bg-amber-400" />}
                   {d.off && <span className="text-[10px] font-semibold text-gray-500">{zh ? "休" : "Off"}</span>}
                 </span>
@@ -203,7 +203,7 @@ function TimeOffPanel({ zh, items, onAdd, onRemove, fmtDate }: {
         <label className="text-xs font-semibold text-gray-600 col-span-2 sm:col-span-1">{zh ? "備註" : "Note"}
           <input value={note} maxLength={120} onChange={(e) => setNote(e.target.value)} placeholder={zh ? "例如：出國" : "e.g. Holiday"} className={`mt-1 ${field}`} />
         </label>
-        <button type="submit" className="col-span-2 sm:col-span-1 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white">{zh ? "新增" : "Add"}</button>
+        <button type="submit" className="col-span-2 sm:col-span-1 rounded-xl bg-[#13223F] px-4 py-2.5 text-sm font-bold text-white">{zh ? "新增" : "Add"}</button>
       </form>
     </section>
   );
@@ -244,7 +244,7 @@ function OutsideCalendar({ zh, status, onChange, fmtTime }: {
           {status.error && <p role="alert" className="text-xs text-red-600">{status.error}</p>}
           <div className="flex gap-2">
             <button type="button" disabled={busy} onClick={() => send({ method: "POST", body: "{}" })}
-              className="rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{busy ? "…" : zh ? "立即同步" : "Sync now"}</button>
+              className="rounded-xl bg-[#13223F] px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{busy ? "…" : zh ? "立即同步" : "Sync now"}</button>
             <button type="button" disabled={busy} onClick={() => send({ method: "DELETE" })}
               className="rounded-xl border border-gray-300 px-3 py-2 text-xs font-bold text-gray-700 disabled:opacity-50">{zh ? "取消連結" : "Disconnect"}</button>
           </div>
@@ -254,14 +254,14 @@ function OutsideCalendar({ zh, status, onChange, fmtTime }: {
           onSubmit={(e) => { e.preventDefault(); if (url.trim()) send({ method: "POST", body: JSON.stringify({ url: url.trim() }) }); }}>
           <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://calendar.google.com/calendar/ical/…/basic.ics"
             className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm" aria-label={zh ? "行事曆私人網址" : "Calendar private address"} />
-          <button type="submit" disabled={busy || !url.trim()} className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">
+          <button type="submit" disabled={busy || !url.trim()} className="rounded-xl bg-[#13223F] px-4 py-2 text-sm font-bold text-white disabled:opacity-50">
             {busy ? "…" : zh ? "連結" : "Connect"}
           </button>
         </form>
       )}
       {msg && <p role="alert" className="mt-2 text-xs text-red-600">{msg}</p>}
 
-      <button type="button" onClick={() => setShowHelp((v) => !v)} className="mt-3 text-xs font-semibold text-indigo-600">
+      <button type="button" onClick={() => setShowHelp((v) => !v)} className="mt-3 text-xs font-semibold text-[#A07C34]">
         {showHelp ? "▾" : "▸"} {zh ? "如何取得 Google 行事曆的私人網址？" : "Where do I find my Google Calendar's private address?"}
       </button>
       {showHelp && (

@@ -54,7 +54,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
   const [copied, setCopied] = useState(false);
 
   const shell = (children: React.ReactNode) => (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
       <main className="max-w-lg mx-auto px-4 py-8 flex flex-col gap-4">{children}</main>
     </div>
@@ -114,7 +114,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
           href={`https://maps.google.com/?q=${encodeURIComponent(info.location_address || info.location_name)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-sm text-indigo-600 mt-1 hover:underline"
+          className="flex items-center gap-1.5 text-sm text-[#A07C34] mt-1 hover:underline"
         >
           <MapPin size={14} /> {info.location_name}
           {info.location_address && <span className="text-gray-500 text-xs">· {info.location_address}</span>}
@@ -144,7 +144,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
 
       {paid && info.feedback === "ok" && (
         <Link href={`/feedback/${info.booking_id}?t=${encodeURIComponent(token)}`}
-          className="block rounded-2xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold text-center py-3.5">
+          className="block rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold text-center py-3.5">
           {t("payFeedbackCta")}
         </Link>
       )}
@@ -193,7 +193,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
                     onClick={() => {
                       navigator.clipboard?.writeText(info.bank!.account).then(() => setCopied(true)).catch(() => {});
                     }}
-                    className="text-indigo-600"
+                    className="text-[#A07C34]"
                     aria-label={t("payCopy")}
                   >
                     <Copy size={14} />
@@ -221,10 +221,10 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
                       value={last5}
                       onChange={(e) => setLast5(e.target.value.replace(/\D/g, ""))}
                       placeholder="12345"
-                      className="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-sm font-mono tracking-widest focus:outline-none focus:border-indigo-500"
+                      className="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-sm font-mono tracking-widest focus:outline-none focus:border-[#C49A4A]"
                     />
                     <button type="submit" disabled={sending}
-                      className="rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white text-sm font-bold px-4">
+                      className="rounded-xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-60 text-white text-sm font-bold px-4">
                       {t("payReport")}
                     </button>
                   </div>
@@ -255,12 +255,12 @@ function ReferralBox({ url, coach }: { url: string; coach: string }) {
   const [copied, setCopied] = useState(false);
   const share = `https://line.me/R/share?text=${encodeURIComponent(`${t("refShareText")} ${url}`)}`;
   return (
-    <section className="rounded-3xl bg-white border border-violet-200 p-5 shadow-sm">
+    <section className="rounded-3xl bg-white border border-[#E7C98A] p-5 shadow-sm">
       <h2 className="text-base font-black text-gray-900">🎁 {t("refTitle")}</h2>
       <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">{t("refBody").replace("{coach}", coach)}</p>
       <div className="mt-3 flex items-center gap-2 rounded-xl bg-gray-50 border border-gray-200 px-3 py-2">
         <span className="flex-1 truncate font-mono text-xs text-gray-700">{url}</span>
-        <button type="button" className="text-xs font-bold text-indigo-600 flex-shrink-0"
+        <button type="button" className="text-xs font-bold text-[#A07C34] flex-shrink-0"
           onClick={() => navigator.clipboard?.writeText(url).then(() => setCopied(true)).catch(() => {})}>
           {copied ? t("refCopied") : t("refCopy")}
         </button>

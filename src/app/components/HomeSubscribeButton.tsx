@@ -60,7 +60,7 @@ export default function HomeSubscribeButton({ planId, discountPercent }: Props) 
       {/* Trigger button */}
       <button
         onClick={openModal}
-        className="inline-flex items-center gap-1.5 rounded-full bg-white text-indigo-700 hover:bg-indigo-50 text-xs font-bold px-4 py-2 transition-colors"
+        className="inline-flex items-center gap-1.5 rounded-full bg-white text-[#A07C34] hover:bg-[#FBF5E8] text-xs font-bold px-4 py-2 transition-colors"
       >
         Subscribe <ArrowRight size={12} />
       </button>
@@ -73,7 +73,7 @@ export default function HomeSubscribeButton({ planId, discountPercent }: Props) 
         >
           <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden">
             {/* Modal header */}
-            <div className="bg-gradient-to-br from-indigo-500 to-violet-600 px-6 pt-6 pb-5 text-white relative">
+            <div className="bg-gradient-to-br from-[#13223F] to-[#2A4170] px-6 pt-6 pb-5 text-white relative">
               <button
                 onClick={closeModal}
                 className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
@@ -83,7 +83,7 @@ export default function HomeSubscribeButton({ planId, discountPercent }: Props) 
               </button>
               <Crown size={28} className="mb-2" />
               <h2 className="text-base font-black leading-tight">Set Up Your Membership</h2>
-              <p className="text-xs text-indigo-100 mt-1 leading-snug">
+              <p className="text-xs text-[#E7C98A] mt-1 leading-snug">
                 We'll link your membership to your phone so discounts apply automatically when you book.
                 {discountPercent && ` Save ${discountPercent}% on every session.`}
               </p>
@@ -104,7 +104,7 @@ export default function HomeSubscribeButton({ planId, discountPercent }: Props) 
                     placeholder="0912 345 678"
                     required
                     disabled={step === "loading"}
-                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
+                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E7C98A] disabled:opacity-50"
                   />
                 </div>
                 <p className="text-[10px] text-gray-400 mt-1">Used to identify your membership at booking.</p>
@@ -120,7 +120,7 @@ export default function HomeSubscribeButton({ planId, discountPercent }: Props) 
                   onChange={(e) => setAccountId(e.target.value)}
                   placeholder="e.g. ISSAC-001"
                   disabled={step === "loading"}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E7C98A] disabled:opacity-50"
                 />
               </div>
 
@@ -140,7 +140,7 @@ export default function HomeSubscribeButton({ planId, discountPercent }: Props) 
                 <button
                   type="submit"
                   disabled={step === "loading"}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition-colors disabled:opacity-50 shadow-sm shadow-indigo-200"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold transition-colors disabled:opacity-50 shadow-sm shadow-[#13223F]/10"
                 >
                   {step === "loading" ? (
                     <Loader2 size={14} className="animate-spin" />

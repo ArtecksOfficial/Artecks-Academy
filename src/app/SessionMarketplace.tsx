@@ -122,15 +122,15 @@ function Calendar({
                 className={[
                   "relative w-9 h-9 rounded-full text-sm font-semibold transition-all flex items-center justify-center",
                   isSelected
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                    ? "bg-[#13223F] text-white shadow-md shadow-[#13223F]/10"
                     : hasSession && !isPast
-                    ? "text-gray-900 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer"
+                    ? "text-gray-900 hover:bg-[#FBF5E8] hover:text-[#8A6A2C] cursor-pointer"
                     : "text-gray-300 cursor-default",
                 ].join(" ")}
               >
                 {day}
                 {hasSession && !isSelected && !isPast && (
-                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#13223F]" />
                 )}
               </button>
             </div>
@@ -155,7 +155,7 @@ function TimeSlots({ sessions, onSelect }: { sessions: AcademySession[]; onSelec
               onClick={() => open && onSelect(s)}
               className={`flex-1 rounded-xl border px-4 py-3 text-sm font-semibold flex items-center justify-between gap-3 transition-all ${
                 open
-                  ? "border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 cursor-pointer"
+                  ? "border-[#E7C98A] text-[#A07C34] bg-[#FBF5E8] hover:bg-[#FBF5E8] cursor-pointer"
                   : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"
               }`}
             >
@@ -168,7 +168,7 @@ function TimeSlots({ sessions, onSelect }: { sessions: AcademySession[]; onSelec
             </div>
             {open && (
               <button onClick={() => onSelect(s)}
-                className="flex-shrink-0 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold px-5 py-3 transition-colors shadow-sm">
+                className="flex-shrink-0 rounded-xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold px-5 py-3 transition-colors shadow-sm">
                 Select
               </button>
             )}
@@ -263,22 +263,22 @@ function BookingForm({
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Parent Name *</span>
-          <input name="parent_name" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white" />
+          <input name="parent_name" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone *</span>
-          <input name="parent_phone" type="tel" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white" />
+          <input name="parent_phone" type="tel" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Student Name *</span>
-          <input name="student_name" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white" />
+          <input name="student_name" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Age *</span>
-          <input name="student_age" type="number" min={4} max={18} required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white" />
+          <input name="student_age" type="number" min={4} max={18} required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
       </div>
 
@@ -289,7 +289,7 @@ function BookingForm({
           {EXPERIENCE_OPTS.map(({ key, label }) => (
             <button key={key} type="button" onClick={() => setExperience(key)}
               className={`rounded-xl border px-2 py-2 text-xs font-semibold text-center transition-all ${
-                experience === key ? "bg-indigo-600 border-indigo-600 text-white" : "border-gray-200 bg-gray-50 text-gray-600 hover:border-indigo-300"
+                experience === key ? "bg-[#13223F] border-[#13223F] text-white" : "border-gray-200 bg-gray-50 text-gray-600 hover:border-[#C49A4A]"
               }`}>{label}</button>
           ))}
         </div>
@@ -302,7 +302,7 @@ function BookingForm({
           {CONTACT_OPTS.map(({ key, label, emoji }) => (
             <button key={key} type="button" onClick={() => setContactMethod(key)}
               className={`rounded-xl border py-2 text-xs font-semibold flex flex-col items-center gap-0.5 transition-all ${
-                contactMethod === key ? "bg-indigo-600 border-indigo-600 text-white" : "border-gray-200 bg-gray-50 text-gray-600 hover:border-indigo-300"
+                contactMethod === key ? "bg-[#13223F] border-[#13223F] text-white" : "border-gray-200 bg-gray-50 text-gray-600 hover:border-[#C49A4A]"
               }`}>
               <span className="text-sm">{emoji}</span><span>{label}</span>
             </button>
@@ -310,32 +310,32 @@ function BookingForm({
         </div>
         <input name="contact_value" required placeholder={placeholders[contactMethod]}
           type={contactMethod === "email" ? "email" : "text"}
-          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white" />
+          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
       </div>
 
       <label className="flex flex-col gap-1">
         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</span>
         <textarea name="special_notes" rows={2} placeholder="Special requirements, questions…"
-          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-indigo-400 focus:bg-white" />
+          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
       </label>
 
       <label className="flex flex-col gap-1">
         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
           Artecks Account ID{" "}
-          <span className="text-violet-500 normal-case font-normal">optional · earn XP</span>
-          {memberChecking && <span className="text-indigo-400 normal-case font-normal ml-1">checking…</span>}
+          <span className="text-[#A07C34] normal-case font-normal">optional · earn XP</span>
+          {memberChecking && <span className="text-[#E7C98A] normal-case font-normal ml-1">checking…</span>}
         </span>
         <input
           name="artecks_account_id"
           placeholder="ACT-XXXX"
           value={accountId}
           onChange={(e) => setAccountId(e.target.value)}
-          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+          className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white"
         />
       </label>
 
-      <label className="flex items-start gap-2.5 rounded-xl bg-indigo-50/60 border border-indigo-100 px-3 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
-              <input type="checkbox" name="account_consent" required className="mt-0.5 accent-indigo-600 w-4 h-4 flex-shrink-0" />
+      <label className="flex items-start gap-2.5 rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-3 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
+              <input type="checkbox" name="account_consent" required className="mt-0.5 accent-[#13223F] w-4 h-4 flex-shrink-0" />
               <span>報名的同時，我同意為孩子建立 Artecks 西洋棋帳號，讓教練可以指派作業、孩子可以線上練習。 / I agree to an Artecks Chess account for my child, so the coach can set homework and my child can practise online.</span>
             </label>
 
@@ -347,7 +347,7 @@ function BookingForm({
       )}
 
       <button type="submit" disabled={isPending}
-        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200 disabled:opacity-50 active:scale-[0.98] transition-all">
+        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#13223F] hover:bg-[#1C3157] py-4 text-sm font-bold text-white shadow-lg shadow-[#13223F]/10 disabled:opacity-50 active:scale-[0.98] transition-all">
         {isPending ? <><Loader2 size={16} className="animate-spin" /> Booking…</> : "Confirm Booking"}
       </button>
     </form>
@@ -404,7 +404,7 @@ function SuccessScreen({
       </div>
       {/* ── Primary: Stripe ─────────────────────────────────────────── */}
       <button onClick={handlePay}
-        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all">
+        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#13223F] hover:bg-[#1C3157] py-4 text-sm font-bold text-white shadow-lg shadow-[#13223F]/10 active:scale-[0.98] transition-all">
         Pay Now (Card / PayPal)
       </button>
 
@@ -430,7 +430,7 @@ function SuccessScreen({
         台灣在地支付 (信用卡 / ATM / 行動支付)
       </a>
 
-      <a href={`/report/${bookingId}`} className="text-xs text-indigo-500 hover:underline">View booking details</a>
+      <a href={`/report/${bookingId}`} className="text-xs text-[#A07C34] hover:underline">View booking details</a>
     </div>
   );
 }
@@ -463,25 +463,25 @@ function InfoPanel({
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-md flex-shrink-0">
+        <div className="w-12 h-12 rounded-2xl bg-[#13223F] flex items-center justify-center shadow-md flex-shrink-0">
           <span className="text-white text-xl font-black">♟</span>
         </div>
         <div>
-          <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider">Artecks Academy</p>
+          <p className="text-xs font-bold text-[#A07C34] uppercase tracking-wider">Artecks Academy</p>
           <p className="text-lg font-black text-gray-900 leading-tight">Chess Lessons</p>
         </div>
       </div>
       <div className="flex flex-col gap-3 border-t border-gray-100 pt-4">
         <div className="flex items-start gap-2 text-sm text-gray-600">
-          <Clock size={15} className="mt-0.5 text-indigo-400 flex-shrink-0" />
+          <Clock size={15} className="mt-0.5 text-[#E7C98A] flex-shrink-0" />
           <span>{mins ? `${mins} minutes` : "Duration TBD"}</span>
         </div>
         <div className="flex items-start gap-2 text-sm text-gray-600">
-          <MapPin size={15} className="mt-0.5 text-indigo-400 flex-shrink-0" />
+          <MapPin size={15} className="mt-0.5 text-[#E7C98A] flex-shrink-0" />
           <span>{session?.location_name ?? "Linkou, New Taipei"}</span>
         </div>
         <div className="flex items-start gap-2 text-sm text-gray-600">
-          <Users size={15} className="mt-0.5 text-indigo-400 flex-shrink-0" />
+          <Users size={15} className="mt-0.5 text-[#E7C98A] flex-shrink-0" />
           <span>Small group · max {session?.max_seats ?? 10} students</span>
         </div>
       </div>
@@ -501,25 +501,25 @@ function InfoPanel({
                   onClick={() => onVariantChange(v)}
                   className={`rounded-xl border px-3 py-2 text-left transition-all ${
                     active
-                      ? "bg-indigo-600 border-indigo-600 text-white"
-                      : "border-gray-200 bg-gray-50 text-gray-700 hover:border-indigo-300 hover:bg-indigo-50"
+                      ? "bg-[#13223F] border-[#13223F] text-white"
+                      : "border-gray-200 bg-gray-50 text-gray-700 hover:border-[#C49A4A] hover:bg-[#FBF5E8]"
                   } ${step !== "form" ? "cursor-default" : "cursor-pointer"}`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-bold">{v.label}</span>
                     <div className="flex items-center gap-1.5">
                       {isMember && v.member_price < v.price && (
-                        <span className={`text-[10px] line-through ${active ? "text-indigo-300" : "text-gray-400"}`}>
+                        <span className={`text-[10px] line-through ${active ? "text-[#E7C98A]" : "text-gray-400"}`}>
                           NT${v.price.toLocaleString()}
                         </span>
                       )}
-                      <span className={`text-xs font-semibold ${active ? "text-indigo-200" : "text-indigo-600"}`}>
+                      <span className={`text-xs font-semibold ${active ? "text-[#E7C98A]" : "text-[#A07C34]"}`}>
                         NT${showPrice.toLocaleString()}/pp
                       </span>
                     </div>
                   </div>
                   {!isMember && v.member_price < v.price && (
-                    <p className={`text-[10px] mt-0.5 ${active ? "text-indigo-200" : "text-gray-400"}`}>
+                    <p className={`text-[10px] mt-0.5 ${active ? "text-[#E7C98A]" : "text-gray-400"}`}>
                       Members: NT${v.member_price.toLocaleString()}/pp
                     </p>
                   )}
@@ -543,15 +543,15 @@ function InfoPanel({
         </div>
       )}
 
-      <div className="rounded-2xl bg-indigo-50 border border-indigo-100 px-4 py-3">
-        <p className="text-xs text-indigo-400 font-semibold">
+      <div className="rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
+        <p className="text-xs text-[#E7C98A] font-semibold">
           {step === "form" && hasVariants && selectedVariant
             ? `Per student · ${selectedVariant.label}${isMember ? " · Member rate" : ""}`
             : (hasVariants ? "Starting from" : (session ? "Per session" : "Starting from"))}
         </p>
         {displayPrice != null
-          ? <p className="text-2xl font-black text-indigo-700">NT${displayPrice.toLocaleString()} <span className="text-sm font-normal text-indigo-400">TWD</span></p>
-          : <p className="text-sm text-indigo-400 font-medium">Pricing TBD</p>
+          ? <p className="text-2xl font-black text-[#A07C34]">NT${displayPrice.toLocaleString()} <span className="text-sm font-normal text-[#E7C98A]">TWD</span></p>
+          : <p className="text-sm text-[#E7C98A] font-medium">Pricing TBD</p>
         }
       </div>
       {session?.coach && (
@@ -566,15 +566,15 @@ function InfoPanel({
           </div>
         </div>
       )}
-      <div className="rounded-2xl bg-violet-50 border border-violet-100 px-4 py-3">
-        <p className="text-xs font-bold text-violet-700 mb-1">🎮 Artecks Rewards</p>
-        <p className="text-xs text-violet-600">Add your account ID to earn XP &amp; coins after each session.</p>
+      <div className="rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
+        <p className="text-xs font-bold text-[#A07C34] mb-1">🎮 Artecks Rewards</p>
+        <p className="text-xs text-[#A07C34]">Add your account ID to earn XP &amp; coins after each session.</p>
       </div>
       <a
         href="https://store.artecks.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-indigo-300 hover:text-indigo-600 transition-all"
+        className="flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-[#C49A4A] hover:text-[#8A6A2C] transition-all"
       >
         🛍 Visit Artecks Store
         <span className="text-gray-400 text-xs">→</span>
@@ -587,7 +587,7 @@ function InfoPanel({
 
 function CoachCard({ coach }: { coach: typeof COACHES[0] }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 flex gap-4 hover:border-indigo-200 hover:shadow-sm transition-all">
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 flex gap-4 hover:border-[#C49A4A] hover:shadow-sm transition-all">
       <div className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center text-white text-lg font-black shadow-sm"
            style={{ backgroundColor: coach.color }}>
         {coach.avatar}
@@ -682,7 +682,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
   }[step];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
 
       <SiteHeader />
 
@@ -761,9 +761,9 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
                     onNextMonth={nextMonth}
                   />
                   {!hasAnySessions && (
-                    <div className="mt-6 rounded-2xl border border-dashed border-indigo-200 bg-indigo-50 px-5 py-4 text-center">
-                      <p className="text-sm font-bold text-indigo-700">♟ Sessions launching soon</p>
-                      <p className="text-xs text-indigo-500 mt-1 mb-3">
+                    <div className="mt-6 rounded-2xl border border-dashed border-[#E7C98A] bg-[#FBF5E8] px-5 py-4 text-center">
+                      <p className="text-sm font-bold text-[#A07C34]">♟ Sessions launching soon</p>
+                      <p className="text-xs text-[#A07C34] mt-1 mb-3">
                         Highlighted dates will appear here once sessions are scheduled.
                       </p>
                       
@@ -791,7 +791,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
                         </svg>
                         加入棋藝俱樂部 / Join Chess Club
                       </a>
-                      <a href="/book" className="block mt-3 text-xs font-bold text-indigo-600 hover:text-indigo-800">
+                      <a href="/book" className="block mt-3 text-xs font-bold text-[#A07C34] hover:text-[#8A6A2C]">
                         想要一對一課程？預約上課時間 → / Book a 1-on-1 lesson →
                       </a>
                     </div>
@@ -838,11 +838,11 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
         </div>
 
         {/* ── Artecks login nudge ── */}
-        <div className="flex items-start gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3">
+        <div className="flex items-start gap-3 rounded-2xl border border-[#E7C98A] bg-[#FBF5E8] px-4 py-3">
           <span className="text-lg mt-0.5">🎮</span>
           <div>
-            <p className="text-xs font-bold text-indigo-800">Booking is open to everyone — no login required.</p>
-            <p className="text-xs text-indigo-600 mt-0.5 leading-relaxed">
+            <p className="text-xs font-bold text-[#13223F]">Booking is open to everyone — no login required.</p>
+            <p className="text-xs text-[#A07C34] mt-0.5 leading-relaxed">
               Have an Artecks account? Add your account ID when you book and earn <strong>XP &amp; coins</strong> automatically after each session.
             </p>
           </div>
@@ -857,11 +857,11 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
         </section>
 
         {/* ── Ecosystem callout ── */}
-        <section className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-indigo-50 p-5">
-          <p className="text-sm font-black text-violet-700 mb-1">🎮 Artecks Ecosystem Rewards</p>
+        <section className="rounded-2xl border border-[#E7C98A] bg-gradient-to-br from-[#FBF5E8] to-[#F6F4EF] p-5">
+          <p className="text-sm font-black text-[#A07C34] mb-1">🎮 Artecks Ecosystem Rewards</p>
           <p className="text-sm text-gray-700 leading-relaxed">
-            Link your Artecks account and earn <strong className="text-violet-700">XP</strong> and{" "}
-            <strong className="text-violet-700">coins</strong> automatically after every session —
+            Link your Artecks account and earn <strong className="text-[#A07C34]">XP</strong> and{" "}
+            <strong className="text-[#A07C34]">coins</strong> automatically after every session —
             redeemable in the Artecks store and games.{" "}
             <span className="text-gray-400">連結帳號，課程後自動獲得獎勵。</span>
           </p>
