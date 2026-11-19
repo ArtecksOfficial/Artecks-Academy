@@ -23,7 +23,7 @@ function StatusBadge({ status }: { status: string }) {
     confirmed: { label: "Confirmed", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
     pending:   { label: "Pending",   cls: "bg-amber-50 text-amber-700 border-amber-200" },
     cancelled: { label: "Cancelled", cls: "bg-red-50 text-red-600 border-red-200" },
-    attended:  { label: "Attended",  cls: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+    attended:  { label: "Attended",  cls: "bg-[#FBF5E8] text-[#A07C34] border-[#E7C98A]" },
   };
   const s = map[status] ?? { label: status, cls: "bg-gray-100 text-gray-500 border-gray-200" };
   return (
@@ -53,17 +53,17 @@ function BookingCard({ booking }: { booking: MyBooking }) {
   return (
     <a
       href={`/report/${booking.id}`}
-      className="block rounded-2xl border border-gray-200 bg-white hover:border-indigo-300 hover:shadow-sm transition-all overflow-hidden group"
+      className="block rounded-2xl border border-gray-200 bg-white hover:border-[#C49A4A] hover:shadow-sm transition-all overflow-hidden group"
     >
       {/* Top bar */}
-      <div className="h-1 bg-gradient-to-r from-indigo-500 to-violet-500" />
+      <div className="h-1 bg-gradient-to-r from-[#13223F] to-[#2A4170]" />
       <div className="p-4 flex flex-col gap-2.5">
         {/* Title + arrow */}
         <div className="flex items-start justify-between gap-2">
           <h3 className="text-sm font-black text-gray-900 leading-snug">
             {booking.session_title}
           </h3>
-          <ChevronRight size={14} className="text-gray-300 group-hover:text-indigo-500 mt-0.5 flex-shrink-0 transition-colors" />
+          <ChevronRight size={14} className="text-gray-300 group-hover:text-[#8A6A2C] mt-0.5 flex-shrink-0 transition-colors" />
         </div>
 
         {/* Student */}
@@ -74,12 +74,12 @@ function BookingCard({ booking }: { booking: MyBooking }) {
         {/* Date + location */}
         <div className="flex flex-col gap-1 text-xs text-gray-400">
           <span className="flex items-center gap-1.5">
-            <Clock size={10} className="text-indigo-300" />
+            <Clock size={10} className="text-[#E7C98A]" />
             {fmtDateTime(booking.session_start)}
           </span>
           {booking.location_name && (
             <span className="flex items-center gap-1.5">
-              <MapPin size={10} className="text-indigo-300" />
+              <MapPin size={10} className="text-[#E7C98A]" />
               {booking.location_name}
             </span>
           )}
@@ -93,7 +93,7 @@ function BookingCard({ booking }: { booking: MyBooking }) {
 
         {/* Rewards */}
         {hasRewards && (
-          <div className="flex items-center gap-3 bg-violet-50 border border-violet-100 rounded-xl px-3 py-2 text-xs font-bold text-violet-700">
+          <div className="flex items-center gap-3 bg-[#FBF5E8] border border-[#E7C98A] rounded-xl px-3 py-2 text-xs font-bold text-[#A07C34]">
             <Star size={11} className="text-amber-400" fill="currentColor" />
             <span>+{booking.xp_awarded} XP</span>
             <span>+{booking.coins_awarded} coins</span>
@@ -197,7 +197,7 @@ export default function UserBookingsDrawer({
                 placeholder="e.g. 0912 345 678"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full pl-8 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-gray-900"
+                className="w-full pl-8 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#C49A4A] focus:ring-2 focus:ring-[#E7C98A] text-gray-900"
               />
             </div>
             <button
@@ -228,11 +228,11 @@ export default function UserBookingsDrawer({
             <>
               {/* Rewards summary (if Artecks account linked) */}
               {hasArtecks && (totalXP > 0 || totalCoins > 0) && (
-                <div className="rounded-2xl bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-100 p-4 flex items-center gap-4">
+                <div className="rounded-2xl bg-gradient-to-br from-[#FBF5E8] to-[#F6F4EF] border border-[#E7C98A] p-4 flex items-center gap-4">
                   <span className="text-2xl">🎮</span>
                   <div>
-                    <p className="text-xs font-black text-violet-800">Artecks Rewards Earned</p>
-                    <p className="text-sm font-bold text-violet-700 mt-0.5">
+                    <p className="text-xs font-black text-[#13223F]">Artecks Rewards Earned</p>
+                    <p className="text-sm font-bold text-[#A07C34] mt-0.5">
                       {totalXP} XP &nbsp;·&nbsp; {totalCoins} coins
                     </p>
                   </div>
@@ -250,7 +250,7 @@ export default function UserBookingsDrawer({
         <div className="px-5 py-3 border-t border-gray-100 bg-gray-50">
           <p className="text-[11px] text-gray-400 text-center leading-relaxed">
             No account needed to book.{" "}
-            <span className="text-indigo-500 font-semibold">Add your Artecks ID</span>{" "}
+            <span className="text-[#A07C34] font-semibold">Add your Artecks ID</span>{" "}
             when booking to earn XP &amp; coins.
           </p>
         </div>

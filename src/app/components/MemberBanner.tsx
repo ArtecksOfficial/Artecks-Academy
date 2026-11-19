@@ -66,12 +66,12 @@ export default function MemberBanner({
   }
 
   return (
-    <div className="rounded-xl bg-indigo-50 border border-indigo-200 px-4 py-3">
-      <p className="text-xs font-bold text-indigo-700">
+    <div className="rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
+      <p className="text-xs font-bold text-[#A07C34]">
         Become a {provider.name} Member
       </p>
       {bestPlan && (
-        <p className="text-[10px] text-indigo-500 mt-0.5 leading-tight">
+        <p className="text-[10px] text-[#A07C34] mt-0.5 leading-tight">
           Save {bestPlan.discount_percent}% on every session
         </p>
       )}
@@ -79,7 +79,7 @@ export default function MemberBanner({
         <button
           onClick={handleSubscribe}
           disabled={loading}
-          className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold py-2 transition-colors"
+          className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-50 text-white text-xs font-bold py-2 transition-colors"
         >
           {loading ? (
             <Loader2 size={12} className="animate-spin" />

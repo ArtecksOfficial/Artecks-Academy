@@ -36,13 +36,13 @@ export default function MembershipLookup() {
             onChange={(e) => { setPhone(e.target.value); setStatus("idle"); setResult(null); }}
             placeholder="Enter your phone number"
             required
-            className="w-full pl-10 pr-4 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white"
+            className="w-full pl-10 pr-4 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E7C98A] bg-white"
           />
         </div>
         <button
           type="submit"
           disabled={status === "loading" || !phone.trim()}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-bold transition-colors shadow-sm shadow-indigo-200"
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-50 text-white text-sm font-bold transition-colors shadow-sm shadow-[#13223F]/10"
         >
           {status === "loading" ? (
             <Loader2 size={15} className="animate-spin" />
@@ -58,17 +58,17 @@ export default function MembershipLookup() {
           {result.is_member ? (
             <>
               {/* Active member */}
-              <div className="bg-gradient-to-br from-indigo-500 to-violet-600 px-5 py-5 text-white text-center">
+              <div className="bg-gradient-to-br from-[#13223F] to-[#2A4170] px-5 py-5 text-white text-center">
                 <Crown size={32} className="mx-auto mb-2" />
                 <h2 className="text-base font-black">Active Membership</h2>
                 {result.provider_name && (
-                  <p className="text-xs text-indigo-100 mt-0.5">{result.provider_name}</p>
+                  <p className="text-xs text-[#E7C98A] mt-0.5">{result.provider_name}</p>
                 )}
               </div>
               <div className="bg-white px-5 py-4 flex flex-col gap-3">
                 {result.plan_name && (
                   <div className="flex items-center gap-3">
-                    <Tag size={14} className="text-indigo-500 flex-shrink-0" />
+                    <Tag size={14} className="text-[#A07C34] flex-shrink-0" />
                     <div>
                       <p className="text-[10px] text-gray-400 uppercase tracking-wide font-semibold">Plan</p>
                       <p className="text-sm font-bold text-gray-800">{result.plan_name}</p>
@@ -86,7 +86,7 @@ export default function MembershipLookup() {
                 )}
                 {expiry && (
                   <div className="flex items-center gap-3">
-                    <Calendar size={14} className="text-indigo-400 flex-shrink-0" />
+                    <Calendar size={14} className="text-[#E7C98A] flex-shrink-0" />
                     <div>
                       <p className="text-[10px] text-gray-400 uppercase tracking-wide font-semibold">Renews</p>
                       <p className="text-sm font-bold text-gray-800">{expiry}</p>
@@ -100,7 +100,7 @@ export default function MembershipLookup() {
                 </div>
                 <Link
                   href="/"
-                  className="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition-colors"
+                  className="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold transition-colors"
                 >
                   Book a Session <ArrowRight size={13} />
                 </Link>
@@ -124,7 +124,7 @@ export default function MembershipLookup() {
                 </p>
                 <Link
                   href="/"
-                  className="flex items-center justify-center gap-1.5 py-3 rounded-xl border border-indigo-200 text-indigo-700 hover:bg-indigo-50 text-sm font-bold transition-colors"
+                  className="flex items-center justify-center gap-1.5 py-3 rounded-xl border border-[#E7C98A] text-[#A07C34] hover:bg-[#FBF5E8] text-sm font-bold transition-colors"
                 >
                   View Plans <ArrowRight size={13} />
                 </Link>

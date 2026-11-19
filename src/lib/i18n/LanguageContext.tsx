@@ -79,7 +79,7 @@ export function LanguageToggle({ className = "" }: { className?: string }) {
       onClick={() => setLocale(isZh ? "en" : "zh")}
       aria-label={isZh ? "Switch to English" : "切換至中文"}
       title={isZh ? "Switch to English" : "切換至中文"}
-      className={`flex items-center gap-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 hover:border-indigo-200 px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-indigo-700 transition-all shadow-sm ${className}`}
+      className={`flex items-center gap-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 hover:border-[#C49A4A] px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-[#8A6A2C] transition-all shadow-sm ${className}`}
     >
       <Globe size={13} className="flex-shrink-0 opacity-70" />
       <span>{isZh ? "EN" : "中文"}</span>

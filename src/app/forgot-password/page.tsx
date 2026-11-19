@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0d2a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
@@ -66,13 +66,13 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+                className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+              className="w-full bg-[#C49A4A] hover:bg-[#D4AE63] disabled:opacity-50 disabled:cursor-not-allowed text-[#0E1E3A] font-bold font-semibold py-3 rounded-xl transition-colors text-sm"
             >
               {loading ? (zh ? "寄送中…" : "Sending…") : (zh ? "寄送重設連結" : "Send reset link")}
             </button>
@@ -81,7 +81,7 @@ export default function ForgotPasswordPage() {
 
         <p className="text-center text-sm text-white/40 mt-6">
           {zh ? "用 LINE 註冊的嗎？直接用 LINE 登入即可。" : "Signed up with LINE? Just log in with LINE instead."}{" "}
-          <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+          <Link href="/login" className="text-[#E7C98A] hover:text-[#F3DFAE] font-medium transition-colors">
             {zh ? "回到登入" : "Back to log in"}
           </Link>
         </p>

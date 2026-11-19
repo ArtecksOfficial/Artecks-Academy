@@ -91,7 +91,7 @@ function ConfirmationScreen({
             href={mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-sm text-indigo-600 mt-1 hover:underline"
+            className="flex items-center gap-1 text-sm text-[#A07C34] mt-1 hover:underline"
           >
             <MapPin size={13} />
             {session.location_name}
@@ -154,7 +154,7 @@ function ConfirmationScreen({
           </div>
           <a
             href={`/report/${bookingId}`}
-            className="text-xs text-indigo-600 underline"
+            className="text-xs text-[#A07C34] underline"
           >
             {t("viewParentCard")}
           </a>
@@ -220,9 +220,9 @@ export default function BookingSection({
   return (
     <div className="rounded-3xl bg-white shadow-lg border border-gray-100 overflow-hidden">
       {/* Card header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-white">
+      <div className="bg-gradient-to-r from-[#13223F] to-[#2A4170] px-6 py-5 text-white">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-200">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#E7C98A]">
             {t("sessionDetails")}
           </p>
           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
@@ -235,11 +235,11 @@ export default function BookingSection({
               : `${spotsLeft} ${t("spotsLeft")}`}
           </span>
         </div>
-        <p className="text-sm text-indigo-200">
+        <p className="text-sm text-[#E7C98A]">
           🕐 {formatDateTW(session.start_time, locale)} · 📍 {session.location_name}
         </p>
         {session.topic && (
-          <p className="text-sm text-indigo-100 mt-0.5">{session.topic}</p>
+          <p className="text-sm text-[#E7C98A] mt-0.5">{session.topic}</p>
         )}
         <p className="text-lg font-black mt-2">
           NT$ {(session.price_twd ?? 0).toLocaleString()}
@@ -275,7 +275,7 @@ export default function BookingSection({
                 <input
                   name="parent_name"
                   required
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white"
                 />
               </label>
               <label className="flex flex-col gap-1">
@@ -286,7 +286,7 @@ export default function BookingSection({
                   name="parent_phone"
                   type="tel"
                   required
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white"
                 />
               </label>
             </div>
@@ -300,7 +300,7 @@ export default function BookingSection({
                 <input
                   name="student_name"
                   required
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white"
                 />
               </label>
               <label className="flex flex-col gap-1">
@@ -313,7 +313,7 @@ export default function BookingSection({
                   min={4}
                   max={18}
                   required
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white"
                 />
               </label>
             </div>
@@ -332,8 +332,8 @@ export default function BookingSection({
                     onClick={() => setExperience(key)}
                     className={`rounded-xl px-4 py-3 text-sm font-medium text-left transition-all border ${
                       experience === key
-                        ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                        : "bg-gray-50 text-gray-700 border-gray-200 hover:border-indigo-300"
+                        ? "bg-[#13223F] text-white border-[#13223F] shadow-sm"
+                        : "bg-gray-50 text-gray-700 border-gray-200 hover:border-[#C49A4A]"
                     }`}
                   >
                     {experience === key ? "● " : "○ "}{t(labelKey)}
@@ -355,7 +355,7 @@ export default function BookingSection({
                     onClick={() => { setContactMethod(key); setContactError(null); }}
                     className={`rounded-xl py-2 text-xs font-semibold flex flex-col items-center gap-0.5 transition-all ${
                       contactMethod === key
-                        ? "bg-indigo-600 text-white shadow-sm"
+                        ? "bg-[#13223F] text-white shadow-sm"
                         : "bg-gray-100 text-gray-600"
                     }`}
                   >
@@ -383,7 +383,7 @@ export default function BookingSection({
                   placeholder={t(placeholderKey)}
                   type={contactMethod === "email" ? "email" : "text"}
                   onChange={() => contactError && setContactError(null)}
-                  className={`rounded-xl border bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:bg-white ${contactError ? "border-red-400 focus:border-red-400" : "border-gray-200 focus:border-indigo-400"}`}
+                  className={`rounded-xl border bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:bg-white ${contactError ? "border-red-400 focus:border-red-400" : "border-gray-200 focus:border-[#C49A4A]"}`}
                 />
                 {contactError && (
                   <p className="text-xs text-red-600 mt-0.5">{contactError}</p>
@@ -400,7 +400,7 @@ export default function BookingSection({
                 name="special_notes"
                 rows={3}
                 placeholder={t("specialNotesPlaceholder")}
-                className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-indigo-400 focus:bg-white"
+                className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-[#C49A4A] focus:bg-white"
               />
             </label>
 
@@ -414,13 +414,13 @@ export default function BookingSection({
                 placeholder="ACT-XXXX"
                 value={artecksAccountId}
                 onChange={e => setArtecksAccountId(e.target.value)}
-                className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-400 focus:bg-white"
+                className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white"
               />
-              <span className="text-xs text-violet-600">{t("artecksIdHint")}</span>
+              <span className="text-xs text-[#A07C34]">{t("artecksIdHint")}</span>
             </label>
 
-            <label className="flex items-start gap-2.5 rounded-xl bg-indigo-50/60 border border-indigo-100 px-3 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
-              <input type="checkbox" name="account_consent" required className="mt-0.5 accent-indigo-600 w-4 h-4 flex-shrink-0" />
+            <label className="flex items-start gap-2.5 rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-3 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
+              <input type="checkbox" name="account_consent" required className="mt-0.5 accent-[#13223F] w-4 h-4 flex-shrink-0" />
               <span>{t("consentLabel")}</span>
             </label>
 
@@ -434,7 +434,7 @@ export default function BookingSection({
             <button
               type="submit"
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 py-4 text-base font-bold text-white shadow-lg shadow-indigo-200 disabled:opacity-50 active:scale-95 transition-all"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#13223F] py-4 text-base font-bold text-white shadow-lg shadow-[#13223F]/10 disabled:opacity-50 active:scale-95 transition-all"
             >
               {isPending ? (
                 <>

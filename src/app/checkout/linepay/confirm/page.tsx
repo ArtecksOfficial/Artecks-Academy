@@ -113,7 +113,7 @@ export default async function LinePayConfirmPage({
           {bookingId && result.success && (
             <Link
               href={`/report/${bookingId}`}
-              className="w-full flex items-center justify-center rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-indigo-200"
+              className="w-full flex items-center justify-center rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-[#13223F]/10"
             >
               View My Booking Details
             </Link>

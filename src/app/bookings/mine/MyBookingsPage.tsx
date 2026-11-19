@@ -1,6 +1,10 @@
 "use client";
 import SiteHeader from "@/app/components/SiteHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/app/components/AuthContext";
+import { authHeaders } from "@/lib/auth-client";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Phone, Loader2, ArrowLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import type { MyBooking } from "@/lib/api";
 
@@ -17,7 +21,7 @@ function StatusBadge({ status }: { status: string }) {
     confirmed: { label: "Confirmed", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
     pending:   { label: "Pending",   cls: "bg-amber-50 text-amber-700 border-amber-200" },
     cancelled: { label: "Cancelled", cls: "bg-red-50 text-red-600 border-red-200" },
-    attended:  { label: "Attended",  cls: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+    attended:  { label: "Attended",  cls: "bg-[#FBF5E8] text-[#A07C34] border-[#E7C98A]" },
   };
   const s = map[status] ?? { label: status, cls: "bg-gray-100 text-gray-500 border-gray-200" };
   return (
@@ -32,9 +36,9 @@ function payPath(url: string): string {
 
 function BookingCard({ booking }: { booking: MyBooking }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white hover:border-indigo-300 hover:shadow-sm transition-all overflow-hidden">
+    <div className="rounded-2xl border border-gray-200 bg-white hover:border-[#C49A4A] hover:shadow-sm transition-all overflow-hidden">
     <a href={`/report/${booking.id}`} className="block">
-      <div className="h-1 bg-gradient-to-r from-indigo-500 to-violet-500" />
+      
       <div className="p-4 flex flex-col gap-2.5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
@@ -55,7 +59,7 @@ function BookingCard({ booking }: { booking: MyBooking }) {
             <ChevronRight size={14} className="text-gray-300" />
           </div>
         </div>
-        {booking.price_twd != null && (
+        {Number(booking.price_twd) > 0 && (
           <p className="text-xs font-bold text-gray-700">
             NT${Number(booking.price_twd).toLocaleString()}
             {booking.applied_discount_amount > 0 ? (
@@ -65,10 +69,10 @@ function BookingCard({ booking }: { booking: MyBooking }) {
         )}
       </div>
     </a>
-    {booking.pay_url && (
+    {booking.pay_url && Number(booking.price_twd) > 0 && (
       <div className="px-4 pb-4 -mt-1">
         <a href={payPath(booking.pay_url)}
-          className="flex items-center justify-center w-full rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-2.5">
+          className="flex items-center justify-center w-full rounded-xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-2.5">
           付款 / Pay · NT${Number(booking.price_twd).toLocaleString()}
         </a>
       </div>
@@ -78,76 +82,108 @@ function BookingCard({ booking }: { booking: MyBooking }) {
 }
 
 export default function MyBookingsPage() {
+  const { locale } = useLanguage();
+  const zh = locale === "zh";
+  const { user, isLoading } = useAuth();
   const [phone, setPhone] = useState("");
   const [bookings, setBookings] = useState<MyBooking[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Signed in: show this account's lessons straight away (no phone lookup).
+  useEffect(() => {
+    if (!user) return;
+    setLoading(true);
+    fetch("/api/my-bookings", { headers: authHeaders(), cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d) => setBookings(Array.isArray(d) ? d : (d.bookings ?? [])))
+      .catch(() => setError(zh ? "目前無法載入課程。" : "We couldn't load your lessons right now."))
+      .finally(() => setLoading(false));
+  }, [user, zh]);
+
   async function handleLookup(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = phone.trim();
-    if (!trimmed) { setError("Please enter your phone number."); return; }
+    if (!trimmed) { setError(zh ? "請輸入電話號碼。" : "Please enter your phone number."); return; }
     setLoading(true); setError(null);
     try {
       const res = await fetch(`/api/my-bookings?phone=${encodeURIComponent(trimmed)}`);
-      if (!res.ok) { setError("Could not find bookings for that number."); setBookings(null); return; }
+      if (!res.ok) { setError(zh ? "找不到這個號碼的預約。" : "Could not find bookings for that number."); setBookings(null); return; }
       const data = await res.json();
-      // Django returns a plain list; older code expected { bookings: [...] }.
       setBookings(Array.isArray(data) ? data : (data.bookings ?? []));
     } catch {
-      setError("Something went wrong. Try again.");
+      setError(zh ? "發生錯誤，請再試一次。" : "Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2", fontFamily: "system-ui, sans-serif" }}>
-      {/* Header */}
-      <SiteHeader />
+  const now = Date.now();
+  const upcoming = (bookings ?? []).filter((b) => b.status !== "cancelled" && new Date(b.session_start).getTime() >= now - 3600_000)
+    .sort((a, b) => a.session_start.localeCompare(b.session_start));
+  const past = (bookings ?? []).filter((b) => !upcoming.includes(b));
 
-      <div className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-6">
-        {/* Lookup form */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6">
-          <div className="flex items-center gap-2 mb-1">
-            <Phone size={15} className="text-indigo-500" />
-            <p className="font-black text-sm text-gray-900">Look up your sessions</p>
+  return (
+    <div className="min-h-screen bg-[#F6F4EF]">
+      <SiteHeader />
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-6">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="font-serif-tc text-3xl font-black text-[#13223F]">{zh ? "我的課程" : "My lessons"}</h1>
+            <p className="mt-1 text-sm text-[#5B6478]">{zh ? "即將到來與過去的課程、付款和課後報告。" : "Upcoming and past lessons, payments and lesson reports."}</p>
           </div>
-          <p className="text-xs text-gray-400 mb-4">Enter the phone number you used when booking.</p>
-          <form onSubmit={handleLookup} className="flex gap-2">
-            <input
-              type="tel"
-              placeholder="+886 9xx xxx xxx"
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
-              className="flex-1 rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-bold transition-colors flex items-center gap-1.5"
-            >
-              {loading ? <Loader2 size={14} className="animate-spin" /> : "Search"}
-            </button>
-          </form>
-          {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
+          <Link href="/book" className="rounded-xl bg-[#C49A4A] px-4 py-2.5 text-sm font-bold text-[#0E1E3A] hover:bg-[#D4AE63]">
+            {zh ? "預約課程" : "Book a lesson"}
+          </Link>
         </div>
 
-        {/* Results */}
-        {bookings !== null && (
-          bookings.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
-              <p className="text-sm font-semibold">No bookings found</p>
-              <p className="text-xs mt-1">Try the phone number you used when booking.</p>
+        {isLoading ? <Loader2 className="animate-spin text-gray-300" /> : !user && (
+          <div className="max-w-xl bg-white rounded-3xl border border-[#E2DDD2] p-6">
+            <div className="flex items-center gap-2 mb-1">
+              <Phone size={15} className="text-[#A07C34]" />
+              <p className="font-black text-sm text-[#13223F]">{zh ? "查詢你的課程" : "Look up your lessons"}</p>
             </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">{bookings.length} booking{bookings.length !== 1 ? "s" : ""}</p>
-              {bookings.map(b => <BookingCard key={b.id} booking={b} />)}
-            </div>
-          )
+            <p className="text-xs text-[#5B6478] mb-4">
+              {zh ? "輸入預約時使用的電話號碼，或" : "Enter the phone number you used when booking, or "}
+              <Link href="/login?next=/bookings/mine" className="font-bold text-[#A07C34]">{zh ? "登入" : "log in"}</Link>
+              {zh ? "直接查看。" : " to see them straight away."}
+            </p>
+            <form onSubmit={handleLookup} className="flex gap-2">
+              <input type="tel" placeholder="+886 9xx xxx xxx" value={phone} onChange={(e) => setPhone(e.target.value)}
+                className="flex-1 rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#E7C98A]" />
+              <button type="submit" disabled={loading}
+                className="px-4 py-2.5 rounded-xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-50 text-white text-sm font-bold flex items-center gap-1.5">
+                {loading ? <Loader2 size={14} className="animate-spin" /> : (zh ? "查詢" : "Search")}
+              </button>
+            </form>
+          </div>
         )}
-      </div>
+
+        {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+        {user && loading && <Loader2 className="animate-spin text-gray-300" />}
+
+        {bookings !== null && (bookings.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-[#E2DDD2] bg-white/60 p-8 text-center">
+            <p className="text-sm font-bold text-[#13223F]">{zh ? "還沒有課程" : "No lessons yet"}</p>
+            <p className="mt-1 text-sm text-[#5B6478]">{zh ? "預約第一堂課後就會出現在這裡。" : "Your lessons appear here once you book the first one."}</p>
+          </div>
+        ) : (
+          <>
+            {upcoming.length > 0 && (
+              <section className="flex flex-col gap-3">
+                <h2 className="text-sm font-black text-[#13223F]">{zh ? `即將到來（${upcoming.length}）` : `Upcoming (${upcoming.length})`}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">{upcoming.map((b) => <BookingCard key={b.id} booking={b} />)}</div>
+              </section>
+            )}
+            {past.length > 0 && (
+              <section className="flex flex-col gap-3">
+                <h2 className="text-sm font-black text-[#13223F]">{zh ? `過去的課程（${past.length}）` : `Past lessons (${past.length})`}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">{past.map((b) => <BookingCard key={b.id} booking={b} />)}</div>
+              </section>
+            )}
+          </>
+        ))}
+      </main>
     </div>
   );
 }

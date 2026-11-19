@@ -58,11 +58,11 @@ function SessionCard({ session, locale, t }: {
   return (
     <a
       href={`/session/${session.id}`}
-      className="group bg-white rounded-2xl border border-gray-200 p-5 flex flex-col gap-3 hover:shadow-md hover:border-indigo-200 transition-all"
+      className="group bg-white rounded-2xl border border-gray-200 p-5 flex flex-col gap-3 hover:shadow-md hover:border-[#C49A4A] transition-all"
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+          <span className="text-xs font-black text-[#A07C34] bg-[#FBF5E8] px-2.5 py-1 rounded-lg">
             {fmtDate(session.start_time, locale)}
           </span>
           <span className="text-xs text-gray-400 font-medium">{fmtTime(session.start_time, locale)}</span>
@@ -76,7 +76,7 @@ function SessionCard({ session, locale, t }: {
         ) : null}
       </div>
       <div>
-        <p className="font-bold text-gray-900 text-sm group-hover:text-indigo-700 transition-colors">{session.title}</p>
+        <p className="font-bold text-gray-900 text-sm group-hover:text-[#8A6A2C] transition-colors">{session.title}</p>
         {session.topic && <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">{session.topic}</p>}
       </div>
       <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
@@ -102,7 +102,7 @@ function SessionCard({ session, locale, t }: {
             </span>
           </span>
         ) : <span />}
-        <span className="text-sm font-black text-indigo-600">
+        <span className="text-sm font-black text-[#A07C34]">
           {session.price_twd ? `NT$${session.price_twd.toLocaleString()}` : t("priceFree")}
         </span>
       </div>
@@ -129,7 +129,7 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
           {coach.name_zh && locale === "en" && (
             <p className="text-xs text-gray-400 font-medium">{coach.name_zh}</p>
           )}
-          <p className="text-xs text-indigo-600 font-semibold mt-0.5">{coach.title}</p>
+          <p className="text-xs text-[#A07C34] font-semibold mt-0.5">{coach.title}</p>
         </div>
       </div>
       {coach.bio && (
@@ -137,7 +137,7 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
       )}
       <a
         href="/sessions"
-        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-sm font-bold py-2.5 transition-colors"
+        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#FBF5E8] hover:bg-[#FBF5E8] text-[#A07C34] text-sm font-bold py-2.5 transition-colors"
       >
         {t("viewSessions")} <ChevronRight size={14} />
       </a>
@@ -233,7 +233,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
 
       <SiteHeader />
 
@@ -317,7 +317,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
             <span aria-hidden="true" className="hidden sm:block absolute top-5 left-5 right-5 h-px bg-[#C49A4A]/40" />
             {[1, 2, 3, 4].map((n) => (
               <li key={n} className="relative flex sm:flex-col gap-4">
-                <span className="relative z-10 w-10 h-10 flex-shrink-0 rounded-full flex items-center justify-center font-serif-tc font-black text-[#0E1E3A] bg-[#E9DCC0] ring-4 ring-[#F7F6F2]">{n}</span>
+                <span className="relative z-10 w-10 h-10 flex-shrink-0 rounded-full flex items-center justify-center font-serif-tc font-black text-[#0E1E3A] bg-[#E9DCC0] ring-4 ring-[#F6F4EF]">{n}</span>
                 <div>
                   <p className="text-xs font-semibold text-[#A07C34]">{t(`roadmapL${n}Badge` as DictionaryKey)}</p>
                   <p className="mt-0.5 font-bold text-[#13223F]">{t(`roadmapL${n}Title` as DictionaryKey)}</p>

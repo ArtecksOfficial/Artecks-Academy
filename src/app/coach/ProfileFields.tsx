@@ -8,7 +8,7 @@ export interface CoachProfile {
 
 export const EMPTY_PROFILE: CoachProfile = { name: "", name_zh: "", title: "", bio: "", subjects: "", avatar_initials: "", line_id: "" };
 
-const field = "mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500";
+const field = "mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A]";
 
 export default function ProfileFields({ value, onChange, zh }: { value: CoachProfile; onChange: (p: CoachProfile) => void; zh: boolean }) {
   const set = (k: keyof CoachProfile) => (e: { target: { value: string } }) => onChange({ ...value, [k]: e.target.value });

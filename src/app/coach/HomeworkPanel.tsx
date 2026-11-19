@@ -182,19 +182,19 @@ function AssignForm({ zh, kids, onDone }: { zh: boolean; kids: Kid[]; onDone: ()
 
   return (
     <form onSubmit={submit} className={`${card} flex flex-col gap-3`}>
-      <h3 className="inline-flex items-center gap-2 text-sm font-black text-gray-900"><BookOpenCheck size={16} className="text-indigo-600" /> {zh ? "出作業" : "Set homework"}</h3>
+      <h3 className="inline-flex items-center gap-2 text-sm font-black text-gray-900"><BookOpenCheck size={16} className="text-[#A07C34]" /> {zh ? "出作業" : "Set homework"}</h3>
       <div>
         <div className="flex items-center justify-between">
           <p className="text-xs font-semibold text-gray-600">{zh ? "給哪些學生" : "For"}</p>
           <button type="button" onClick={() => setPicked(picked.length === kids.length ? [] : kids.map((k) => k.id))}
-            className="text-xs font-semibold text-indigo-600">{picked.length === kids.length ? (zh ? "全部取消" : "Clear") : (zh ? "全選" : "Select all")}</button>
+            className="text-xs font-semibold text-[#A07C34]">{picked.length === kids.length ? (zh ? "全部取消" : "Clear") : (zh ? "全選" : "Select all")}</button>
         </div>
         <div className="mt-1.5 flex flex-wrap gap-2">
           {kids.map((k) => {
             const on = picked.includes(k.id);
             return (
               <button key={k.id} type="button" onClick={() => toggle(k.id)} aria-pressed={on}
-                className={`rounded-full border px-3 py-1.5 text-xs font-bold ${on ? "border-indigo-600 bg-indigo-600 text-white" : "border-gray-200 bg-white text-gray-700"}`}>
+                className={`rounded-full border px-3 py-1.5 text-xs font-bold ${on ? "border-[#13223F] bg-[#13223F] text-white" : "border-gray-200 bg-white text-gray-700"}`}>
                 {k.name} <span className={on ? "text-white/70" : "text-gray-400"}>· {k.age}</span>
               </button>
             );
@@ -213,7 +213,7 @@ function AssignForm({ zh, kids, onDone }: { zh: boolean; kids: Kid[]; onDone: ()
           <input type="date" value={due} onChange={(e) => setDue(e.target.value)} className={`mt-1 ${field}`} />
         </label>
         <button type="submit" disabled={busy || !picked.length || !title.trim()}
-          className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white disabled:opacity-40">
+          className="rounded-xl bg-[#13223F] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-40">
           {busy ? "…" : zh ? "出作業" : "Set homework"}
         </button>
       </div>

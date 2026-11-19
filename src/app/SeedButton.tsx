@@ -22,7 +22,7 @@ export function SeedButton({ label }: { label: string }) {
         type="button"
         onClick={handleClick}
         disabled={isPending}
-        className="flex items-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 px-6 py-3 text-sm font-bold text-white transition-colors"
+        className="flex items-center gap-2 rounded-2xl bg-[#13223F] hover:bg-[#1C3157] disabled:opacity-60 px-6 py-3 text-sm font-bold text-white transition-colors"
       >
         {isPending ? (
           <>

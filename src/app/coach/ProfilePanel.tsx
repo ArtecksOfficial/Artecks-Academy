@@ -42,7 +42,7 @@ export default function ProfilePanel({ zh, onSaved }: { zh: boolean; onSaved: (n
       <ProfileFields value={profile} onChange={setProfile} zh={zh} />
       <div className="flex items-center gap-3">
         <button type="submit" disabled={busy || !profile.name.trim()}
-          className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50">{busy ? "…" : zh ? "儲存" : "Save"}</button>
+          className="rounded-xl bg-[#13223F] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50">{busy ? "…" : zh ? "儲存" : "Save"}</button>
         {msg && <p role={msg.ok ? "status" : "alert"} className={`text-sm font-semibold ${msg.ok ? "text-emerald-700" : "text-red-600"}`}>{msg.text}</p>}
       </div>
     </form>

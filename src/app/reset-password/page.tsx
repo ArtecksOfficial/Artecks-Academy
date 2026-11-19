@@ -53,10 +53,10 @@ export default function ResetPasswordPage() {
     }
   }
 
-  const input = "w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors";
+  const input = "w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors";
 
   return (
-    <div className="min-h-screen bg-[#0f0d2a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
@@ -70,7 +70,7 @@ export default function ResetPasswordPage() {
             <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-sm px-4 py-4 rounded-xl">
               {zh ? "密碼已更新，請用新密碼登入。" : "Your password has been updated. Log in with the new one."}
             </div>
-            <Link href="/login" className="block w-full bg-indigo-500 hover:bg-indigo-400 text-white text-center font-semibold py-3 rounded-xl transition-colors text-sm">
+            <Link href="/login" className="block w-full bg-[#C49A4A] hover:bg-[#D4AE63] text-[#0E1E3A] font-bold text-center font-semibold py-3 rounded-xl transition-colors text-sm">
               {zh ? "前往登入" : "Go to log in"}
             </Link>
           </div>
@@ -79,7 +79,7 @@ export default function ResetPasswordPage() {
             <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm px-4 py-4 rounded-xl">
               {zh ? "這個連結不完整或已失效。" : "This link is incomplete or no longer valid."}
             </div>
-            <Link href="/forgot-password" className="block w-full bg-indigo-500 hover:bg-indigo-400 text-white text-center font-semibold py-3 rounded-xl transition-colors text-sm">
+            <Link href="/forgot-password" className="block w-full bg-[#C49A4A] hover:bg-[#D4AE63] text-[#0E1E3A] font-bold text-center font-semibold py-3 rounded-xl transition-colors text-sm">
               {zh ? "重新申請重設連結" : "Request a new link"}
             </Link>
           </div>
@@ -99,7 +99,7 @@ export default function ResetPasswordPage() {
                 value={confirm} onChange={(e) => setConfirm(e.target.value)} className={input} />
             </div>
             <button type="submit" disabled={loading || !ready}
-              className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm">
+              className="w-full bg-[#C49A4A] hover:bg-[#D4AE63] disabled:opacity-50 disabled:cursor-not-allowed text-[#0E1E3A] font-bold font-semibold py-3 rounded-xl transition-colors text-sm">
               {loading ? (zh ? "儲存中…" : "Saving…") : (zh ? "儲存新密碼" : "Save new password")}
             </button>
           </form>

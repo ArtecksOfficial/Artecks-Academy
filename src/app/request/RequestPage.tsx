@@ -8,7 +8,7 @@ import RequestForm from "./RequestForm";
 export default function RequestPage() {
   const { t } = useLanguage();
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
       <main className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
         <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("reqTitle")}</h1>

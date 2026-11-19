@@ -52,10 +52,10 @@ export default function AccountClient() {
   const totalCredits = credits ? credits.private + credits.pair + credits.group : 0;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
 
-      <main className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-5">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         <h1 className="font-serif-tc text-3xl font-black text-gray-900">{zh ? "我的帳戶" : "My account"}</h1>
 
         {isLoading ? (
@@ -66,7 +66,7 @@ export default function AccountClient() {
               {zh ? "登入後即可查看寶石、剩餘堂數和孩子的 XP。" : "Log in to see your gems, lessons left and your kids' XP."}
             </p>
             <LineLoginButton next="/account" label={zh ? "使用 LINE 登入" : "Continue with LINE"} />
-            <Link href="/login?next=/account" className="text-center text-sm font-bold text-indigo-600">{zh ? "用 Email 登入" : "Log in with email"}</Link>
+            <Link href="/login?next=/account" className="text-center text-sm font-bold text-[#A07C34]">{zh ? "用 Email 登入" : "Log in with email"}</Link>
           </section>
         ) : kidSession ? (
           <section className={card}>
@@ -81,17 +81,17 @@ export default function AccountClient() {
                 <b className="text-amber-600">{k.xp_month}</b> {zh ? "本月 XP" : "XP this month"} · {k.xp_total} {zh ? "總計" : "total"}
               </p>
             ))}
-            <Link href="/leaderboard" className="mt-4 inline-block text-sm font-bold text-indigo-600">{zh ? "看排行榜 →" : "See the leaderboard →"}</Link>
+            <Link href="/leaderboard" className="mt-4 inline-block text-sm font-bold text-[#A07C34]">{zh ? "看排行榜 →" : "See the leaderboard →"}</Link>
           </section>
         ) : (
-          <>
+          <div className="lg:columns-2 lg:gap-5 flex flex-col gap-5 lg:block [&>*]:break-inside-avoid lg:[&>*]:mb-5">
             {/* Gems */}
             <section className={card}>
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={16} className="text-violet-600" /> {zh ? "家庭寶石" : "Family gems"}</h2>
-                <Link href="/packages" className="text-xs font-bold text-indigo-600">{zh ? "用寶石折抵 →" : "Use for a discount →"}</Link>
+                <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={16} className="text-[#A07C34]" /> {zh ? "家庭寶石" : "Family gems"}</h2>
+                <Link href="/packages" className="text-xs font-bold text-[#A07C34]">{zh ? "用寶石折抵 →" : "Use for a discount →"}</Link>
               </div>
-              <p className="mt-3 text-4xl font-black text-violet-700">{mine ? mine.gems.toLocaleString() : "…"}</p>
+              <p className="mt-3 text-4xl font-black text-[#A07C34]">{mine ? mine.gems.toLocaleString() : "…"}</p>
               {mine && (
                 <p className="text-xs text-gray-500 mt-1">
                   {zh ? `約可折 NT$${(mine.gems * mine.gem_value_twd).toLocaleString()}（每筆套票最多折 10%）` : `Worth about NT$${(mine.gems * mine.gem_value_twd).toLocaleString()} off (up to 10% per package)`}
@@ -108,14 +108,14 @@ export default function AccountClient() {
             {/* Lessons left */}
             <section className={card}>
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Package size={16} className="text-indigo-600" /> {zh ? "剩餘堂數" : "Lessons left"}</h2>
-                <Link href="/packages" className="text-xs font-bold text-indigo-600">{zh ? "購買套票 →" : "Buy a package →"}</Link>
+                <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Package size={16} className="text-[#A07C34]" /> {zh ? "剩餘堂數" : "Lessons left"}</h2>
+                <Link href="/packages" className="text-xs font-bold text-[#A07C34]">{zh ? "購買套票 →" : "Buy a package →"}</Link>
               </div>
               {credits && totalCredits > 0 ? (
                 <div className="mt-3 grid grid-cols-3 gap-2 text-center">
                   {([["private", zh ? "一對一" : "1-on-1"], ["pair", zh ? "一對二" : "1-on-2"], ["group", zh ? "團體" : "Group"]] as const).map(([k, label]) => (
-                    <div key={k} className="rounded-2xl bg-indigo-50 py-3">
-                      <p className="text-2xl font-black text-indigo-700">{credits[k]}</p>
+                    <div key={k} className="rounded-2xl bg-[#FBF5E8] py-3">
+                      <p className="text-2xl font-black text-[#A07C34]">{credits[k]}</p>
                       <p className="text-[11px] font-semibold text-gray-600">{label}</p>
                     </div>
                   ))}
@@ -124,7 +124,7 @@ export default function AccountClient() {
                 <p className="mt-3 text-sm text-gray-500">{mine ? (zh ? "目前沒有套票。" : "No package yet.") : "…"}</p>
               )}
               <div className="mt-4 flex gap-2">
-                <Link href="/book" className="flex-1 text-center rounded-xl bg-indigo-600 text-white text-sm font-bold py-2.5">{zh ? "預約課程" : "Book a lesson"}</Link>
+                <Link href="/book" className="flex-1 text-center rounded-xl bg-[#13223F] text-white text-sm font-bold py-2.5">{zh ? "預約課程" : "Book a lesson"}</Link>
                 <Link href="/bookings/mine" className="flex-1 text-center rounded-xl border border-gray-200 text-sm font-bold text-gray-700 py-2.5">{zh ? "我的預約" : "My bookings"}</Link>
               </div>
             </section>
@@ -133,7 +133,7 @@ export default function AccountClient() {
             {tracker !== null && tracker.length > 0 && (
               <section className={card}>
                 <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2">
-                  <CalendarCheck size={16} className="text-indigo-600" /> {zh ? "上課進度" : "Class tracker"}
+                  <CalendarCheck size={16} className="text-[#A07C34]" /> {zh ? "上課進度" : "Class tracker"}
                 </h2>
                 <p className="mt-1 mb-4 text-xs text-gray-500">
                   {zh ? "每上完一堂，這裡會顯示套票還剩幾堂。" : "After every class, see how many are left in the package."}
@@ -146,7 +146,7 @@ export default function AccountClient() {
             <section className={card}>
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Trophy size={16} className="text-amber-500" /> {zh ? "我的孩子 · XP" : "My kids · XP"}</h2>
-                <Link href="/leaderboard" className="text-xs font-bold text-indigo-600">{zh ? "管理 · 排行榜 →" : "Manage · Leaderboard →"}</Link>
+                <Link href="/leaderboard" className="text-xs font-bold text-[#A07C34]">{zh ? "管理 · 排行榜 →" : "Manage · Leaderboard →"}</Link>
               </div>
               {kids === null ? (
                 <p className="mt-3 text-sm text-gray-400">…</p>
@@ -172,16 +172,16 @@ export default function AccountClient() {
             </section>
 
             {/* Everything editable (kids, Kid Mode PIN, teen links, name, password) is on the settings page. */}
-            <Link href="/settings" className={`${card} flex items-center justify-between gap-4 hover:border-indigo-300 transition-colors`}>
+            <Link href="/settings" className={`${card} flex items-center justify-between gap-4 hover:border-[#C49A4A] transition-colors`}>
               <span>
                 <span className="block text-sm font-black text-gray-900">{zh ? "設定" : "Settings"}</span>
                 <span className="block mt-0.5 text-xs text-gray-500">
                   {zh ? "孩子、兒童模式與家長 PIN、姓名、密碼、語言" : "Kids, Kid Mode and parent PIN, name, password, language"}
                 </span>
               </span>
-              <span className="text-sm font-bold text-indigo-600" aria-hidden>→</span>
+              <span className="text-sm font-bold text-[#A07C34]" aria-hidden>→</span>
             </Link>
-          </>
+          </div>
         )}
       </main>
     </div>

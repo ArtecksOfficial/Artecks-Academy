@@ -183,9 +183,9 @@ export default function CoachDashboard() {
   const weekdays = locale === "en" ? WEEKDAYS_EN : WEEKDAYS_ZH;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
+      <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-gray-200">
+        <div className="px-4 py-3 flex items-center justify-between gap-3">
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
             <img src="/logo.png" alt="Artecks" className="h-8 w-auto" />
             <span className="text-sm font-black text-gray-900 truncate">{t("coachTitle")}</span>
@@ -201,13 +201,13 @@ export default function CoachDashboard() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-6 sm:py-10">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-10">
         {status === "loading" && <p className="text-sm text-gray-400">…</p>}
 
         {status === "anon" && (
           <div className="rounded-3xl bg-white border border-gray-200 p-8 text-center">
             <p className="text-sm text-gray-600 mb-4">{t("coachLoginPrompt")}</p>
-            <Link href="/login?next=/coach" className="inline-block rounded-xl bg-indigo-600 text-white font-bold px-6 py-3 text-sm">
+            <Link href="/login?next=/coach" className="inline-block rounded-xl bg-[#13223F] text-white font-bold px-6 py-3 text-sm">
               {t("coachLogin")}
             </Link>
           </div>
@@ -216,7 +216,7 @@ export default function CoachDashboard() {
         {status === "not_coach" && (
           <div className="rounded-3xl bg-white border border-amber-200 p-8 text-center">
             <p className="text-sm text-amber-800">{t("coachNotCoach")}</p>
-            <Link href="/teach" className="mt-4 inline-block rounded-xl bg-indigo-600 text-white font-bold px-6 py-3 text-sm">
+            <Link href="/teach" className="mt-4 inline-block rounded-xl bg-[#13223F] text-white font-bold px-6 py-3 text-sm">
               {locale === "zh" ? "申請成為老師" : "Sign up as a teacher"}
             </Link>
           </div>
@@ -243,7 +243,7 @@ export default function CoachDashboard() {
                   aria-selected={tab === k}
                   onClick={() => setTab(k)}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                    tab === k ? "bg-indigo-600 text-white" : "bg-white border border-gray-200 text-gray-600"
+                    tab === k ? "bg-[#13223F] text-white" : "bg-white border border-gray-200 text-gray-600"
                   }`}
                 >
                   {k === "profile" ? (locale === "zh" ? "我的檔案" : "Profile") : k === "sessions" ? t("coachTabSessions") : k === "homework" ? (locale === "zh" ? "作業" : "Homework") : k === "packages" ? t("coachTabPackages") : k === "availability" ? t("coachTabAvailability") : k === "feedback" ? t("coachTabFeedback") : t("coachTabArena")}
@@ -329,13 +329,13 @@ function SessionCard({
     <article className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs font-semibold text-indigo-600">{fmt(s.start_time, locale)}</p>
+          <p className="text-xs font-semibold text-[#A07C34]">{fmt(s.start_time, locale)}</p>
           <h2 className="text-base font-black text-gray-900 mt-0.5">{s.title}</h2>
           <p className="text-sm text-gray-600 mt-1">📍 {s.location_name}{s.location_address ? ` · ${s.location_address}` : ""}</p>
           {s.private_access_notes && <p className="text-xs text-gray-500 mt-1">{s.private_access_notes}</p>}
         </div>
         {s.is_private && (
-          <span className="flex-shrink-0 text-[11px] font-bold text-violet-700 bg-violet-50 border border-violet-200 rounded-full px-2.5 py-0.5">
+          <span className="flex-shrink-0 text-[11px] font-bold text-[#A07C34] bg-[#FBF5E8] border border-[#E7C98A] rounded-full px-2.5 py-0.5">
             {t("coachPrivate")}
           </span>
         )}
@@ -400,7 +400,7 @@ function StudentRow({
               </button>
             )
           )}
-          <button onClick={() => setOpen((o) => !o)} aria-expanded={open} className="text-xs font-semibold text-indigo-600 px-2 py-1.5">
+          <button onClick={() => setOpen((o) => !o)} aria-expanded={open} className="text-xs font-semibold text-[#A07C34] px-2 py-1.5">
             {t("coachReport")} {open ? "▴" : "▾"}
           </button>
         </div>
@@ -425,7 +425,7 @@ function StudentRow({
               className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm" />
           </label>
           <div className="flex items-center gap-3">
-            <button type="submit" className="rounded-xl bg-indigo-600 text-white text-sm font-bold px-4 py-2">{t("coachSave")}</button>
+            <button type="submit" className="rounded-xl bg-[#13223F] text-white text-sm font-bold px-4 py-2">{t("coachSave")}</button>
             {saved && <span className="text-xs font-semibold text-emerald-600">✓ {t("coachSaved")}</span>}
           </div>
         </form>
@@ -492,7 +492,7 @@ function AvailabilityPanel({
           {t("coachArea")}
           <input value={area} onChange={(e) => setArea(e.target.value)} placeholder="Linkou" maxLength={100} className={`mt-1 ${field}`} />
         </label>
-        <button type="submit" className="col-span-2 sm:col-span-1 rounded-xl bg-indigo-600 text-white text-sm font-bold px-4 py-2.5">
+        <button type="submit" className="col-span-2 sm:col-span-1 rounded-xl bg-[#13223F] text-white text-sm font-bold px-4 py-2.5">
           {t("coachAdd")}
         </button>
       </form>

@@ -20,7 +20,7 @@ interface Kid {
 }
 
 const MEDAL = ["🥇", "🥈", "🥉"];
-const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500";
+const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A]";
 
 export default function LeaderboardClient() {
   const { t, locale } = useLanguage();
@@ -48,10 +48,10 @@ export default function LeaderboardClient() {
   const rows = board?.groups?.find((g) => g.key === group)?.rows ?? [];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F7F6F2" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
 
-      <main className="max-w-2xl mx-auto px-4 py-8 sm:py-12 flex flex-col gap-5">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         <div>
           <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight inline-flex items-center gap-3">
             <Trophy className="text-amber-500" size={32} /> {t("lbTitle")}
@@ -60,13 +60,14 @@ export default function LeaderboardClient() {
           {board?.prize && <p className="mt-3 inline-block rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5">🏆 {board.prize}</p>}
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-5 items-start">
         <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="flex gap-2 overflow-x-auto" role="tablist">
               {(board?.groups ?? []).map((g) => (
                 <button key={g.key} type="button" role="tab" aria-selected={group === g.key} onClick={() => setGroup(g.key)}
                   className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
-                    group === g.key ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
+                    group === g.key ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
                   {g.label} {t("lbGroup")}
                 </button>
               ))}
@@ -86,32 +87,33 @@ export default function LeaderboardClient() {
           <ol className="flex flex-col gap-1.5">
             {rows.map((r, i) => (
               <li key={`${r.rank}-${r.name}-${i}`}
-                className={`flex items-center gap-3 rounded-2xl px-4 py-3 ${r.mine ? "bg-indigo-50 ring-2 ring-indigo-300" : i < 3 ? "bg-amber-50/60" : "bg-gray-50"}`}>
+                className={`flex items-center gap-3 rounded-2xl px-4 py-3 ${r.mine ? "bg-[#FBF5E8] ring-2 ring-[#E7C98A]" : i < 3 ? "bg-amber-50/60" : "bg-gray-50"}`}>
                 <span className="w-8 text-center text-lg font-black text-gray-700">{r.rank <= 3 ? MEDAL[r.rank - 1] : r.rank}</span>
                 <span className="flex-1 text-sm font-bold text-gray-900 truncate">
                   {r.name}
-                  {r.mine && <span className="ml-2 text-[10px] font-bold text-indigo-600 uppercase">{t("lbYou")}</span>}
+                  {r.mine && <span className="ml-2 text-[10px] font-bold text-[#A07C34] uppercase">{t("lbYou")}</span>}
                 </span>
-                <span className="text-sm font-black text-indigo-700 tabular-nums">{r.xp.toLocaleString()} XP</span>
+                <span className="text-sm font-black text-[#A07C34] tabular-nums">{r.xp.toLocaleString()} XP</span>
               </li>
             ))}
           </ol>
         </section>
 
+        <div className="flex flex-col gap-5">
         <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
           <h2 className="text-sm font-black text-gray-900">{t("lbHowTitle")}</h2>
           <ul className="mt-3 flex flex-col gap-1.5 text-sm text-gray-700">
-            <li className="flex justify-between"><span>{t("lbHow1")}</span><b className="text-indigo-700">+{board?.lesson_xp ?? 100} XP</b></li>
+            <li className="flex justify-between"><span>{t("lbHow1")}</span><b className="text-[#A07C34]">+{board?.lesson_xp ?? 100} XP</b></li>
             {board?.arena_xp && (
               <>
-                <li className="flex justify-between"><span>{t("lbHowArena")}</span><b className="text-indigo-700">+{board.arena_xp.participation} XP</b></li>
-                <li className="flex justify-between"><span>{t("lbHowArenaWin")}</span><b className="text-indigo-700">+{board.arena_xp.win} XP</b></li>
+                <li className="flex justify-between"><span>{t("lbHowArena")}</span><b className="text-[#A07C34]">+{board.arena_xp.participation} XP</b></li>
+                <li className="flex justify-between"><span>{t("lbHowArenaWin")}</span><b className="text-[#A07C34]">+{board.arena_xp.win} XP</b></li>
                 {board.arena_xp.podium.length > 0 && (
-                  <li className="flex justify-between"><span>{t("lbHowArenaPodium")}</span><b className="text-indigo-700">{board.arena_xp.podium.map((x) => `+${x}`).join(" / ")} XP</b></li>
+                  <li className="flex justify-between"><span>{t("lbHowArenaPodium")}</span><b className="text-[#A07C34]">{board.arena_xp.podium.map((x) => `+${x}`).join(" / ")} XP</b></li>
                 )}
               </>
             )}
-            <li className="flex justify-between"><span>{t("lbHow2")}</span><b className="text-indigo-700">+XP</b></li>
+            <li className="flex justify-between"><span>{t("lbHow2")}</span><b className="text-[#A07C34]">+XP</b></li>
             <li className="text-gray-400">{t("lbHow3")}</li>
           </ul>
         </section>
@@ -122,7 +124,7 @@ export default function LeaderboardClient() {
             <>
               <p className="text-sm text-gray-600">{t("lbKidsLogin")}</p>
               <LineLoginButton next="/leaderboard" label={t("pkgLoginLine")} />
-              <Link href="/login?next=/leaderboard" className="text-center text-sm font-bold text-indigo-600">{t("pkgLoginEmail")}</Link>
+              <Link href="/login?next=/leaderboard" className="text-center text-sm font-bold text-[#A07C34]">{t("pkgLoginEmail")}</Link>
             </>
           ) : (
             <>
@@ -131,6 +133,8 @@ export default function LeaderboardClient() {
             </>
           )}
         </section>
+        </div>
+        </div>
       </main>
     </div>
   );
@@ -164,19 +168,19 @@ export function KidCard({ kid, onChange }: { kid: Kid; onChange: () => void }) {
       <div className="flex items-center justify-between gap-3">
         <span className="text-sm font-bold text-gray-900">{kid.first_name} · {kid.age}</span>
         <span className="text-xs text-gray-600 text-right">
-          {t("lbThisMonth")} <b className="text-indigo-700">{kid.xp_month}</b> · {t("lbTotal")} <b>{kid.xp_total}</b>
+          {t("lbThisMonth")} <b className="text-[#A07C34]">{kid.xp_month}</b> · {t("lbTotal")} <b>{kid.xp_total}</b>
         </span>
       </div>
       <label className="flex items-center gap-3 text-sm cursor-pointer">
         <input type="checkbox" checked={kid.leaderboard_opt_in} disabled={busy}
-          onChange={(e) => patch({ leaderboard_opt_in: e.target.checked })} className="accent-indigo-600 w-4 h-4" />
+          onChange={(e) => patch({ leaderboard_opt_in: e.target.checked })} className="accent-[#13223F] w-4 h-4" />
         <span className="font-semibold text-gray-800">{t("lbOptIn")}</span>
       </label>
       <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); patch({ nickname }); }}>
         <input value={nickname} onChange={(e) => setNickname(e.target.value.slice(0, 20))} placeholder={kid.first_name}
           aria-label={t("lbNickname")} className={input} />
         <button type="submit" disabled={busy || nickname === kid.nickname}
-          className="rounded-xl bg-indigo-600 disabled:opacity-40 text-white text-xs font-bold px-4 whitespace-nowrap">{t("lbSave")}</button>
+          className="rounded-xl bg-[#13223F] disabled:opacity-40 text-white text-xs font-bold px-4 whitespace-nowrap">{t("lbSave")}</button>
       </form>
       {err && <p role="alert" className="text-xs text-red-600">{t("lbError")}</p>}
     </div>
@@ -212,13 +216,13 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
 
   if (!open) {
     return (
-      <button type="button" onClick={() => setOpen(true)} className="self-start rounded-xl border-2 border-dashed border-indigo-300 text-indigo-700 text-sm font-bold px-4 py-2.5">
+      <button type="button" onClick={() => setOpen(true)} className="self-start rounded-xl border-2 border-dashed border-[#E7C98A] text-[#A07C34] text-sm font-bold px-4 py-2.5">
         + {t("lbAddKid")}
       </button>
     );
   }
   return (
-    <form onSubmit={submit} className="rounded-2xl border border-indigo-200 p-4 flex flex-col gap-3">
+    <form onSubmit={submit} className="rounded-2xl border border-[#E7C98A] p-4 flex flex-col gap-3">
       <div className="grid grid-cols-[1fr_80px] gap-3">
         <input name="first_name" required maxLength={50} placeholder={t("lbFirstName")} aria-label={t("lbFirstName")} className={input} />
         <input name="age" required type="number" min={3} max={99} placeholder={t("lbAge")} aria-label={t("lbAge")} className={input} />
@@ -228,11 +232,11 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
         <p className="text-[11px] text-gray-500 mt-1">{t("lbNickHint")}</p>
       </div>
       <label className="flex items-center gap-3 text-sm cursor-pointer">
-        <input type="checkbox" name="opt_in" className="accent-indigo-600 w-4 h-4" />
+        <input type="checkbox" name="opt_in" className="accent-[#13223F] w-4 h-4" />
         <span className="font-semibold text-gray-800">{t("lbOptIn")}</span>
       </label>
       {err && <p role="alert" className="text-xs text-red-600">{err}</p>}
-      <button type="submit" disabled={busy} className="rounded-xl bg-indigo-600 disabled:opacity-60 text-white text-sm font-bold py-2.5">
+      <button type="submit" disabled={busy} className="rounded-xl bg-[#13223F] disabled:opacity-60 text-white text-sm font-bold py-2.5">
         {busy ? "…" : t("lbAddKid")}
       </button>
     </form>

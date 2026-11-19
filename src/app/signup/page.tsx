@@ -89,7 +89,7 @@ export default function SignupPage() {
 
   if (needsGuardian) {
     return (
-      <div className="min-h-screen bg-[#0f0d2a] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
           <h1 className="text-2xl font-bold text-white mb-3">Ask a parent or guardian</h1>
           <p className="text-white/60 text-sm leading-relaxed mb-8">
@@ -98,7 +98,7 @@ export default function SignupPage() {
           </p>
           <Link
             href="/"
-            className="inline-block bg-indigo-500 hover:bg-indigo-400 text-white font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
+            className="inline-block bg-[#C49A4A] hover:bg-[#D4AE63] text-[#0E1E3A] font-bold font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
           >
             Back to Artecks Academy
           </Link>
@@ -109,20 +109,20 @@ export default function SignupPage() {
 
   if (step === "check-email") {
     return (
-      <div className="min-h-screen bg-[#0f0d2a] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
           <div className="text-5xl mb-6">📬</div>
           <h1 className="text-2xl font-bold text-white mb-3">Check your inbox</h1>
           <p className="text-white/50 text-sm leading-relaxed mb-2">
             We sent a verification link to
           </p>
-          <p className="text-indigo-300 font-semibold text-sm mb-6">{registeredEmail}</p>
+          <p className="text-[#E7C98A] font-semibold text-sm mb-6">{registeredEmail}</p>
           <p className="text-white/40 text-xs leading-relaxed mb-8">
             Click the link in the email to activate your account, then come back here to sign in.
           </p>
           <Link
             href={loginHref}
-            className="inline-block bg-indigo-500 hover:bg-indigo-400 text-white font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
+            className="inline-block bg-[#C49A4A] hover:bg-[#D4AE63] text-[#0E1E3A] font-bold font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
           >
             Go to sign in
           </Link>
@@ -135,7 +135,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0d2a] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
@@ -161,7 +161,7 @@ export default function SignupPage() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Jane"
-                className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+                className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
               />
               {error.first_name && <p className="text-red-400 text-xs mt-1">{error.first_name}</p>}
             </div>
@@ -173,7 +173,7 @@ export default function SignupPage() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Doe"
-                className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+                className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
               />
               {error.last_name && <p className="text-red-400 text-xs mt-1">{error.last_name}</p>}
             </div>
@@ -187,7 +187,7 @@ export default function SignupPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="janedoe"
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
             />
             {error.username && <p className="text-red-400 text-xs mt-1">{error.username}</p>}
           </div>
@@ -200,7 +200,7 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="jane@example.com"
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
             />
             {error.email && <p className="text-red-400 text-xs mt-1">{error.email}</p>}
           </div>
@@ -213,7 +213,7 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
             />
             {error.password && <p className="text-red-400 text-xs mt-1">{error.password}</p>}
           </div>
@@ -225,7 +225,7 @@ export default function SignupPage() {
               required
               value={birthYear}
               onChange={(e) => setBirthYear(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 transition-colors"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
             >
               <option value="" className="text-gray-900">Select year</option>
               {Array.from({ length: 100 }, (_, i) => thisYear - i).map((y) => (
@@ -242,7 +242,7 @@ export default function SignupPage() {
                   type="checkbox"
                   checked={consent}
                   onChange={(e) => setConsent(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 accent-indigo-500"
+                  className="mt-0.5 w-4 h-4 accent-[#13223F]"
                 />
                 <span>My parent or guardian knows about this account and agrees to me creating it.</span>
               </label>
@@ -253,7 +253,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+            className="w-full bg-[#C49A4A] hover:bg-[#D4AE63] disabled:opacity-50 disabled:cursor-not-allowed text-[#0E1E3A] font-bold font-semibold py-3 rounded-xl transition-colors text-sm"
           >
             {loading ? "Creating account…" : "Create account"}
           </button>
@@ -263,7 +263,7 @@ export default function SignupPage() {
 
         <p className="text-center text-sm text-white/40 mt-6">
           Already have an account?{" "}
-          <Link href={loginHref} className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+          <Link href={loginHref} className="text-[#E7C98A] hover:text-[#F3DFAE] font-medium transition-colors">
             Sign in
           </Link>
         </p>

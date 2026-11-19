@@ -15,7 +15,7 @@ export default function MyMembershipPage() {
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-200 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#13223F] to-[#2A4170] shadow-lg shadow-[#13223F]/10 mb-4">
             <Crown size={26} className="text-white" />
           </div>
           <h1 className="font-serif-tc text-2xl font-black text-gray-900">My Membership</h1>
