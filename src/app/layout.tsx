@@ -6,6 +6,7 @@ import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { AuthProvider } from "@/app/components/AuthContext";
 import KidModeBar from "@/app/components/KidModeBar";
 import SiteSidebar from "@/app/components/SiteSidebar";
+import MobileNav from "@/app/components/MobileNav";
 import { AchievementsProvider } from "@/app/components/AchievementsContext";
 import PageViewTracker from '@/components/PageViewTracker'
 import { Analytics } from '@vercel/analytics/next';
@@ -53,6 +54,7 @@ export default function RootLayout({
               <SiteSidebar />
               <KidModeBar />
               {children}
+              <MobileNav />
             </AchievementsProvider>
           </LanguageProvider>
         </AuthProvider>
