@@ -10,6 +10,7 @@ import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import ArenaPanel from "./ArenaPanel";
+import CoachCalendar from "./CoachCalendar";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 
 interface Student {
@@ -256,7 +257,13 @@ export default function CoachDashboard() {
             {tab === "arena" && <ArenaPanel t={t} />}
 
             {tab === "availability" && (
-              <AvailabilityPanel slots={slots} weekdays={weekdays} t={t} onAdd={addSlot} onRemove={removeSlot} />
+              <div className="flex flex-col gap-6">
+                <CoachCalendar zh={locale === "zh"} refreshKey={slots.length} />
+                <div>
+                  <h3 className="mb-2 text-sm font-black text-gray-900">{locale === "zh" ? "每週固定可上課時段" : "Weekly hours"}</h3>
+                  <AvailabilityPanel slots={slots} weekdays={weekdays} t={t} onAdd={addSlot} onRemove={removeSlot} />
+                </div>
+              </div>
             )}
           </>
         )}
