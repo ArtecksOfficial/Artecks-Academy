@@ -1,15 +1,16 @@
 "use client";
-// ─── Kid Mode on the account page: parent PIN, "Start Kid Mode", teen links ──
+// ─── Kids' logins: each child gets a login for their own device; teen links ──
 //
-// PIN + Start Kid Mode are behind NEXT_PUBLIC_KID_MODE_ENABLED (see lib/kid-mode.ts).
-// Linking a 13–17-year-old's own account is always available.
+// Owner decision (Nov 2026): no parent PIN / "Start Kid Mode" on the parent's
+// device. Instead the parent gives each child a username + password; the child
+// signs in at /kid on their own tablet or phone and plays in Kid Mode.
+// Linking a 13–17-year-old's own full account is still available.
 
-import { useCallback, useEffect, useState, FormEvent } from "react";
-import { Check, Copy, KeyRound, Link2, Loader2, Play } from "lucide-react";
+import { useState, FormEvent } from "react";
+import { Check, Copy, KeyRound, Link2 } from "lucide-react";
 import { authHeaders } from "@/lib/auth-client";
-import { KID_MODE_ENABLED, PinFailure, pinErrorText, startKidMode } from "@/lib/kid-mode";
 
-export interface AccountKid { id: number; first_name: string; age: number; linked?: boolean }
+export interface AccountKid { id: number; first_name: string; age: number; linked?: boolean; kid_login?: string | null }
 
 const card = "rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm";
 const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500";
@@ -29,152 +30,111 @@ export default function KidModeCard({ kids, zh, onKidsChanged }: { kids: Account
   const teens = kids.filter((k) => k.age >= TEEN_MIN_AGE);
   return (
     <>
-      {KID_MODE_ENABLED && <PinAndStart kids={kids} zh={zh} />}
+      {kids.length > 0 && <KidLogins kids={kids} zh={zh} onChanged={onKidsChanged} />}
       {teens.length > 0 && <TeenLinks teens={teens} zh={zh} onChanged={onKidsChanged} />}
     </>
   );
 }
 
-// ── Parent PIN + Start Kid Mode ───────────────────────────────────────────────
+// ── Kid logins (for the child's own device) ──────────────────────────────────
 
-function PinAndStart({ kids, zh }: { kids: AccountKid[]; zh: boolean }) {
-  const [hasPin, setHasPin] = useState<boolean | null>(null);
-  const [editing, setEditing] = useState(false);
-  const [starting, setStarting] = useState<number | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+const KID_LOGIN_URL = "academy.artecks.com/kid";
 
-  const load = useCallback(() => {
-    call("/api/guardian-pin", "GET").then((r) => setHasPin(r.ok ? !!r.data.has_pin : false));
-  }, []);
-  useEffect(load, [load]);
-
-  async function start(kid: AccountKid) {
-    setErr(null);
-    setStarting(kid.id);
-    const r = await startKidMode(kid.id);
-    if (r.url) { window.location.assign(r.url); return; }
-    setStarting(null);
-    setErr(pinErrorText({ detail: r.error ?? "failed" }, zh));
-  }
-
+function KidLogins({ kids, zh, onChanged }: { kids: AccountKid[]; zh: boolean; onChanged: () => void }) {
   return (
     <section className={card}>
-      <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2">
-        <KeyRound size={16} className="text-indigo-600" /> {zh ? "兒童模式" : "Kid Mode"}
-      </h2>
-      <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+      <h2 className="flex items-center gap-2 text-base font-black text-gray-900"><KeyRound size={16} className="text-[#A07C34]" /> {zh ? "孩子的登入帳號" : "Kids' logins"}</h2>
+      <p className="mt-1 text-sm text-gray-600">
         {zh
-          ? "把裝置交給孩子下棋。兒童模式下不能購買、使用寶石或更改帳戶，離開時需要家長 PIN。"
-          : "Hand this device to your child to play chess. In Kid Mode nothing can be bought, no gems can be spent and the account can't be changed. Leaving needs your parent PIN."}
+          ? <>給孩子一組帳號密碼，讓他們在自己的平板或手機上下棋。孩子到 <b>{KID_LOGIN_URL}</b> 登入，不能購買東西、不能用寶石，也不能更改帳戶。</>
+          : <>Give each child a username and password to play chess on their own tablet or phone. They log in at <b>{KID_LOGIN_URL}</b>. They can&apos;t buy anything, spend gems or change the account.</>}
       </p>
-
-      {hasPin === null ? (
-        <Loader2 className="mt-4 animate-spin text-gray-300" size={18} />
-      ) : !hasPin || editing ? (
-        <PinForm zh={zh} changing={!!hasPin} onCancel={hasPin ? () => setEditing(false) : undefined}
-          onSaved={() => { setEditing(false); setHasPin(true); }} />
-      ) : (
-        <>
-          <p className="mt-4 flex items-center justify-between rounded-2xl bg-gray-50 px-4 py-3 text-sm">
-            <span className="inline-flex items-center gap-2 font-semibold text-gray-800">
-              <Check size={15} className="text-emerald-600" /> {zh ? "家長 PIN 已設定" : "Parent PIN is set"}
-            </span>
-            <button type="button" onClick={() => setEditing(true)} className="text-xs font-bold text-indigo-600">
-              {zh ? "變更 / 忘記 PIN" : "Change or reset PIN"}
-            </button>
-          </p>
-          {kids.length === 0 ? (
-            <p className="mt-3 text-sm text-gray-500">{zh ? "先新增孩子，才能開始兒童模式。" : "Add a child first to start Kid Mode."}</p>
-          ) : (
-            <ul className="mt-3 flex flex-col gap-2">
-              {kids.map((k) => (
-                <li key={k.id} className="flex items-center justify-between rounded-2xl bg-gray-50 px-4 py-3">
-                  <span className="text-sm font-bold text-gray-900">{k.first_name} <span className="text-xs font-normal text-gray-500">· {k.age}</span></span>
-                  <button type="button" onClick={() => start(k)} disabled={starting !== null}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold text-white disabled:opacity-60">
-                    {starting === k.id ? <Loader2 size={13} className="animate-spin" /> : <Play size={13} />}
-                    {zh ? "開始兒童模式" : "Start Kid Mode"}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
-      )}
-      {err && <p role="alert" className="mt-3 text-xs text-red-600">{err}</p>}
+      <ul className="mt-4 flex flex-col gap-3">
+        {kids.map((k) => <KidLoginRow key={k.id} kid={k} zh={zh} onChanged={onChanged} />)}
+      </ul>
     </section>
   );
 }
 
-function PinForm({ zh, changing, onSaved, onCancel }: { zh: boolean; changing: boolean; onSaved: () => void; onCancel?: () => void }) {
-  const [pin, setPin] = useState("");
-  const [again, setAgain] = useState("");
-  const [current, setCurrent] = useState("");
+function KidLoginRow({ kid, zh, onChanged }: { kid: AccountKid; zh: boolean; onChanged: () => void }) {
+  const [editing, setEditing] = useState(false);
+  const [username, setUsername] = useState(kid.kid_login ?? "");
   const [password, setPassword] = useState("");
-  const [forgot, setForgot] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const digits = (v: string) => v.replace(/\D/g, "").slice(0, 6);
+  const [saved, setSaved] = useState(false);
 
-  async function submit(e: FormEvent) {
+  const errText = (code: string) => ({
+    bad_username: zh ? "帳號需 3–20 個字，只能用英文小寫、數字、. 或 _。" : "Username: 3–20 characters, lowercase letters, numbers, . or _ only.",
+    bad_password: zh ? "密碼至少 6 個字。" : "Password needs at least 6 characters.",
+    username_taken: zh ? "這個帳號已經有人用了，換一個試試。" : "That username is taken. Try another.",
+  } as Record<string, string>)[code] ?? (zh ? "無法儲存，請再試一次。" : "Couldn't save. Please try again.");
+
+  async function save(e: FormEvent) {
     e.preventDefault();
-    if (pin !== again) { setErr(zh ? "兩次輸入的 PIN 不一樣。" : "The two PINs don't match."); return; }
-    setBusy(true);
-    setErr(null);
-    const body: Record<string, string> = { pin };
-    if (changing) Object.assign(body, forgot ? { password } : { current_pin: current });
-    const r = await call("/api/guardian-pin", "POST", body);
+    setBusy(true); setErr(null);
+    const r = await call(`/api/students/${kid.id}/kid-login`, "POST", { username: username.trim().toLowerCase(), password });
     setBusy(false);
-    if (r.ok) { onSaved(); return; }
-    setErr(pinErrorText(r.data as PinFailure, zh));
+    if (!r.ok) return setErr(errText(String(r.data.detail ?? "")));
+    setEditing(false); setPassword(""); setSaved(true); onChanged();
   }
 
-  const pinProps = { type: "password", inputMode: "numeric" as const, autoComplete: "off", pattern: "[0-9]{4,6}", maxLength: 6, required: true, className: input };
+  async function remove() {
+    if (!window.confirm(zh ? `移除 ${kid.first_name} 的登入帳號？孩子將無法再登入。` : `Remove ${kid.first_name}'s login? They won't be able to log in any more.`)) return;
+    setBusy(true);
+    await call(`/api/students/${kid.id}/kid-login`, "DELETE");
+    setBusy(false); setSaved(false); setUsername(""); onChanged();
+  }
 
   return (
-    <form onSubmit={submit} className="mt-4 flex flex-col gap-3">
-      {changing && !forgot && (
-        <label className="text-xs font-semibold text-gray-700">
-          {zh ? "目前的 PIN" : "Current PIN"}
-          <input {...pinProps} value={current} onChange={(e) => setCurrent(digits(e.target.value))} />
-        </label>
-      )}
-      {changing && forgot && (
-        <label className="text-xs font-semibold text-gray-700">
-          {zh ? "帳戶密碼" : "Account password"}
-          <input type="password" autoComplete="current-password" required className={input} value={password} onChange={(e) => setPassword(e.target.value)} />
-        </label>
-      )}
-      <label className="text-xs font-semibold text-gray-700">
-        {changing ? (zh ? "新的 PIN（4–6 位數字）" : "New PIN (4–6 digits)") : (zh ? "設定家長 PIN（4–6 位數字）" : "Choose a parent PIN (4–6 digits)")}
-        <input {...pinProps} value={pin} onChange={(e) => setPin(digits(e.target.value))} />
-      </label>
-      <label className="text-xs font-semibold text-gray-700">
-        {zh ? "再輸入一次" : "Type it again"}
-        <input {...pinProps} value={again} onChange={(e) => setAgain(digits(e.target.value))} />
-      </label>
-      {changing && (
-        <button type="button" onClick={() => { setForgot((f) => !f); setErr(null); }} className="self-start text-xs font-bold text-indigo-600">
-          {forgot ? (zh ? "我記得 PIN" : "I remember my PIN") : (zh ? "忘記 PIN？改用帳戶密碼" : "Forgot the PIN? Use your account password")}
-        </button>
-      )}
-      {changing && forgot && (
-        <p className="text-xs text-gray-500">
-          {zh ? "用 LINE 登入、沒有密碼？請用 LINE 聯絡我們，我們會幫您重設。" : "Signed in with LINE and have no password? Message us on LINE and we'll reset it for you."}
+    <li className="rounded-2xl bg-gray-50 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-sm font-bold text-gray-900">{kid.first_name}</span>
+        {kid.kid_login && !editing ? (
+          <span className="text-xs text-gray-600">{zh ? "帳號：" : "Username: "}<b className="font-mono text-gray-900">{kid.kid_login}</b></span>
+        ) : !editing ? (
+          <span className="text-xs text-gray-500">{zh ? "尚未建立" : "No login yet"}</span>
+        ) : null}
+      </div>
+      {saved && !editing && (
+        <p className="mt-2 text-xs font-semibold text-emerald-700">
+          {zh ? `已儲存。請把帳號和密碼告訴 ${kid.first_name}，並到 ${KID_LOGIN_URL} 登入。` : `Saved. Tell ${kid.first_name} the username and password, and to log in at ${KID_LOGIN_URL}.`}
         </p>
       )}
-      {err && <p role="alert" className="text-xs text-red-600">{err}</p>}
-      <div className="flex gap-2">
-        <button type="submit" disabled={busy} className="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60">
-          {busy ? "…" : zh ? "儲存 PIN" : "Save PIN"}
-        </button>
-        {onCancel && (
-          <button type="button" onClick={onCancel} className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-700">
-            {zh ? "取消" : "Cancel"}
+      {editing ? (
+        <form onSubmit={save} className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+          <label className="text-xs font-semibold text-gray-600">{zh ? "帳號" : "Username"}
+            <input value={username} onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s/g, "").slice(0, 20))}
+              placeholder={kid.first_name.toLowerCase()} autoCapitalize="none" autoCorrect="off" spellCheck={false} required className={`mt-1 ${input} font-mono`} />
+          </label>
+          <label className="text-xs font-semibold text-gray-600">{kid.kid_login ? (zh ? "新密碼" : "New password") : (zh ? "密碼" : "Password")}
+            <input value={password} onChange={(e) => setPassword(e.target.value.slice(0, 64))} minLength={6} required
+              autoComplete="new-password" className={`mt-1 ${input}`} />
+          </label>
+          <div className="flex gap-2">
+            <button type="submit" disabled={busy} className="flex-1 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50">
+              {busy ? "…" : zh ? "儲存" : "Save"}
+            </button>
+            <button type="button" onClick={() => { setEditing(false); setErr(null); setUsername(kid.kid_login ?? ""); }}
+              className="rounded-xl border border-gray-300 px-3 py-2.5 text-sm font-bold text-gray-700">{zh ? "取消" : "Cancel"}</button>
+          </div>
+          <p className="sm:col-span-3 text-[11px] text-gray-500">{zh ? "密碼顯示出來方便你抄給孩子。之後無法再查看，只能重設。" : "The password is shown so you can copy it for your child. You can't see it again later, only set a new one."}</p>
+        </form>
+      ) : (
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button type="button" onClick={() => { setEditing(true); setSaved(false); }}
+            className="rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold text-white">
+            {kid.kid_login ? (zh ? "更改帳號或密碼" : "Change username or password") : (zh ? "建立登入帳號" : "Make a login")}
           </button>
-        )}
-      </div>
-    </form>
+          {kid.kid_login && (
+            <button type="button" disabled={busy} onClick={remove} className="rounded-xl border border-gray-300 px-3 py-2 text-xs font-bold text-red-600">
+              {zh ? "移除" : "Remove"}
+            </button>
+          )}
+        </div>
+      )}
+      {err && <p role="alert" className="mt-2 text-xs text-red-600">{err}</p>}
+    </li>
   );
 }
 
