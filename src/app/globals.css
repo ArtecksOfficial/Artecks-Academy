@@ -19,3 +19,8 @@
 .ach-pop-icon { animation: ach-icon-bounce .6s .1s ease-out both; }
 .ach-bell-ring { animation: ach-bell 1.2s ease-in-out 2; transform-origin: top center; }
 @media (prefers-reduced-motion: reduce) { .ach-pop, .ach-pop-icon, .ach-bell-ring { animation: none; } }
+
+/* Phones/tablets: room for the bottom tab bar (MobileNav) */
+@media (max-width: 1023.98px) {
+  body { padding-bottom: calc(3.5rem + env(safe-area-inset-bottom)); }
+}
