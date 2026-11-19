@@ -12,16 +12,6 @@ export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: b
 
 export const GROUPS: Group[] = [
   {
-    en: "My learning", zh: "我的學習", signedInOnly: true,
-    items: [
-      { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
-      { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
-      { href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true },
-      { href: "/account", en: "Account & gems", zh: "帳戶與寶石", icon: UserRound },
-      { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
-    ],
-  },
-  {
     en: "Academy", zh: "學院",
     items: [
       { href: "/", en: "Home", zh: "首頁", icon: Home },
@@ -32,11 +22,21 @@ export const GROUPS: Group[] = [
     ],
   },
   {
+    en: "My learning", zh: "我的學習", signedInOnly: true,
+    items: [
+      { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
+      { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
+      { href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true },
+      { href: "/account", en: "Account & gems", zh: "帳戶與寶石", icon: UserRound },
+      { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
+    ],
+  },
+  {
     en: "More", zh: "更多",
     items: [
       { href: CHESS_URL, en: "Play chess", zh: "線上下棋", icon: Swords, external: true },
       { href: "/coach", en: "For coaches", zh: "教練專區", icon: GraduationCap, guardianOnly: true },
-      { href: TEACH_URL, en: "Teach with us", zh: "加入師資團隊", icon: Languages, guardianOnly: true },
+      { href: TEACH_URL, en: "Be a teacher", zh: "成為老師", icon: Languages, guardianOnly: true },
       { href: "/#faq", en: "FAQ", zh: "常見問題", icon: HelpCircle },
       { href: "/#line-contact", en: "Contact", zh: "聯絡我們", icon: MessageCircle },
     ],
