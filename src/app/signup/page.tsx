@@ -3,6 +3,9 @@
 import { useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
 import LegalLinks from "@/app/components/LegalLinks";
+import LineLoginButton from "@/app/components/LineLoginButton";
+import GoogleLoginButton, { GoogleProvider } from "@/app/components/GoogleLoginButton";
+import { saveAuth } from "@/lib/auth-client";
 
 type Step = "form" | "check-email";
 
@@ -44,6 +47,29 @@ export default function SignupPage() {
     // Once blocked, changing the year and trying again in the same visit is not offered.
     try { if (sessionStorage.getItem(AGE_GATE_KEY)) setNeedsGuardian(true); } catch {}
   }, []);
+
+  function nextPath() {
+    const next = new URLSearchParams(window.location.search).get("next") ?? "";
+    return next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  }
+
+  async function handleGoogle(accessToken: string) {
+    setError({});
+    setLoading(true);
+    const res = await fetch("/api/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ access_token: accessToken }),
+    }).catch(() => null);
+    const d = res ? await res.json().catch(() => ({})) : {};
+    if (res?.ok && d.access && d.refresh && d.user) {
+      saveAuth(d.access, d.refresh, d.user);
+      window.location.assign(nextPath());
+      return;
+    }
+    setLoading(false);
+    setError({ detail: d.detail || "Google sign-up didn't work. Please try again." });
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -258,6 +284,17 @@ export default function SignupPage() {
             {loading ? "Creating account…" : "Create account"}
           </button>
         </form>
+
+        <div className="flex items-center gap-3 my-5 text-xs text-white/30">
+          <span className="flex-1 h-px bg-white/10" /> or · 或 <span className="flex-1 h-px bg-white/10" />
+        </div>
+        <div className="space-y-3">
+          <GoogleProvider>
+            <GoogleLoginButton onToken={handleGoogle} onError={(m) => setError({ detail: m })} />
+          </GoogleProvider>
+          <LineLoginButton label="Sign up with LINE · 使用 LINE 註冊" />
+        </div>
+        <p className="text-center text-xs text-white/40 mt-3">For parents and adult learners. Kids get their login from a parent in Settings.</p>
 
         <p className="text-center mt-4"><LegalLinks className="justify-center text-xs text-white/40" /></p>
 
