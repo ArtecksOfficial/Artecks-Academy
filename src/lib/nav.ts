@@ -24,7 +24,7 @@ export const GROUPS: Group[] = [
     en: "Academy", zh: "學院",
     items: [
       { href: "/", en: "Home", zh: "首頁", icon: Home },
-      { href: "/#coaches-programs", en: "Coaches & programs", zh: "教練與課程", icon: Users },
+      { href: "/coaches", en: "Coaches & programs", zh: "教練與課程", icon: Users },
       { href: "/book", en: "Book a lesson", zh: "預約課程", icon: CalendarPlus, guardianOnly: true },
       { href: "/packages", en: "Lesson packages", zh: "課程套票", icon: Package, guardianOnly: true },
       { href: "/leaderboard", en: "Leaderboard", zh: "排行榜", icon: Trophy },

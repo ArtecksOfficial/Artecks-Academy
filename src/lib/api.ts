@@ -1,7 +1,7 @@
 // ─── Artecks Academy — Django API client ─────────────────────────────────────
 // All server-side fetches go through here. Never import from "use client" code.
 
-import type { AcademySession, BookingReport, MembershipCheckResult } from "./types";
+import type { AcademySession, BookingReport, Coach, MembershipCheckResult } from "./types";
 
 const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
 const BASE = `${BACKEND}/api/academy`;
@@ -195,5 +195,18 @@ export async function fetchProviderPlans(
     return res.json();
   } catch {
     return null;
+  }
+}
+
+// ── Coaches (public list for the Coaches & programs page) ─────────────────────
+
+export async function fetchCoaches(): Promise<Omit<Coach, "line_id">[]> {
+  try {
+    const res = await fetch(`${BASE}/coaches/`, revalidation());
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
   }
 }
