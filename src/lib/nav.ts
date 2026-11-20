@@ -9,15 +9,15 @@ import { TEACH_URL } from "@/lib/teach";
 import { GEMS_ENABLED } from "@/lib/gems";
 import { ACHIEVEMENTS_ENABLED } from "@/lib/achievements-flag";
 
-export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean }
+export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean; guestOnly?: boolean }
 export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
 
 export const GROUPS: Group[] = [
   {
     en: "Academy", zh: "學院",
     items: [
-      { href: "/", en: "Home", zh: "首頁", icon: Home },
-      { href: "/coaches", en: "Coaches & programs", zh: "教練與課程", icon: Users },
+      { href: "/", en: "Home", zh: "首頁", icon: Home, guestOnly: true },
+      { href: "/coaches", en: "Coaches & programs", zh: "教練與課程", icon: Users, guestOnly: true },
       { href: "/book", en: "Book a lesson", zh: "預約課程", icon: CalendarPlus, guardianOnly: true },
       { href: "/packages", en: "Lesson packages", zh: "課程套票", icon: Package, guardianOnly: true },
       { href: "/leaderboard", en: "Leaderboard", zh: "排行榜", icon: Trophy },

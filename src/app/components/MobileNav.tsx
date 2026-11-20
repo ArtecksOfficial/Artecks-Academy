@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeftRight, BookOpenCheck, CalendarDays, CalendarPlus, ClipboardList, Home, LayoutDashboard, LogIn, LogOut, Menu, Swords, Trophy, UserCog, X, type LucideIcon } from "lucide-react";
+import { ArrowLeftRight, BookOpen, BookOpenCheck, CalendarDays, CalendarPlus, ClipboardList, Home, LayoutDashboard, LogIn, LogOut, Menu, Sparkles, Swords, Trophy, UserCog, X, type LucideIcon } from "lucide-react";
 import { useAuth } from "./AuthContext";
 import LegalLinks from "./LegalLinks";
 import { getAccessToken } from "@/lib/auth-client";
@@ -58,7 +58,11 @@ export default function MobileNav() {
     { href: "/coach?tab=profile", tab: "profile", en: "Profile", zh: "檔案", icon: UserCog },
   ];
   const parentTabs: Tab[] = [
-    { href: "/", en: "Home", zh: "首頁", icon: Home },
+    !user
+      ? { href: "/", en: "Home", zh: "首頁", icon: Home }
+      : kidMode
+        ? { href: "/achievements", en: "XP", zh: "XP", icon: Sparkles }
+        : { href: "/bookings/mine", en: "Lessons", zh: "課程", icon: BookOpen },
     kidMode
       ? { href: "/leaderboard", en: "Leaderboard", zh: "排行榜", icon: Trophy }
       : { href: "/book", en: "Book", zh: "預約", icon: CalendarPlus },
@@ -146,7 +150,7 @@ export default function MobileNav() {
             <div className="px-3">
               {groups.map((group) => {
                 if (group.signedInOnly && !user) return null;
-                const items = group.items.filter((i) => !(kidMode && i.guardianOnly));
+                const items = group.items.filter((i) => !(kidMode && i.guardianOnly) && !(user && i.guestOnly));
                 if (!items.length) return null;
                 return (
                   <div key={group.en} className="mt-3">
