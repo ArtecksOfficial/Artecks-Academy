@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { CHESS_URL } from "@/lib/kid-mode";
 import { TEACH_URL } from "@/lib/teach";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean }
 export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
@@ -27,7 +28,7 @@ export const GROUPS: Group[] = [
       { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
       { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
       { href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true },
-      { href: "/account", en: "Account & gems", zh: "帳戶與寶石", icon: UserRound },
+      { href: "/account", en: GEMS_ENABLED ? "Account & gems" : "Account", zh: GEMS_ENABLED ? "帳戶與寶石" : "帳戶", icon: UserRound },
       { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
     ],
   },

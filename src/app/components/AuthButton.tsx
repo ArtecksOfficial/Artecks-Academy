@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthContext";
 import { getAccessToken } from "@/lib/auth-client";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 interface WalletData {
   xp: number;
@@ -82,9 +83,9 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
           <span title={zh ? "我的經驗值" : "My XP"} className="flex items-center gap-1 bg-[#0E1E3A]/5 text-[#13223F] border border-[#0E1E3A]/15 text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
             ⚡ {wallet.xp.toLocaleString()} XP
           </span>
-          <span title={zh ? "寶石" : "Gems"} className="flex items-center gap-1 bg-[#FBF5E8] text-[#A07C34] border border-[#E7C98A] text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
+          {GEMS_ENABLED && <span title={zh ? "寶石" : "Gems"} className="flex items-center gap-1 bg-[#FBF5E8] text-[#A07C34] border border-[#E7C98A] text-xs font-bold px-2.5 py-1 rounded-full tabular-nums whitespace-nowrap">
             💎 {wallet.gems.toLocaleString()}
-          </span>
+          </span>}
         </>
       )}
 
@@ -124,7 +125,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
             {wallet && (
               <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-3">
                 <span className="text-xs font-bold text-[#13223F]">⚡ {wallet.xp.toLocaleString()} XP</span>
-                <span className="text-xs font-bold text-[#A07C34]">💎 {wallet.gems.toLocaleString()}</span>
+                {GEMS_ENABLED && <span className="text-xs font-bold text-[#A07C34]">💎 {wallet.gems.toLocaleString()}</span>}
               </div>
             )}
             {[

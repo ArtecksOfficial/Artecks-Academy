@@ -12,6 +12,7 @@ import LineLoginButton from "@/app/components/LineLoginButton";
 import { authHeaders } from "@/lib/auth-client";
 import { getKidSession, KidSession } from "@/lib/kid-mode";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 interface Kid { id: number; first_name: string; display_name: string; age: number; xp_month: number; xp_total: number; leaderboard_opt_in: boolean; linked?: boolean }
 interface Mine { gems: number; gem_value_twd: number; credits: Record<"private" | "pair" | "group", number> }
@@ -63,7 +64,7 @@ export default function AccountClient() {
         ) : !user ? (
           <section className={`${card} flex flex-col gap-3`}>
             <p className="text-sm text-gray-600">
-              {zh ? "登入後即可查看寶石、剩餘堂數和孩子的 XP。" : "Log in to see your gems, lessons left and your kids' XP."}
+              {zh ? (GEMS_ENABLED ? "登入後即可查看寶石、剩餘堂數和孩子的 XP。" : "登入後即可查看剩餘堂數和孩子的 XP。") : GEMS_ENABLED ? "Log in to see your gems, lessons left and your kids' XP." : "Log in to see your lessons left and your kids' XP."}
             </p>
             <LineLoginButton next="/account" label={zh ? "使用 LINE 登入" : "Continue with LINE"} />
             <Link href="/login?next=/account" className="text-center text-sm font-bold text-[#A07C34]">{zh ? "用 Email 登入" : "Log in with email"}</Link>
@@ -85,25 +86,27 @@ export default function AccountClient() {
           </section>
         ) : (
           <div className="lg:columns-2 lg:gap-5 flex flex-col gap-5 lg:block [&>*]:break-inside-avoid lg:[&>*]:mb-5">
-            {/* Gems */}
-            <section className={card}>
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={16} className="text-[#A07C34]" /> {zh ? "家庭寶石" : "Family gems"}</h2>
-                <Link href="/packages" className="text-xs font-bold text-[#A07C34]">{zh ? "用寶石折抵 →" : "Use for a discount →"}</Link>
-              </div>
-              <p className="mt-3 text-4xl font-black text-[#A07C34]">{mine ? mine.gems.toLocaleString() : "…"}</p>
-              {mine && (
-                <p className="text-xs text-gray-500 mt-1">
-                  {zh ? `約可折 NT$${(mine.gems * mine.gem_value_twd).toLocaleString()}（每筆套票最多折 10%）` : `Worth about NT$${(mine.gems * mine.gem_value_twd).toLocaleString()} off (up to 10% per package)`}
-                </p>
-              )}
-              <ul className="mt-4 grid grid-cols-2 gap-2 text-xs text-gray-600">
-                <li className="rounded-xl bg-gray-50 px-3 py-2">♟ {zh ? "孩子在 chess.artecks.com 下棋" : "Kids playing on chess.artecks.com"}</li>
-                <li className="rounded-xl bg-gray-50 px-3 py-2">✅ {zh ? "每出席一堂 +5" : "+5 per lesson attended"}</li>
-                <li className="rounded-xl bg-gray-50 px-3 py-2">📝 {zh ? "每次課後回饋 +15" : "+15 per lesson feedback"}</li>
-                <li className="rounded-xl bg-gray-50 px-3 py-2">🎉 {zh ? "上完整套課程 +100" : "+100 for finishing a package"}</li>
-              </ul>
-            </section>
+            {/* Gems — hidden while the academy is XP-only */}
+            {GEMS_ENABLED && (
+              <section className={card}>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={16} className="text-[#A07C34]" /> {zh ? "家庭寶石" : "Family gems"}</h2>
+                  <Link href="/packages" className="text-xs font-bold text-[#A07C34]">{zh ? "用寶石折抵 →" : "Use for a discount →"}</Link>
+                </div>
+                <p className="mt-3 text-4xl font-black text-[#A07C34]">{mine ? mine.gems.toLocaleString() : "…"}</p>
+                {mine && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    {zh ? `約可折 NT$${(mine.gems * mine.gem_value_twd).toLocaleString()}（每筆套票最多折 10%）` : `Worth about NT$${(mine.gems * mine.gem_value_twd).toLocaleString()} off (up to 10% per package)`}
+                  </p>
+                )}
+                <ul className="mt-4 grid grid-cols-2 gap-2 text-xs text-gray-600">
+                  <li className="rounded-xl bg-gray-50 px-3 py-2">♟ {zh ? "孩子在 chess.artecks.com 下棋" : "Kids playing on chess.artecks.com"}</li>
+                  <li className="rounded-xl bg-gray-50 px-3 py-2">✅ {zh ? "每出席一堂 +5" : "+5 per lesson attended"}</li>
+                  <li className="rounded-xl bg-gray-50 px-3 py-2">📝 {zh ? "每次課後回饋 +15" : "+15 per lesson feedback"}</li>
+                  <li className="rounded-xl bg-gray-50 px-3 py-2">🎉 {zh ? "上完整套課程 +100" : "+100 for finishing a package"}</li>
+                </ul>
+              </section>
+            )}
 
             {/* Lessons left */}
             <section className={card}>

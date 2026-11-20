@@ -15,6 +15,7 @@ import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { COACH_GROUPS, GROUPS, type Item } from "@/lib/nav";
 import { useMode } from "./ModeContext";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 interface Tab { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; primary?: boolean }
 
@@ -128,7 +129,7 @@ export default function MobileNav() {
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#C49A4A] text-sm font-black text-[#0E1E3A]">{name[0]?.toUpperCase() ?? "?"}</span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold">{name}</p>
-                    {wallet && <p className="text-xs text-white/60">⚡ {wallet.xp.toLocaleString()} XP · <span className="text-[#E7C98A]">💎 {wallet.gems.toLocaleString()}</span></p>}
+                    {wallet && <p className="text-xs text-white/60">⚡ {wallet.xp.toLocaleString()} XP{GEMS_ENABLED && <> · <span className="text-[#E7C98A]">💎 {wallet.gems.toLocaleString()}</span></>}</p>}
                   </div>
                 </div>
               ) : (

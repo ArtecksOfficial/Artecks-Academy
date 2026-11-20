@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { CheckCircle, Clock, Copy, MapPin } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 export interface PayInfo {
   booking_id: number;
@@ -145,7 +146,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
       {paid && info.feedback === "ok" && (
         <Link href={`/feedback/${info.booking_id}?t=${encodeURIComponent(token)}`}
           className="block rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold text-center py-3.5">
-          {t("payFeedbackCta")}
+          {t(GEMS_ENABLED ? "payFeedbackCta" : "payFeedbackCtaXp")}
         </Link>
       )}
 

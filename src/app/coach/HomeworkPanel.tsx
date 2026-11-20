@@ -75,8 +75,8 @@ export default function HomeworkPanel({ zh }: { zh: boolean }) {
     <div className="flex flex-col gap-5">
       <p className="text-sm text-gray-600">
         {zh
-          ? `為學生出作業，下次上課時打勾完成。每完成一份：孩子 +${rules.xp} XP、家長 +${rules.gems} 顆寶石（每位孩子每週最多 ${rules.weekly_max} 份有獎勵）。`
-          : `Set homework for your students and tick it done at the next lesson. Each one done: +${rules.xp} XP for the child and +${rules.gems} gems for the parent (rewards for up to ${rules.weekly_max} per child each week).`}
+          ? `為學生出作業，下次上課時打勾完成。每完成一份：孩子 +${rules.xp} XP${rules.gems > 0 ? `、家長 +${rules.gems} 顆寶石` : ""}（每位孩子每週最多 ${rules.weekly_max} 份有獎勵）。`
+          : `Set homework for your students and tick it done at the next lesson. Each one done: +${rules.xp} XP for the child${rules.gems > 0 ? ` and +${rules.gems} gems for the parent` : ""} (rewards for up to ${rules.weekly_max} per child each week).`}
       </p>
 
       <AssignForm zh={zh} kids={data.students} onDone={load} />
@@ -129,7 +129,7 @@ export default function HomeworkPanel({ zh }: { zh: boolean }) {
                 <span className="text-gray-800">✅ {h.student_name} · {h.title}</span>
                 <span className="text-xs text-gray-500">
                   {h.done_at && fmtDate(h.done_at)}{" · "}
-                  {h.rewarded ? (zh ? `+${rules.xp} XP、+${rules.gems} 寶石` : `+${rules.xp} XP, +${rules.gems} gems`) : (zh ? "未發獎勵（已達上限）" : "No reward (weekly limit)")}
+                  {h.rewarded ? (zh ? `+${rules.xp} XP${rules.gems > 0 ? `、+${rules.gems} 寶石` : ""}` : `+${rules.xp} XP${rules.gems > 0 ? `, +${rules.gems} gems` : ""}`) : (zh ? "未發獎勵（已達上限）" : "No reward (weekly limit)")}
                 </span>
               </li>
             ))}
