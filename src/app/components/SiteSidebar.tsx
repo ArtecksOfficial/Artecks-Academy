@@ -19,6 +19,7 @@ import LegalLinks from "./LegalLinks";
 import NotificationBell from "./NotificationBell";
 import { COACH_GROUPS, GROUPS, type Item } from "@/lib/nav";
 import { useMode } from "./ModeContext";
+import { useShowSidebar } from "./useShowSidebar";
 
 export default function SiteSidebar() {
   const { locale } = useLanguage();
@@ -50,6 +51,15 @@ export default function SiteSidebar() {
     : GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => !(isCoach && i.href === "/coach")) }));
 
   const name = user ? (user.first_name || user.username || user.email) : "";
+  const show = useShowSidebar();
+
+  // The page is shifted right only while the sidebar is shown (see globals.css).
+  useEffect(() => {
+    document.body.classList.toggle("has-sidebar", show);
+    return () => document.body.classList.remove("has-sidebar");
+  }, [show]);
+
+  if (!show) return null;
 
   return (
     <aside

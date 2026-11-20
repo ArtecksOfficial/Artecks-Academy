@@ -1,7 +1,8 @@
 "use client";
 // ─── Top bar for phones and tablets ───────────────────────────────────────────
 // Logo, bell, account and language. Navigation lives in MobileNav (bottom tab
-// bar + menu sheet). From `lg` up, SiteSidebar is the navigation and this hides.
+// bar + menu sheet). From `lg` up, signed-in users get SiteSidebar and this hides;
+// visitors who aren't logged in keep this bar on every screen size.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,10 +10,12 @@ import type { MouseEvent } from "react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import AuthButton from "./AuthButton";
 import NotificationBell from "./NotificationBell";
+import { useShowSidebar } from "./useShowSidebar";
 
 export default function SiteHeader() {
   const { locale } = useLanguage();
   const path = usePathname() || "/";
+  const hasSidebar = useShowSidebar();
 
   // On the homepage the logo scrolls to the very top and clears any #section.
   function goHome(e: MouseEvent) {
@@ -25,7 +28,7 @@ export default function SiteHeader() {
   }
 
   return (
-    <header className="lg:hidden sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#E2DDD2]">
+    <header className={`${hasSidebar ? "lg:hidden " : ""}sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#E2DDD2]`}>
       <div className="max-w-6xl mx-auto px-3 sm:px-5 py-2.5 flex items-center justify-between gap-3">
         <Link href="/" onClick={goHome} className="flex items-center gap-2.5 min-w-0">
           <img src="/logo.png" alt="" className="h-8 w-auto" />
