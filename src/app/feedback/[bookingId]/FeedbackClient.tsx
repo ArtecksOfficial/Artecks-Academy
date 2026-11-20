@@ -96,7 +96,7 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
   } else if (info === null) {
     body = <div className={card}><p className="text-sm text-gray-600">{t("payNotFoundBody")}</p></div>;
   } else if (result || info.status === "done") {
-    const unclaimed = !info.reward_claimed;
+    const unclaimed = !info.reward_claimed && info.gems > 0;
     body = (
       <div className={`${card} text-center`}>
         <h1 className="text-xl font-black text-gray-900">{t("fbThanksTitle")}</h1>
@@ -135,9 +135,11 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
           <p className="text-sm text-gray-600 mt-1">
             {info.student_name} · {info.coach_name} · {new Date(info.start_time).toLocaleDateString(locale === "en" ? "en-US" : "zh-TW", { timeZone: "Asia/Taipei", month: "long", day: "numeric" })}
           </p>
-          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#FBF5E8] text-[#A07C34] font-semibold text-xs px-3 py-1.5">
-            <Gem size={13} /> {t("fbReward").replace("{n}", String(info.gems))}
-          </p>
+          {info.gems > 0 && (
+            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#FBF5E8] text-[#A07C34] font-semibold text-xs px-3 py-1.5">
+              <Gem size={13} /> {t("fbReward").replace("{n}", String(info.gems))}
+            </p>
+          )}
         </div>
         <Stars value={rating} onChange={setRating} label={t("fbRating")} />
         <Stars value={enjoyment} onChange={setEnjoyment} label={t("fbEnjoyment")} />

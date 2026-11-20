@@ -14,6 +14,7 @@ import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 interface Lesson { booking_id: number; start: string; coach: string; title: string }
 interface Kid {
@@ -90,11 +91,11 @@ export default function DashboardClient() {
         ) : (
           <>
             {/* Family at a glance */}
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <section className={`grid grid-cols-2 ${GEMS_ENABLED ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-3`}>
               <Tile icon={<Package size={15} />} label={zh ? "剩餘堂數" : "Classes left"} value={data.family.classes_left}
                 hint={data.family.active_packages ? (zh ? `${data.family.active_packages} 組套票` : `${data.family.active_packages} active package${data.family.active_packages === 1 ? "" : "s"}`) : (zh ? "尚無套票" : "No package yet")}
                 href={data.family.active_packages ? "#tracker" : "/packages"} />
-              <Tile icon={<Gem size={15} />} label={zh ? "家庭寶石" : "Family gems"} value={data.family.gems} hint={zh ? "可折抵套票" : "For package discounts"} href="/account" />
+              {GEMS_ENABLED && <Tile icon={<Gem size={15} />} label={zh ? "家庭寶石" : "Family gems"} value={data.family.gems} hint={zh ? "可折抵套票" : "For package discounts"} href="/account" />}
               <Tile icon={<BookOpen size={15} />} label={zh ? "本月上課" : "Lessons this month"} value={data.kids.reduce((n, k) => n + k.lessons_this_month, 0)} hint={zh ? "所有孩子" : "All kids"} />
               <Tile icon={<Sparkles size={15} />} label={zh ? "本月 XP" : "XP this month"} value={data.kids.reduce((n, k) => n + k.xp_month, 0)} hint={zh ? "所有孩子" : "All kids"} href="/leaderboard" />
             </section>
@@ -221,7 +222,9 @@ function KidCard({ kid, zh, fmtDay, fmtTime, homework }: { kid: Kid; zh: boolean
                 })}
               </ul>
               <p className="mt-2 text-[11px] text-[#5B6478]">
-                {zh ? "教練會在下次上課時確認完成，孩子和你都會得到獎勵。" : "The coach ticks it done at the next lesson. Your child gets XP and you get gems."}
+                {GEMS_ENABLED
+                  ? (zh ? "教練會在下次上課時確認完成，孩子和你都會得到獎勵。" : "The coach ticks it done at the next lesson. Your child gets XP and you get gems.")
+                  : (zh ? "教練會在下次上課時確認完成，孩子會得到 XP。" : "The coach ticks it done at the next lesson, and your child gets XP.")}
               </p>
             </div>
           )}

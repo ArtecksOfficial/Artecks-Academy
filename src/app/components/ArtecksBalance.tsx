@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 interface WalletData {
   xp?: number;
@@ -82,7 +83,7 @@ export default function ArtecksBalance() {
             <span>{wallet.xp.toLocaleString()}</span>
           </div>
         )}
-        {wallet.gems !== undefined && (
+        {GEMS_ENABLED && wallet.gems !== undefined && (
           <div className="flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-[#FBF5E8] border border-[#E7C98A] text-[#A07C34]">
             <span>💎</span>
             <span>{wallet.gems.toLocaleString()}</span>

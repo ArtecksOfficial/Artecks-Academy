@@ -1,3 +1,5 @@
+import { GEMS_ENABLED } from "@/lib/gems";
+
 // ─── Parent achievements — shared types (see Django apps/academy/achievements.py) ─
 
 export interface Bilingual { en: string; zh: string }
@@ -55,6 +57,9 @@ export interface BellItem {
 export interface BellData { unread: number; items: BellItem[]; new: Badge[] }
 
 export function rewardText(r: BadgeReward, zh: boolean): string {
-  if (r.type === "gems") return zh ? `+${r.gems} 顆寶石` : `+${r.gems} gems`;
+  if (r.type === "gems") {
+    if (!GEMS_ENABLED) return zh ? "收藏徽章" : "A badge for your collection";
+    return zh ? `+${r.gems} 顆寶石` : `+${r.gems} gems`;
+  }
   return zh ? r.zh : r.en;
 }

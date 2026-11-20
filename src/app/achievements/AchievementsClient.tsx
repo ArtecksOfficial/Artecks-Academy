@@ -15,6 +15,7 @@ import { authHeaders } from "@/lib/auth-client";
 import { getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { rewardText, type AchievementsOverview, type Badge, type Perk } from "@/lib/achievements";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 const card = "rounded-3xl bg-white border border-[#E2DDD2] p-5 sm:p-6 shadow-sm";
 const LINE_URL = "https://line.me/R/ti/p/@843yqhoa";
@@ -101,9 +102,11 @@ function Summary({ data, zh }: { data: AchievementsOverview; zh: boolean }) {
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#E7C98A]">{zh ? "已解鎖" : "Unlocked"}</p>
           <p className="mt-1 text-4xl font-black leading-none">{unlocked}<span className="text-xl text-white/50"> / {total}</span></p>
         </div>
-        <p className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-[#E7C98A]">
-          <Gem size={14} /> {zh ? `徽章已獲得 ${gems_earned} 顆寶石` : `${gems_earned} gems earned from badges`}
-        </p>
+        {GEMS_ENABLED && (
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-[#E7C98A]">
+            <Gem size={14} /> {zh ? `徽章已獲得 ${gems_earned} 顆寶石` : `${gems_earned} gems earned from badges`}
+          </p>
+        )}
       </div>
       <div className="mt-4 h-2 rounded-full bg-white/10" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
         <div className="h-2 rounded-full bg-[#C49A4A] transition-all" style={{ width: `${pct}%` }} />

@@ -11,6 +11,7 @@ import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import LineLoginButton from "@/app/components/LineLoginButton";
+import { GEMS_ENABLED } from "@/lib/gems";
 
 type Format = "private" | "pair" | "group";
 
@@ -114,10 +115,10 @@ export default function PackagesClient() {
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
         <div>
           <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("pkgTitle")}</h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t("pkgSub")}</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t(GEMS_ENABLED ? "pkgSub" : "pkgSubXp")}</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-5 items-start">
+        <div className={`grid grid-cols-1 ${GEMS_ENABLED ? "lg:grid-cols-[minmax(0,1fr)_320px]" : ""} gap-5 items-start`}>
         <div className="flex flex-col gap-5 min-w-0">
         {/* Orders waiting for payment */}
         {pending.map((p) => <PendingOrder key={p.id} p={p} onChange={loadMine} />)}
@@ -183,7 +184,7 @@ export default function PackagesClient() {
             {!user && !isLoading ? (
               <>
                 <h2 className="text-lg font-black text-gray-900">{t("pkgLoginTitle")}</h2>
-                <p className="text-sm text-gray-600 -mt-2">{t("pkgLoginBody")}</p>
+                <p className="text-sm text-gray-600 -mt-2">{t(GEMS_ENABLED ? "pkgLoginBody" : "pkgLoginBodyXp")}</p>
                 <LineLoginButton next="/packages" label={t("pkgLoginLine")} />
                 <Link href="/login?next=/packages" className="text-center text-sm font-bold text-[#A07C34]">{t("pkgLoginEmail")}</Link>
               </>
@@ -193,18 +194,20 @@ export default function PackagesClient() {
                   <span className="font-bold text-gray-900">{t(`pkgFormat_${pkg.format}` as DictionaryKey)} × {pkg.total_lessons}</span>
                   <span className="text-gray-700">{nt(pkg.price_twd)}</span>
                 </div>
-                <div className="rounded-2xl bg-[#FBF5E8] px-4 py-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-bold text-[#13223F] inline-flex items-center gap-1.5"><Gem size={14} /> {t("pkgUseGems")}</span>
-                    <span className="text-xs text-[#A07C34]">{t("pkgYourGems")}: {(mine?.gems ?? 0).toLocaleString()}</span>
+                {GEMS_ENABLED && (
+                  <div className="rounded-2xl bg-[#FBF5E8] px-4 py-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-bold text-[#13223F] inline-flex items-center gap-1.5"><Gem size={14} /> {t("pkgUseGems")}</span>
+                      <span className="text-xs text-[#A07C34]">{t("pkgYourGems")}: {(mine?.gems ?? 0).toLocaleString()}</span>
+                    </div>
+                    <input type="range" min={0} max={maxGems} step={1} value={gems} disabled={maxGems === 0}
+                      onChange={(e) => setGems(Number(e.target.value))} className="w-full mt-2 accent-[#13223F]" aria-label={t("pkgUseGems")} />
+                    <div className="flex items-center justify-between text-xs text-[#13223F]">
+                      <span>{gems} 💎 → − {nt(gems * gemValue)}</span>
+                      <span>{t("pkgGemNote1")}{gemValue}{t("pkgGemNote2")}</span>
+                    </div>
                   </div>
-                  <input type="range" min={0} max={maxGems} step={1} value={gems} disabled={maxGems === 0}
-                    onChange={(e) => setGems(Number(e.target.value))} className="w-full mt-2 accent-[#13223F]" aria-label={t("pkgUseGems")} />
-                  <div className="flex items-center justify-between text-xs text-[#13223F]">
-                    <span>{gems} 💎 → − {nt(gems * gemValue)}</span>
-                    <span>{t("pkgGemNote1")}{gemValue}{t("pkgGemNote2")}</span>
-                  </div>
-                </div>
+                )}
                 <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                   <span className="text-sm font-bold text-gray-900">{t("pkgTotal")}</span>
                   <span className="text-xl font-black text-[#A07C34]">{nt(pkg.price_twd - gems * gemValue)}</span>
@@ -220,15 +223,17 @@ export default function PackagesClient() {
         )}
 
         </div>
-        {/* How to earn */}
-        <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm lg:sticky lg:top-6">
-          <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={15} className="text-[#A07C34]" /> {t("pkgEarnTitle")}</h2>
-          <ul className="mt-3 flex flex-col gap-1.5 text-sm text-gray-700">
-            {(["pkgEarn1", "pkgEarn2", "pkgEarn3", "pkgEarn4"] as DictionaryKey[]).map((k) => (
-              <li key={k} className="flex gap-2"><CheckCircle size={15} className="text-emerald-500 mt-0.5 flex-shrink-0" /> {t(k)}</li>
-            ))}
-          </ul>
-        </section>
+        {/* How to earn — hidden while the academy is XP-only */}
+        {GEMS_ENABLED && (
+          <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm lg:sticky lg:top-6">
+            <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={15} className="text-[#A07C34]" /> {t("pkgEarnTitle")}</h2>
+            <ul className="mt-3 flex flex-col gap-1.5 text-sm text-gray-700">
+              {(["pkgEarn1", "pkgEarn2", "pkgEarn3", "pkgEarn4"] as DictionaryKey[]).map((k) => (
+                <li key={k} className="flex gap-2"><CheckCircle size={15} className="text-emerald-500 mt-0.5 flex-shrink-0" /> {t(k)}</li>
+              ))}
+            </ul>
+          </section>
+        )}
         </div>
       </main>
     </div>
@@ -286,7 +291,7 @@ function PendingOrder({ p, onChange }: { p: Purchase; onChange: () => void }) {
       {err && <p role="alert" className="text-sm text-red-600">{t("pkgError")}</p>}
       {!p.transfer_reported && (
         <button type="button" disabled={busy} onClick={() => post("cancel")} className="self-start text-xs font-semibold text-gray-500 hover:text-red-600">
-          {t("pkgCancel")}
+          {t(GEMS_ENABLED ? "pkgCancel" : "pkgCancelXp")}
         </button>
       )}
     </section>
