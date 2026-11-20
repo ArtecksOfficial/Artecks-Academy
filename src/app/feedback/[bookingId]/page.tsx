@@ -12,9 +12,10 @@ export default async function Page({
   searchParams,
 }: {
   params: Promise<{ bookingId: string }>;
-  searchParams: Promise<{ t?: string }>;
+  searchParams: Promise<{ t?: string; stars?: string }>;
 }) {
   const { bookingId } = await params;
-  const { t = "" } = await searchParams;
-  return <FeedbackClient bookingId={bookingId} token={t} />;
+  const { t = "", stars = "" } = await searchParams;
+  const n = Number(stars);
+  return <FeedbackClient bookingId={bookingId} token={t} initialStars={n >= 1 && n <= 5 ? n : 0} />;
 }

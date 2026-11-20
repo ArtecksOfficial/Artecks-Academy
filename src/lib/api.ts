@@ -166,6 +166,9 @@ export interface MyBooking {
   status: string;
   payment_status: string;
   pay_url: string | null;
+  rate_url?: string | null;
+  my_rating?: number | null;
+  coach_name?: string | null;
   xp_awarded: number;
   coins_awarded: number;
   applied_discount_amount: number;

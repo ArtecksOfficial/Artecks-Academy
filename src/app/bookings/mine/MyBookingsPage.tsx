@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { Phone, Loader2, ArrowLeft, ChevronRight, Clock, MapPin } from "lucide-react";
+import { Phone, Loader2, ArrowLeft, ChevronRight, Clock, MapPin, Star } from "lucide-react";
 import type { MyBooking } from "@/lib/api";
 
 const TZ = "Asia/Taipei";
@@ -33,6 +33,55 @@ function StatusBadge({ status }: { status: string }) {
 function payPath(url: string): string {
   // Keep the parent on this site, whatever host the backend put in the link.
   try { const u = new URL(url); return u.pathname + u.search; } catch { return url; }
+}
+
+/** One tap rates the lesson. Saved straight away; a comment is optional on the full page. */
+function RateLesson({ booking }: { booking: MyBooking }) {
+  const zh = useLanguage().locale === "zh";
+  const [mine, setMine] = useState<number | null>(booking.my_rating ?? null);
+  const [hover, setHover] = useState(0);
+  const [saving, setSaving] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [gems, setGems] = useState(0);
+  if (!mine && !booking.rate_url) return null;
+
+  async function rate(n: number) {
+    if (!booking.rate_url || saving) return;
+    setSaving(true); setFailed(false);
+    try {
+      const token = new URL(booking.rate_url).searchParams.get("t") ?? "";
+      const r = await fetch(`/api/feedback/${booking.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify({ t: token, rating: n }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error();
+      setMine(n); setGems(d.gems_credited ?? 0);
+    } catch { setFailed(true); } finally { setSaving(false); }
+  }
+
+  const shown = hover || mine || 0;
+  return (
+    <div className="px-4 pb-4 -mt-1">
+      <div className="rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-3 py-2.5 flex items-center justify-between gap-2">
+        <p className="text-xs font-bold text-[#13223F]">
+          {mine ? (zh ? "你的評分" : "Your rating") : (zh ? "這堂課怎麼樣？" : "How was this lesson?")}
+          {gems > 0 && <span className="ml-1.5 text-[#A07C34]">+{gems} {zh ? "寶石" : "gems"}</span>}
+          {failed && <span className="ml-1.5 text-red-600">{zh ? "沒有存到，請再試一次" : "Not saved. Try again"}</span>}
+        </p>
+        <div className="flex" role="radiogroup" aria-label={zh ? "評分 1 到 5 顆星" : "Rate 1 to 5 stars"} onMouseLeave={() => setHover(0)}>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button key={n} type="button" role="radio" aria-checked={mine === n} aria-label={zh ? `${n} 顆星` : `${n} star${n > 1 ? "s" : ""}`}
+              disabled={!!mine || saving} onClick={() => rate(n)} onMouseEnter={() => !mine && setHover(n)}
+              className="p-1 disabled:cursor-default">
+              <Star size={22} className={n <= shown ? "fill-amber-400 text-amber-400" : "text-gray-300"} />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function BookingCard({ booking }: { booking: MyBooking }) {
@@ -82,6 +131,7 @@ function BookingCard({ booking }: { booking: MyBooking }) {
         </a>
       </div>
     )}
+    <RateLesson booking={booking} />
     </div>
   );
 }
