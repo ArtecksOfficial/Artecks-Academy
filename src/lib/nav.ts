@@ -2,11 +2,12 @@
 import {
   BookOpenCheck, CalendarDays, ClipboardList, MessageSquareHeart, UserCog,
   Award, BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, MessageCircle,
-  Languages, Package, Settings, Swords, Trophy, UserRound, Users, type LucideIcon,
+  Languages, Package, Settings, Sparkles, Swords, Trophy, UserRound, Users, type LucideIcon,
 } from "lucide-react";
 import { CHESS_URL } from "@/lib/kid-mode";
 import { TEACH_URL } from "@/lib/teach";
 import { GEMS_ENABLED } from "@/lib/gems";
+import { ACHIEVEMENTS_ENABLED } from "@/lib/achievements-flag";
 
 export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean }
 export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
@@ -20,6 +21,7 @@ export const GROUPS: Group[] = [
       { href: "/book", en: "Book a lesson", zh: "預約課程", icon: CalendarPlus, guardianOnly: true },
       { href: "/packages", en: "Lesson packages", zh: "課程套票", icon: Package, guardianOnly: true },
       { href: "/leaderboard", en: "Leaderboard", zh: "排行榜", icon: Trophy },
+      ...(ACHIEVEMENTS_ENABLED ? [] : [{ href: "/achievements", en: "How XP works", zh: "XP 怎麼賺", icon: Sparkles }]),
     ],
   },
   {
@@ -27,7 +29,7 @@ export const GROUPS: Group[] = [
     items: [
       { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
       { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
-      { href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true },
+      ...(ACHIEVEMENTS_ENABLED ? [{ href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true }] : []),
       { href: "/account", en: GEMS_ENABLED ? "Account & gems" : "Account", zh: GEMS_ENABLED ? "帳戶與寶石" : "帳戶", icon: UserRound },
       { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
     ],
