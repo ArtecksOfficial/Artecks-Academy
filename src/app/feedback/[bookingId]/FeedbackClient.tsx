@@ -34,11 +34,11 @@ function Stars({ value, onChange, label }: { value: number; onChange: (n: number
   );
 }
 
-export default function FeedbackClient({ bookingId, token }: { bookingId: string; token: string }) {
+export default function FeedbackClient({ bookingId, token, initialStars = 0 }: { bookingId: string; token: string; initialStars?: number }) {
   const { t, locale } = useLanguage();
   const { user, isLoading } = useAuth();
   const [info, setInfo] = useState<FbInfo | null | undefined>(undefined);
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(initialStars);
   const [enjoyment, setEnjoyment] = useState(0);
   const [comment, setComment] = useState("");
   const [sending, setSending] = useState(false);
@@ -69,14 +69,13 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
   async function submit(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!rating || !enjoyment) return setError(t("fbPickStars"));
-    if (comment.trim().length < 20) return setError(t("fbCommentShort"));
+    if (!rating) return setError(t("fbPickStars"));
     setSending(true);
     try {
       const r = await fetch(`/api/feedback/${bookingId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...(user ? authHeaders() : {}) },
-        body: JSON.stringify({ t: token, rating, enjoyment, comment: comment.trim() }),
+        body: JSON.stringify({ t: token, rating, ...(enjoyment ? { enjoyment } : {}), comment: comment.trim() }),
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.detail ?? String(r.status));
@@ -142,13 +141,12 @@ export default function FeedbackClient({ bookingId, token }: { bookingId: string
           )}
         </div>
         <Stars value={rating} onChange={setRating} label={t("fbRating")} />
-        <Stars value={enjoyment} onChange={setEnjoyment} label={t("fbEnjoyment")} />
+        {rating > 0 && <Stars value={enjoyment} onChange={setEnjoyment} label={`${t("fbEnjoyment")} (${t("fbOptional")})`} />}
         <label className="block">
-          <span className="block text-xs font-semibold text-gray-600 mb-1.5">{t("fbComment")}</span>
+          <span className="block text-xs font-semibold text-gray-600 mb-1.5">{t("fbComment")} ({t("fbOptional")})</span>
           <textarea value={comment} onChange={(e) => setComment(e.target.value)} rows={4} maxLength={3000}
             placeholder={t("fbCommentPlaceholder")}
             className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A]" />
-          <span className="text-[11px] text-gray-400">{comment.trim().length}/20+</span>
         </label>
         <p className="text-xs text-gray-500">{t("fbPrivacy")}</p>
         {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
