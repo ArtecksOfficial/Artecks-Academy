@@ -3,6 +3,7 @@
 
 import { fetchSessions, fetchProviderPlans } from "@/lib/api";
 import HomePageContent from "@/app/components/HomePageContent";
+import SignedInHomeRedirect from "@/app/components/SignedInHomeRedirect";
 
 export default async function HomePage() {
   const [sessions, provider] = await Promise.all([
@@ -10,5 +11,10 @@ export default async function HomePage() {
     fetchProviderPlans("issac"),
   ]);
 
-  return <HomePageContent sessions={sessions} provider={provider} />;
+  return (
+    <>
+      <SignedInHomeRedirect />
+      <HomePageContent sessions={sessions} provider={provider} />
+    </>
+  );
 }

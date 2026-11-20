@@ -67,7 +67,7 @@ export default function SiteSidebar() {
       aria-label={zh ? "主選單" : "Main navigation"}
       className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-[var(--sidebar-w)] flex-col bg-[#0E1E3A] text-white border-r border-white/10"
     >
-      <Link href="/" className="flex items-center gap-3 px-5 pt-6 pb-5">
+      <Link href={user ? (kidMode ? "/leaderboard" : "/dashboard") : "/"} className="flex items-center gap-3 px-5 pt-6 pb-5">
         <img src="/logo.png" alt="" className="h-9 w-auto rounded bg-white p-1" />
         <span className="flex flex-col leading-none">
           <span className="text-xs font-bold tracking-[0.22em] uppercase">Artecks</span>
@@ -81,7 +81,7 @@ export default function SiteSidebar() {
         )}
         {groups.map((group) => {
           if (group.signedInOnly && !user) return null;
-          const items = group.items.filter((i) => !(kidMode && i.guardianOnly));
+          const items = group.items.filter((i) => !(kidMode && i.guardianOnly) && !(user && i.guestOnly));
           if (items.length === 0) return null;
           return (
             <div key={group.en} className="mt-4 first:mt-0">
