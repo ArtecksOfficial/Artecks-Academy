@@ -2,6 +2,7 @@
 // LINE sends the parent back here with ?code&state. We finish the sign-in on
 // the backend, store the Artecks tokens, then continue where they started.
 
+import L from "@/app/components/L";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
@@ -33,10 +34,10 @@ export default function LineCallbackPage() {
           saveAuth(d.access, d.refresh, d.user);
           window.location.replace(safeNext(d.next, "/packages"));
         } else {
-          setError(d.detail || "Could not sign in with LINE. Please try again.");
+          setError(d.detail || "line_failed");
         }
       })
-      .catch(() => setError("Could not sign in with LINE. Please try again."));
+      .catch(() => setError("line_failed"));
   }, []);
 
   return (
@@ -44,10 +45,10 @@ export default function LineCallbackPage() {
       <div className="max-w-sm w-full rounded-3xl bg-white border border-gray-200 p-8 text-center shadow-sm">
         {error ? (
           <>
-            <p className="text-sm text-gray-800">{error}</p>
+            <p className="text-sm text-gray-800">{error === "line_failed" ? <L en="Could not sign in with LINE. Please try again." zh="無法使用 LINE 登入，請再試一次。" /> : error}</p>
             <div className="flex justify-center gap-4 mt-5 text-sm font-bold">
-              <Link href="/login" className="text-[#A07C34]">Log in</Link>
-              <Link href="/signup" className="text-[#A07C34]">Sign up with email</Link>
+              <Link href="/login" className="text-[#A07C34]"><L en="Log in" zh="登入" /></Link>
+              <Link href="/signup" className="text-[#A07C34]"><L en="Sign up with email" zh="用電子郵件註冊" /></Link>
             </div>
           </>
         ) : (

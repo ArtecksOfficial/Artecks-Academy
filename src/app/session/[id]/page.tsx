@@ -2,6 +2,7 @@
 // Server Component. Fetches session from Django API, then renders the static
 // shell + hands off interactivity to <BookingSection />.
 
+import L, { LDate } from "@/app/components/L";
 import SiteHeader from "@/app/components/SiteHeader";
 import { notFound } from "next/navigation";
 import { fetchSession } from "@/lib/api";
@@ -45,20 +46,8 @@ export default async function SessionPage({ params }: PageProps) {
   const session = await fetchSession(id).catch(() => null);
   if (!session) notFound();
 
-  const startDate = new Date(session.start_time);
   const endDate = session.end_time ? new Date(session.end_time) : null;
 
-  function fmt(d: Date) {
-    return d.toLocaleString("zh-TW", {
-      timeZone: "Asia/Taipei",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
 
   const spotsLeft = session.available_spots;
   const isFull = session.is_full;
@@ -85,13 +74,13 @@ export default async function SessionPage({ params }: PageProps) {
                 </span>
               )}
               {session.status === "cancelled" && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 text-xs font-semibold">Cancelled</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 text-xs font-semibold"><L en="Cancelled" zh="已取消" /></span>
               )}
               {isFull && session.status !== "cancelled" && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold">Full</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold"><L en="Full" zh="已額滿" /></span>
               )}
               {canBook && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-semibold">Open</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-semibold"><L en="Open" zh="開放報名" /></span>
               )}
             </div>
 
@@ -103,9 +92,9 @@ export default async function SessionPage({ params }: PageProps) {
               <div className="flex items-start gap-2.5">
                 <span className="text-base mt-0.5">📅</span>
                 <div>
-                  <p className="font-semibold">{fmt(startDate)}</p>
+                  <p className="font-semibold"><LDate iso={session.start_time} opts={{ year: "numeric", month: "long", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" }} /></p>
                   {endDate && (
-                    <p className="text-gray-400 text-xs">ends {endDate.toLocaleTimeString("zh-TW", { timeZone: "Asia/Taipei", hour: "2-digit", minute: "2-digit" })}</p>
+                    <p className="text-gray-400 text-xs"><L en="ends" zh="結束" /> <LDate iso={session.end_time!} opts={{ hour: "2-digit", minute: "2-digit" }} /></p>
                   )}
                 </div>
               </div>
@@ -114,7 +103,7 @@ export default async function SessionPage({ params }: PageProps) {
               <div className="flex items-start gap-2.5">
                 <span className="text-base mt-0.5">📍</span>
                 <div>
-                  <p className="font-semibold">{session.location_name ?? "TBD"}</p>
+                  <p className="font-semibold">{session.location_name ?? <L en="TBD" zh="待定" />}</p>
                   {session.location_address && <p className="text-gray-400 text-xs">{session.location_address}</p>}
                 </div>
               </div>
@@ -124,9 +113,9 @@ export default async function SessionPage({ params }: PageProps) {
                 <span className="text-base mt-0.5">💰</span>
                 <div>
                   <p className="font-semibold">
-                    {session.price_twd ? `NT$${session.price_twd.toLocaleString()}` : "Free"}
+                    {session.price_twd ? `NT$${session.price_twd.toLocaleString()}` : <L en="Free" zh="免費" />}
                   </p>
-                  <p className="text-gray-400 text-xs">per session</p>
+                  <p className="text-gray-400 text-xs"><L en="per session" zh="每堂" /></p>
                 </div>
               </div>
 
@@ -135,9 +124,9 @@ export default async function SessionPage({ params }: PageProps) {
                 <span className="text-base mt-0.5">🪑</span>
                 <div>
                   <p className="font-semibold">
-                    {isFull ? "Session full" : `${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} left`}
+                    {isFull ? <L en="Session full" zh="已額滿" /> : <L en={`${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} left`} zh={`剩 ${spotsLeft} 個名額`} />}
                   </p>
-                  <p className="text-gray-400 text-xs">of {session.max_seats} total</p>
+                  <p className="text-gray-400 text-xs"><L en={`of ${session.max_seats} total`} zh={`共 ${session.max_seats} 個名額`} /></p>
                 </div>
               </div>
             </div>
@@ -148,7 +137,7 @@ export default async function SessionPage({ params }: PageProps) {
         {session.coach && (
           <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
             <div className="px-5 pt-5 pb-1">
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Your Coach · 您的教練</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400"><L en="Your Coach" zh="您的教練" /></p>
             </div>
             <div className="flex items-start gap-4 px-5 py-4">
               <div className="w-14 h-14 rounded-full bg-[#FBF5E8] flex items-center justify-center shrink-0">

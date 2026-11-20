@@ -1,4 +1,6 @@
 "use client";
+import L, { LDate } from "@/app/components/L";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 /**
  * Artecks Academy — Calendly-style booking + content page
  * Steps: calendar → time slots → booking form → success + pay
@@ -25,9 +27,11 @@ const COACHES = [
     name: "Issac Chang",
     nameZH: "張老師",
     title: "Head Coach · Artecks Founder",
+    titleZH: "總教練 · Artecks 創辦人",
     rating: 5.0,
     reviews: 24,
     bio: "Founder of Artecks and lead chess educator. Passionate about making chess accessible and fun for youth in Linkou.",
+    bioZH: "Artecks 創辦人暨首席西洋棋教練，致力讓林口的孩子輕鬆愛上西洋棋。",
     avatar: "IC",
     color: "#1C3157",
   },
@@ -46,17 +50,7 @@ function ymd(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function fmtTime(iso: string) {
-  return new Date(iso).toLocaleString("en-US", {
-    timeZone: TZ, hour: "numeric", minute: "2-digit", hour12: true,
-  });
-}
 
-function fmtDateLong(iso: string) {
-  return new Date(iso).toLocaleString("en-US", {
-    timeZone: TZ, weekday: "long", month: "long", day: "numeric", year: "numeric",
-  });
-}
 
 function durationMins(start: string, end: string | null): number | null {
   if (!end) return null;
@@ -77,7 +71,8 @@ function Calendar({
   onPrevMonth: () => void;
   onNextMonth: () => void;
 }) {
-  const monthName = new Date(year, month, 1).toLocaleString("en-US", { month: "long" });
+  const zh = useLanguage().locale === "zh";
+  const monthTitle = zh ? `${year} 年 ${month + 1} 月` : `${new Date(year, month, 1).toLocaleString("en-US", { month: "long" })} ${year}`;
   const firstDow = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const cells: (number | null)[] = [
@@ -93,7 +88,7 @@ function Calendar({
           className="p-2 rounded-full hover:bg-gray-100 text-gray-400 transition-colors">
           <ChevronLeft size={18} />
         </button>
-        <h2 className="text-base font-bold text-gray-900">{monthName} {year}</h2>
+        <h2 className="text-base font-bold text-gray-900">{monthTitle}</h2>
         <button onClick={onNextMonth}
           className="p-2 rounded-full hover:bg-gray-100 text-gray-400 transition-colors">
           <ChevronRight size={18} />
@@ -101,7 +96,7 @@ function Calendar({
       </div>
 
       <div className="grid grid-cols-7 mb-1">
-        {["SUN","MON","TUE","WED","THU","FRI","SAT"].map((d) => (
+        {(zh ? ["日","一","二","三","四","五","六"] : ["SUN","MON","TUE","WED","THU","FRI","SAT"]).map((d) => (
           <div key={d} className="text-center text-[10px] font-bold text-gray-400 py-1 tracking-wide">{d}</div>
         ))}
       </div>
@@ -159,17 +154,17 @@ function TimeSlots({ sessions, onSelect }: { sessions: AcademySession[]; onSelec
                   : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"
               }`}
             >
-              <span>{fmtTime(s.start_time)}</span>
+              <span><LDate iso={s.start_time} opts={{ hour: "numeric", minute: "2-digit" }} /></span>
               <div className="flex items-center gap-2 text-xs font-normal">
                 {mins && <span className="text-gray-400">{mins} min</span>}
-                {s.is_full && <span className="font-bold text-red-400">Full</span>}
-                {!open && !s.is_full && <span className="text-gray-400">Closed</span>}
+                {s.is_full && <span className="font-bold text-red-400"><L en="Full" zh="已額滿" /></span>}
+                {!open && !s.is_full && <span className="text-gray-400"><L en="Closed" zh="未開放" /></span>}
               </div>
             </div>
             {open && (
               <button onClick={() => onSelect(s)}
                 className="flex-shrink-0 rounded-xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold px-5 py-3 transition-colors shadow-sm">
-                Select
+                <L en="Select" zh="選擇" />
               </button>
             )}
           </div>
@@ -185,13 +180,13 @@ const CONTACT_OPTS: { key: ContactMethod; label: string; emoji: string }[] = [
   { key: "line",     label: "LINE",      emoji: "🟢" },
   { key: "whatsapp", label: "WhatsApp",  emoji: "💬" },
   { key: "sms",      label: "SMS",       emoji: "📱" },
-  { key: "email",    label: "Email",     emoji: "✉️" },
+  { key: "email",    label: "Email",     emoji: "✉️" },  // zh label set in the form
 ];
 
 const EXPERIENCE_OPTS = [
-  { key: "beginner",    label: "Complete Beginner" },
-  { key: "knows_rules", label: "Knows the Rules"   },
-  { key: "experienced", label: "Tournament Exp."   },
+  { key: "beginner",    label: "Complete Beginner", zh: "完全新手" },
+  { key: "knows_rules", label: "Knows the Rules",   zh: "會基本規則" },
+  { key: "experienced", label: "Tournament Exp.",   zh: "有比賽經驗" },
 ];
 
 function BookingForm({
@@ -207,6 +202,7 @@ function BookingForm({
   onMembershipChange: (isMember: boolean) => void;
   providerSlug?: string;
 }) {
+  const zh = useLanguage().locale === "zh";
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [experience, setExperience] = useState("beginner");
   const [accountId, setAccountId] = useState("");
@@ -262,41 +258,41 @@ function BookingForm({
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Parent Name *</span>
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide"><L en="Parent Name *" zh="家長姓名 *" /></span>
           <input name="parent_name" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone *</span>
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide"><L en="Phone *" zh="電話 *" /></span>
           <input name="parent_phone" type="tel" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Student Name *</span>
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide"><L en="Student Name *" zh="學生姓名 *" /></span>
           <input name="student_name" required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Age *</span>
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide"><L en="Age *" zh="年齡 *" /></span>
           <input name="student_age" type="number" min={4} max={18} required className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
         </label>
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Chess Level *</span>
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide"><L en="Chess Level *" zh="棋力程度 *" /></span>
         <input type="hidden" name="chess_experience_level" value={experience} />
         <div className="grid grid-cols-3 gap-2">
-          {EXPERIENCE_OPTS.map(({ key, label }) => (
+          {EXPERIENCE_OPTS.map(({ key, label, zh: zhLabel }) => (
             <button key={key} type="button" onClick={() => setExperience(key)}
               className={`rounded-xl border px-2 py-2 text-xs font-semibold text-center transition-all ${
                 experience === key ? "bg-[#13223F] border-[#13223F] text-white" : "border-gray-200 bg-gray-50 text-gray-600 hover:border-[#C49A4A]"
-              }`}>{label}</button>
+              }`}>{zh ? zhLabel : label}</button>
           ))}
         </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Preferred Contact *</span>
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide"><L en="Preferred Contact *" zh="偏好聯絡方式 *" /></span>
         <input type="hidden" name="contact_method" value={contactMethod} />
         <div className="grid grid-cols-4 gap-2">
           {CONTACT_OPTS.map(({ key, label, emoji }) => (
@@ -304,7 +300,7 @@ function BookingForm({
               className={`rounded-xl border py-2 text-xs font-semibold flex flex-col items-center gap-0.5 transition-all ${
                 contactMethod === key ? "bg-[#13223F] border-[#13223F] text-white" : "border-gray-200 bg-gray-50 text-gray-600 hover:border-[#C49A4A]"
               }`}>
-              <span className="text-sm">{emoji}</span><span>{label}</span>
+              <span className="text-sm">{emoji}</span><span>{zh && key === "email" ? "電子郵件" : zh && key === "sms" ? "簡訊" : label}</span>
             </button>
           ))}
         </div>
@@ -314,16 +310,16 @@ function BookingForm({
       </div>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</span>
-        <textarea name="special_notes" rows={2} placeholder="Special requirements, questions…"
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide"><L en="Notes" zh="備註" /></span>
+        <textarea name="special_notes" rows={2} placeholder={zh ? "特殊需求或問題…" : "Special requirements, questions…"}
           className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-[#C49A4A] focus:bg-white" />
       </label>
 
       <label className="flex flex-col gap-1">
         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          Artecks Account ID{" "}
-          <span className="text-[#A07C34] normal-case font-normal">optional · earn XP</span>
-          {memberChecking && <span className="text-[#E7C98A] normal-case font-normal ml-1">checking…</span>}
+          {zh ? "Artecks 帳號 ID" : "Artecks Account ID"}{" "}
+          <span className="text-[#A07C34] normal-case font-normal">{zh ? "選填 · 可賺 XP" : "optional · earn XP"}</span>
+          {memberChecking && <span className="text-[#E7C98A] normal-case font-normal ml-1">{zh ? "確認中…" : "checking…"}</span>}
         </span>
         <input
           name="artecks_account_id"
@@ -336,7 +332,7 @@ function BookingForm({
 
       <label className="flex items-start gap-2.5 rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-3 py-3 text-xs text-gray-700 leading-relaxed cursor-pointer">
               <input type="checkbox" name="account_consent" required className="mt-0.5 accent-[#13223F] w-4 h-4 flex-shrink-0" />
-              <span>報名的同時，我同意為孩子建立 Artecks 西洋棋帳號，讓教練可以指派作業、孩子可以線上練習。 / I agree to an Artecks Chess account for my child, so the coach can set homework and my child can practise online.</span>
+              <span>{zh ? "報名的同時，我同意為孩子建立 Artecks 西洋棋帳號，讓教練可以指派作業、孩子可以線上練習。" : "I agree to an Artecks Chess account for my child, so the coach can set homework and my child can practise online."}</span>
             </label>
 
       {state.status === "error" && (
@@ -348,7 +344,7 @@ function BookingForm({
 
       <button type="submit" disabled={isPending}
         className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#13223F] hover:bg-[#1C3157] py-4 text-sm font-bold text-white shadow-lg shadow-[#13223F]/10 disabled:opacity-50 active:scale-[0.98] transition-all">
-        {isPending ? <><Loader2 size={16} className="animate-spin" /> Booking…</> : "Confirm Booking"}
+        {isPending ? <><Loader2 size={16} className="animate-spin" /> {zh ? "預約中…" : "Booking…"}</> : (zh ? "確認預約" : "Confirm Booking")}
       </button>
     </form>
   );
@@ -381,18 +377,18 @@ function SuccessScreen({
         <CheckCircle size={36} className="text-emerald-500" />
       </div>
       <div>
-        <h3 className="text-lg font-black text-gray-900">You&rsquo;re booked!</h3>
-        <p className="text-sm text-gray-500 mt-1">{fmtDateLong(session.start_time)} · {fmtTime(session.start_time)}</p>
-        <p className="text-xs text-gray-400 mt-1">Booking #{bookingId}</p>
+        <h3 className="text-lg font-black text-gray-900"><L en="You’re booked!" zh="預約成功！" /></h3>
+        <p className="text-sm text-gray-500 mt-1"><LDate iso={session.start_time} opts={{ weekday: "long", month: "long", day: "numeric", year: "numeric" }} /> · <LDate iso={session.start_time} opts={{ hour: "numeric", minute: "2-digit" }} /></p>
+        <p className="text-xs text-gray-400 mt-1"><L en="Booking" zh="預約編號" /> #{bookingId}</p>
       </div>
       {isMember && (
         <div className="w-full rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-2 flex items-center gap-2">
           <Crown size={13} className="text-emerald-600 flex-shrink-0" />
-          <p className="text-xs font-semibold text-emerald-700">Member discount applied — NT${appliedDiscount.toLocaleString()} off</p>
+          <p className="text-xs font-semibold text-emerald-700"><L en={`Member discount applied — NT$${appliedDiscount.toLocaleString()} off`} zh={`已套用會員折扣，折抵 NT$${appliedDiscount.toLocaleString()}`} /></p>
         </div>
       )}
       <div className="w-full rounded-2xl bg-gray-50 border border-gray-200 px-5 py-4 text-left">
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Complete Your Payment</p>
+        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2"><L en="Complete Your Payment" zh="完成付款" /></p>
         <div className="flex items-baseline gap-2 mb-1">
           {hasDiscount && (
             <span className="text-sm text-gray-400 line-through">NT${basePrice.toLocaleString()}</span>
@@ -400,12 +396,12 @@ function SuccessScreen({
           <span className="text-sm font-bold text-gray-700">NT${finalPrice.toLocaleString()}</span>
           <span className="text-xs text-gray-500">· {session.title}</span>
         </div>
-        <p className="text-xs text-gray-400">Pay securely via Stripe — credit or debit card accepted.</p>
+        <p className="text-xs text-gray-400"><L en="Pay securely via Stripe — credit or debit card accepted." zh="透過 Stripe 安全付款，接受信用卡與金融卡。" /></p>
       </div>
       {/* ── Primary: Stripe ─────────────────────────────────────────── */}
       <button onClick={handlePay}
         className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#13223F] hover:bg-[#1C3157] py-4 text-sm font-bold text-white shadow-lg shadow-[#13223F]/10 active:scale-[0.98] transition-all">
-        Pay Now (Card / PayPal)
+        <L en="Pay Now (Card / PayPal)" zh="立即付款（信用卡／PayPal）" />
       </button>
 
       {/* ── Alternative: LINE Pay (hidden until NEXT_PUBLIC_LINEPAY_ENABLED=true) ── */}
@@ -427,10 +423,10 @@ function SuccessScreen({
         className="w-full flex items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold text-white shadow-sm active:scale-[0.98] transition-all"
         style={{ backgroundColor: "#0066CC" }}
       >
-        台灣在地支付 (信用卡 / ATM / 行動支付)
+        <L en="Pay in Taiwan (card / ATM / mobile wallet)" zh="台灣在地支付（信用卡／ATM／行動支付）" />
       </a>
 
-      <a href={`/report/${bookingId}`} className="text-xs text-[#A07C34] hover:underline">View booking details</a>
+      <a href={`/report/${bookingId}`} className="text-xs text-[#A07C34] hover:underline"><L en="View booking details" zh="查看預約詳情" /></a>
     </div>
   );
 }
@@ -467,29 +463,29 @@ function InfoPanel({
           <span className="text-white text-xl font-black">♟</span>
         </div>
         <div>
-          <p className="text-xs font-bold text-[#A07C34] uppercase tracking-wider">Artecks Academy</p>
-          <p className="text-lg font-black text-gray-900 leading-tight">Chess Lessons</p>
+          <p className="text-xs font-bold text-[#A07C34] uppercase tracking-wider"><L en="Artecks Academy" zh="Artecks 學院" /></p>
+          <p className="text-lg font-black text-gray-900 leading-tight"><L en="Chess Lessons" zh="西洋棋課程" /></p>
         </div>
       </div>
       <div className="flex flex-col gap-3 border-t border-gray-100 pt-4">
         <div className="flex items-start gap-2 text-sm text-gray-600">
           <Clock size={15} className="mt-0.5 text-[#E7C98A] flex-shrink-0" />
-          <span>{mins ? `${mins} minutes` : "Duration TBD"}</span>
+          <span>{mins ? <L en={`${mins} minutes`} zh={`${mins} 分鐘`} /> : <L en="Duration TBD" zh="時長待定" />}</span>
         </div>
         <div className="flex items-start gap-2 text-sm text-gray-600">
           <MapPin size={15} className="mt-0.5 text-[#E7C98A] flex-shrink-0" />
-          <span>{session?.location_name ?? "Linkou, New Taipei"}</span>
+          <span>{session?.location_name ?? <L en="Linkou, New Taipei" zh="新北市林口區" />}</span>
         </div>
         <div className="flex items-start gap-2 text-sm text-gray-600">
           <Users size={15} className="mt-0.5 text-[#E7C98A] flex-shrink-0" />
-          <span>Small group · max {session?.max_seats ?? 10} students</span>
+          <span><L en={`Small group · max ${session?.max_seats ?? 10} students`} zh={`小班 · 最多 ${session?.max_seats ?? 10} 位學生`} /></span>
         </div>
       </div>
 
       {/* ── Pricing variants (Shopee-style chips) ── */}
       {hasVariants && (
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Session Type</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide"><L en="Session Type" zh="課程類型" /></p>
           <div className="flex flex-col gap-1.5">
             {variants.map((v) => {
               const active = step === "form" && selectedVariant?.label === v.label;
@@ -538,20 +534,20 @@ function InfoPanel({
       {/* ── Member badge ── */}
       {isMember && (
         <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2">
-          <p className="text-xs font-bold text-emerald-700">✓ Artecks Member</p>
-          <p className="text-[10px] text-emerald-600 mt-0.5">Member pricing applied to all tiers.</p>
+          <p className="text-xs font-bold text-emerald-700">✓ <L en="Artecks Member" zh="Artecks 會員" /></p>
+          <p className="text-[10px] text-emerald-600 mt-0.5"><L en="Member pricing applied to all tiers." zh="所有方案皆套用會員價。" /></p>
         </div>
       )}
 
       <div className="rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
         <p className="text-xs text-[#E7C98A] font-semibold">
           {step === "form" && hasVariants && selectedVariant
-            ? `Per student · ${selectedVariant.label}${isMember ? " · Member rate" : ""}`
-            : (hasVariants ? "Starting from" : (session ? "Per session" : "Starting from"))}
+            ? <L en={`Per student · ${selectedVariant.label}${isMember ? " · Member rate" : ""}`} zh={`每位學生 · ${selectedVariant.label}${isMember ? " · 會員價" : ""}`} />
+            : (hasVariants ? <L en="Starting from" zh="起價" /> : (session ? <L en="Per session" zh="每堂" /> : <L en="Starting from" zh="起價" />))}
         </p>
         {displayPrice != null
           ? <p className="text-2xl font-black text-[#A07C34]">NT${displayPrice.toLocaleString()} <span className="text-sm font-normal text-[#E7C98A]">TWD</span></p>
-          : <p className="text-sm text-[#E7C98A] font-medium">Pricing TBD</p>
+          : <p className="text-sm text-[#E7C98A] font-medium"><L en="Pricing TBD" zh="價格待定" /></p>
         }
       </div>
       {session?.coach && (
@@ -567,8 +563,8 @@ function InfoPanel({
         </div>
       )}
       <div className="rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
-        <p className="text-xs font-bold text-[#A07C34] mb-1">🎮 Artecks Rewards</p>
-        <p className="text-xs text-[#A07C34]">Add your account ID to earn XP &amp; coins after each session.</p>
+        <p className="text-xs font-bold text-[#A07C34] mb-1">🎮 <L en="Artecks Rewards" zh="Artecks 獎勵" /></p>
+        <p className="text-xs text-[#A07C34]"><L en="Add your account ID to earn XP & coins after each session." zh="填入帳號 ID，每堂課後可賺 XP 與金幣。" /></p>
       </div>
       <a
         href="https://store.artecks.com"
@@ -576,7 +572,7 @@ function InfoPanel({
         rel="noopener noreferrer"
         className="flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:border-[#C49A4A] hover:text-[#8A6A2C] transition-all"
       >
-        🛍 Visit Artecks Store
+        🛍 <L en="Visit Artecks Store" zh="前往 Artecks 商店" />
         <span className="text-gray-400 text-xs">→</span>
       </a>
     </div>
@@ -595,10 +591,8 @@ function CoachCard({ coach }: { coach: typeof COACHES[0] }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 flex-wrap">
           <div>
-            <h3 className="text-sm font-black text-gray-900">{coach.name}
-              <span className="text-xs font-normal text-gray-400 ml-2">{coach.nameZH}</span>
-            </h3>
-            <p className="text-xs text-gray-400 font-medium">{coach.title}</p>
+            <h3 className="text-sm font-black text-gray-900"><L en={coach.name} zh={coach.nameZH} /></h3>
+            <p className="text-xs text-gray-400 font-medium"><L en={coach.title} zh={coach.titleZH} /></p>
           </div>
           <div className="flex items-center gap-1 text-xs font-bold text-amber-500">
             <Star size={11} fill="currentColor" />
@@ -606,7 +600,7 @@ function CoachCard({ coach }: { coach: typeof COACHES[0] }) {
             <span className="text-gray-400 font-normal">({coach.reviews})</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-2 leading-relaxed">{coach.bio}</p>
+        <p className="text-xs text-gray-500 mt-2 leading-relaxed"><L en={coach.bio} zh={coach.bioZH} /></p>
       </div>
     </div>
   );
@@ -617,6 +611,7 @@ function CoachCard({ coach }: { coach: typeof COACHES[0] }) {
 type Step = "calendar" | "slots" | "form" | "success";
 
 export default function SessionMarketplace({ sessions, provider: initialProvider }: { sessions: AcademySession[]; provider: Provider | null }) {
+  const zh = useLanguage().locale === "zh";
   const twToday = toTW(new Date().toISOString());
   twToday.setHours(0, 0, 0, 0);
   const todayStr = ymd(twToday);
@@ -673,12 +668,12 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
   const hasAnySessions = sessions.length > 0;
 
   const stepTitle = {
-    calendar: "Select a Date",
+    calendar: zh ? "選擇日期" : "Select a Date",
     slots: selectedDate
-      ? new Date(selectedDate + "T12:00:00+08:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })
-      : "Select a Time",
-    form: "Your Details",
-    success: "Booking Confirmed",
+      ? new Date(selectedDate + "T12:00:00+08:00").toLocaleDateString(zh ? "zh-TW" : "en-US", { weekday: "long", month: "long", day: "numeric" })
+      : (zh ? "選擇時間" : "Select a Time"),
+    form: zh ? "填寫資料" : "Your Details",
+    success: zh ? "預約成功" : "Booking Confirmed",
   }[step];
 
   return (
@@ -691,12 +686,13 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
         {/* ── Hero intro ── */}
         <div>
           <h1 className="font-serif-tc text-2xl sm:text-3xl font-black text-gray-900 leading-tight">
-            Chess Lessons in <span style={{ color: "#1C3157" }}>Linkou</span>
+            {zh ? <><span style={{ color: "#1C3157" }}>林口</span>西洋棋課程</> : <>Chess Lessons in <span style={{ color: "#1C3157" }}>Linkou</span></>}
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             {hasAnySessions
-              ? `${sessions.filter(s => s.status === "open" && s.booking_open && !s.is_full).length} sessions open · Small groups · Expert coaches`
-              : "New sessions launching soon — add your email to be notified!"}
+              ? (zh ? `${sessions.filter(s => s.status === "open" && s.booking_open && !s.is_full).length} 堂課開放報名 · 小班教學 · 專業教練`
+                    : `${sessions.filter(s => s.status === "open" && s.booking_open && !s.is_full).length} sessions open · Small groups · Expert coaches`)
+              : (zh ? "新課程即將開放！" : "New sessions launching soon — add your email to be notified!")}
           </p>
         </div>
 
@@ -762,9 +758,9 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
                   />
                   {!hasAnySessions && (
                     <div className="mt-6 rounded-2xl border border-dashed border-[#E7C98A] bg-[#FBF5E8] px-5 py-4 text-center">
-                      <p className="text-sm font-bold text-[#A07C34]">♟ Sessions launching soon</p>
+                      <p className="text-sm font-bold text-[#A07C34]">♟ {zh ? "課程即將開放" : "Sessions launching soon"}</p>
                       <p className="text-xs text-[#A07C34] mt-1 mb-3">
-                        Highlighted dates will appear here once sessions are scheduled.
+                        {zh ? "排定課程後，日期會在這裡標示出來。" : "Highlighted dates will appear here once sessions are scheduled."}
                       </p>
                       
                       <a
@@ -777,7 +773,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                           <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
                         </svg>
-                        加入 LINE 群組預約 / Join LINE Group
+                        {zh ? "加入 LINE 群組預約" : "Join LINE Group"}
                       </a>
                       <a
                         href="https://line.me/R/ti/g/t8ChQN7Uxm"
@@ -789,14 +785,14 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                           <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
                         </svg>
-                        加入棋藝俱樂部 / Join Chess Club
+                        {zh ? "加入棋藝俱樂部" : "Join Chess Club"}
                       </a>
                       <a href="/book" className="block mt-3 text-xs font-bold text-[#A07C34] hover:text-[#8A6A2C]">
-                        想要一對一課程？預約上課時間 → / Book a 1-on-1 lesson →
+                        {zh ? "想要一對一課程？預約上課時間 →" : "Book a 1-on-1 lesson →"}
                       </a>
                     </div>
                   )}
-                  <p className="text-[11px] text-gray-400 text-center mt-4">Asia/Taipei timezone</p>
+                  <p className="text-[11px] text-gray-400 text-center mt-4">{zh ? "台北時間" : "Asia/Taipei timezone"}</p>
                 </>
               )}
 
@@ -804,11 +800,12 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
               {step === "slots" && (
                 <div>
                   <p className="text-sm text-gray-500 mb-4">
-                    {slotsForDate.filter(s => s.status === "open" && s.booking_open && !s.is_full).length} slot{slotsForDate.length !== 1 ? "s" : ""} available
+                    {zh ? `${slotsForDate.filter(s => s.status === "open" && s.booking_open && !s.is_full).length} 個時段可預約`
+                        : `${slotsForDate.filter(s => s.status === "open" && s.booking_open && !s.is_full).length} slot${slotsForDate.length !== 1 ? "s" : ""} available`}
                   </p>
                   {slotsForDate.length > 0
                     ? <TimeSlots sessions={slotsForDate} onSelect={handleSlotSelect} />
-                    : <p className="text-sm text-gray-400 py-8 text-center">No sessions on this date.</p>
+                    : <p className="text-sm text-gray-400 py-8 text-center">{zh ? "這天沒有課程。" : "No sessions on this date."}</p>
                   }
                 </div>
               )}
@@ -841,16 +838,17 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
         <div className="flex items-start gap-3 rounded-2xl border border-[#E7C98A] bg-[#FBF5E8] px-4 py-3">
           <span className="text-lg mt-0.5">🎮</span>
           <div>
-            <p className="text-xs font-bold text-[#13223F]">Booking is open to everyone — no login required.</p>
+            <p className="text-xs font-bold text-[#13223F]">{zh ? "所有人都可以預約，不需要登入。" : "Booking is open to everyone — no login required."}</p>
             <p className="text-xs text-[#A07C34] mt-0.5 leading-relaxed">
-              Have an Artecks account? Add your account ID when you book and earn <strong>XP &amp; coins</strong> automatically after each session.
+              {zh ? <>有 Artecks 帳號嗎？預約時填入帳號 ID，每堂課後自動獲得 <strong>XP 與金幣</strong>。</>
+                  : <>Have an Artecks account? Add your account ID when you book and earn <strong>XP &amp; coins</strong> automatically after each session.</>}
             </p>
           </div>
         </div>
 
         {/* ── Coaches ── */}
         <section>
-          <h2 className="text-lg font-black text-gray-900 mb-4">Meet the Coaches</h2>
+          <h2 className="text-lg font-black text-gray-900 mb-4">{zh ? "認識教練" : "Meet the Coaches"}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {COACHES.map((coach) => <CoachCard key={coach.id} coach={coach} />)}
           </div>
@@ -858,12 +856,11 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
 
         {/* ── Ecosystem callout ── */}
         <section className="rounded-2xl border border-[#E7C98A] bg-gradient-to-br from-[#FBF5E8] to-[#F6F4EF] p-5">
-          <p className="text-sm font-black text-[#A07C34] mb-1">🎮 Artecks Ecosystem Rewards</p>
+          <p className="text-sm font-black text-[#A07C34] mb-1">🎮 {zh ? "Artecks 生態系獎勵" : "Artecks Ecosystem Rewards"}</p>
           <p className="text-sm text-gray-700 leading-relaxed">
-            Link your Artecks account and earn <strong className="text-[#A07C34]">XP</strong> and{" "}
-            <strong className="text-[#A07C34]">coins</strong> automatically after every session —
-            redeemable in the Artecks store and games.{" "}
-            <span className="text-gray-400">連結帳號，課程後自動獲得獎勵。</span>
+            {zh ? <>連結 Artecks 帳號，每堂課後自動獲得 <strong className="text-[#A07C34]">XP</strong> 與 <strong className="text-[#A07C34]">金幣</strong>，可在 Artecks 商店與遊戲中使用。</>
+                : <>Link your Artecks account and earn <strong className="text-[#A07C34]">XP</strong> and{" "}
+                  <strong className="text-[#A07C34]">coins</strong> automatically after every session — redeemable in the Artecks store and games.</>}
           </p>
         </section>
 

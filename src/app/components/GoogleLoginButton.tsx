@@ -3,6 +3,7 @@
 // In-app browsers (LINE, Facebook…) block Google sign-in, so we send people to a real browser.
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { useEffect, useState, type ReactNode } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 
 const CLIENT_ID = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "").trim();
@@ -30,7 +31,8 @@ const Icon = () => (
 const cls = "w-full flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-[#F6F4EF] py-3 text-sm font-bold text-[#0E1E3A] disabled:opacity-60 transition-colors";
 
 function Inner({ onToken, onError }: { onToken: (t: string) => void; onError: (m: string) => void }) {
-  const t = (en: string, zh: string) => `${en} · ${zh}`;
+  const zhMode = useLanguage().locale === "zh";
+  const t = (en: string, zh: string) => (zhMode ? zh : en);
   const [env, setEnv] = useState<{ blocked: boolean; line: boolean } | null>(null);
   useEffect(() => setEnv(inAppBrowser()), []);
   const login = useGoogleLogin({

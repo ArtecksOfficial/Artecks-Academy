@@ -7,9 +7,11 @@ import { useAuth } from "@/app/components/AuthContext";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import GoogleLoginButton, { GoogleProvider } from "@/app/components/GoogleLoginButton";
 import { saveAuth } from "@/lib/auth-client";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const zh = useLanguage().locale === "zh";
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +29,9 @@ export default function LoginPage() {
       const next = new URLSearchParams(window.location.search).get("next") ?? "";
       router.push(next.startsWith("/") && !next.startsWith("//") ? next : "/");
     } else {
-      setError(result.error ?? "Login failed.");
+      setError(zh
+        ? (/verif/i.test(result.error ?? "") ? "請先點開驗證信，完成電子郵件驗證。" : "電子郵件或密碼不正確，請再試一次。")
+        : (result.error ?? "Login failed."));
     }
   }
 
@@ -47,7 +51,7 @@ export default function LoginPage() {
       return;
     }
     setLoading(false);
-    setError(d.detail || "Google sign-in didn't work. Please try again.");
+    setError(d.detail || (zh ? "Google 登入失敗，請再試一次。" : "Google sign-in didn't work. Please try again."));
   }
 
   return (
@@ -58,8 +62,8 @@ export default function LoginPage() {
           <Link href="/" className="inline-block">
             <img src="/logo.png" alt="Artecks" className="h-10 w-auto mx-auto mb-4 invert" />
           </Link>
-          <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-          <p className="text-white/50 text-sm mt-1">Sign in to your Artecks Academy account</p>
+          <h1 className="text-2xl font-bold text-white">{zh ? "歡迎回來" : "Welcome back"}</h1>
+          <p className="text-white/50 text-sm mt-1">{zh ? "登入你的 Artecks 學院帳號" : "Sign in to your Artecks Academy account"}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -70,7 +74,7 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-white/70 mb-1.5">{zh ? "電子郵件" : "Email"}</label>
             <input
               type="email"
               required
@@ -83,9 +87,9 @@ export default function LoginPage() {
 
           <div>
             <div className="flex items-baseline justify-between mb-1.5">
-              <label className="block text-sm font-medium text-white/70">Password</label>
+              <label className="block text-sm font-medium text-white/70">{zh ? "密碼" : "Password"}</label>
               <Link href="/forgot-password" className="text-xs text-[#E7C98A] hover:text-[#F3DFAE] font-medium transition-colors">
-                Forgot password? · 忘記密碼
+                {zh ? "忘記密碼？" : "Forgot password?"}
               </Link>
             </div>
             <input
@@ -103,24 +107,24 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-[#C49A4A] hover:bg-[#D4AE63] disabled:opacity-50 disabled:cursor-not-allowed text-[#0E1E3A] font-bold font-semibold py-3 rounded-xl transition-colors text-sm"
           >
-            {loading ? "Signing in…" : "Sign in"}
+            {loading ? (zh ? "登入中…" : "Signing in…") : (zh ? "登入" : "Sign in")}
           </button>
         </form>
 
         <div className="flex items-center gap-3 my-5 text-xs text-white/30">
-          <span className="flex-1 h-px bg-white/10" /> or · 或 <span className="flex-1 h-px bg-white/10" />
+          <span className="flex-1 h-px bg-white/10" /> {zh ? "或" : "or"} <span className="flex-1 h-px bg-white/10" />
         </div>
         <div className="space-y-3">
           <GoogleProvider>
             <GoogleLoginButton onToken={handleGoogle} onError={setError} />
           </GoogleProvider>
-          <LineLoginButton label="Log in with LINE · 使用 LINE 登入" />
+          <LineLoginButton label={zh ? "使用 LINE 登入" : "Log in with LINE"} />
         </div>
 
         <p className="text-center text-sm text-white/40 mt-6">
-          Don&apos;t have an account?{" "}
+          {zh ? "還沒有帳號？" : "Don\u2019t have an account?"}{" "}
           <Link href="/signup" className="text-[#E7C98A] hover:text-[#F3DFAE] font-medium transition-colors">
-            Sign up
+            {zh ? "註冊" : "Sign up"}
           </Link>
         </p>
       </div>

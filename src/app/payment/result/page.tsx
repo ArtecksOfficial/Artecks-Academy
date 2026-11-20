@@ -1,3 +1,4 @@
+import L from "@/app/components/L";
 import Link from "next/link";
 import { CheckCircle, XCircle, Crown, Phone, Clock } from "lucide-react";
 
@@ -49,10 +50,9 @@ export default async function PaymentResultPage({
           {/* Header */}
           <div className="px-6 py-8 text-center text-white bg-gradient-to-br from-[#13223F] to-[#2A4170]">
             <Crown size={48} className="mx-auto mb-3" />
-            <h1 className="text-xl font-black">You&rsquo;re a Member!</h1>
+            <h1 className="text-xl font-black"><L en="You’re a Member!" zh="你已成為會員！" /></h1>
             <p className="text-sm mt-1 text-[#E7C98A]">
-              Your membership is now active. Member pricing applies to every
-              future booking automatically.
+              <L en="Your membership is now active. Member pricing applies to every future booking automatically." zh="會員資格已啟用，之後每次預約都會自動套用會員價。" />
             </p>
           </div>
 
@@ -63,21 +63,20 @@ export default async function PaymentResultPage({
               <div className="rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
                 <div className="flex items-center gap-2 mb-1">
                   <Phone size={12} className="text-[#A07C34]" />
-                  <p className="text-xs font-bold text-[#A07C34]">Membership linked to</p>
+                  <p className="text-xs font-bold text-[#A07C34]"><L en="Membership linked to" zh="會員綁定的手機" /></p>
                 </div>
                 <p className="text-sm font-mono font-bold text-[#13223F]">{linkedPhone}</p>
                 <p className="text-[10px] text-[#A07C34] mt-1 leading-snug">
-                  Enter this phone number when booking to receive your member discount automatically.
+                  <L en="Enter this phone number when booking to receive your member discount automatically." zh="預約時輸入這個手機號碼，就會自動套用會員折扣。" />
                 </p>
               </div>
             ) : (
               <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3">
                 <p className="text-xs font-bold text-emerald-700 mb-1">
-                  ✓ Membership Active
+                  ✓ <L en="Membership Active" zh="會員已啟用" />
                 </p>
                 <p className="text-xs text-emerald-600 leading-relaxed">
-                  Use the phone number or Artecks account ID you registered with when booking to
-                  automatically receive your member discount at checkout.
+                  <L en="Use the phone number or Artecks account ID you registered with when booking to automatically receive your member discount at checkout." zh="預約時使用註冊的手機號碼或 Artecks 帳號，結帳時會自動套用會員折扣。" />
                 </p>
               </div>
             )}
@@ -86,21 +85,21 @@ export default async function PaymentResultPage({
               href="/"
               className="w-full flex items-center justify-center rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-[#13223F]/10"
             >
-              Book a Session
+              <L en="Book a Session" zh="預約課程" />
             </Link>
 
             <Link
               href="/my-membership"
               className="w-full flex items-center justify-center rounded-2xl border border-gray-200 bg-white text-gray-600 text-sm font-semibold py-3 hover:bg-gray-50 transition-colors"
             >
-              View My Membership
+              <L en="View My Membership" zh="查看我的會員資格" />
             </Link>
 
             <Link
               href="/"
               className="w-full flex items-center justify-center text-gray-400 text-xs py-1 hover:text-gray-600 transition-colors"
             >
-              Back to Sessions
+              <L en="Back to Sessions" zh="回到課程" />
             </Link>
           </div>
         </div>
@@ -134,10 +133,10 @@ export default async function PaymentResultPage({
           )}
           <h1 className="text-xl font-black">
             {success
-              ? "Payment Confirmed! 付款成功"
+              ? <L en="Payment Confirmed!" zh="付款成功！" />
               : pending
-              ? "Payment Processing 付款確認中"
-              : "Payment Not Completed 尚未完成付款"}
+              ? <L en="Payment Processing" zh="付款確認中" />
+              : <L en="Payment Not Completed" zh="尚未完成付款" />}
           </h1>
           <p
             className={`text-sm mt-1 ${
@@ -145,10 +144,10 @@ export default async function PaymentResultPage({
             }`}
           >
             {success
-              ? "Your spot is secured. See you at class!"
+              ? <L en="Your spot is secured. See you at class!" zh="名額已保留，上課見！" />
               : pending
-              ? "We haven't received confirmation from the payment provider yet. ATM / convenience-store payments are confirmed after you pay. Refresh this page in a minute, or contact us on LINE."
-              : "Your booking is saved — try paying again from your booking details."}
+              ? <L en="We haven’t received confirmation from the payment provider yet. ATM / convenience-store payments are confirmed after you pay. Refresh this page in a minute, or contact us on LINE." zh="尚未收到金流確認。ATM／超商付款會在完成繳費後確認。請稍後重新整理，或透過 LINE 聯絡我們。" />
+              : <L en="Your booking is saved — try paying again from your booking details." zh="預約已保留，可以從預約詳情再付款一次。" />}
           </p>
         </div>
 
@@ -156,7 +155,7 @@ export default async function PaymentResultPage({
         <div className="px-6 py-6 flex flex-col gap-4">
           {bookingId && (
             <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3">
-              <p className="text-xs text-gray-400">Booking Reference</p>
+              <p className="text-xs text-gray-400"><L en="Booking Reference" zh="預約編號" /></p>
               <p className="text-sm font-mono font-bold text-gray-800">
                 #{bookingId}
               </p>
@@ -168,7 +167,7 @@ export default async function PaymentResultPage({
               href={`/report/${bookingId}`}
               className="w-full flex items-center justify-center rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-[#13223F]/10"
             >
-              View My Booking Details
+              <L en="View My Booking Details" zh="查看預約詳情" />
             </Link>
           )}
 
@@ -176,7 +175,7 @@ export default async function PaymentResultPage({
             href="/"
             className="w-full flex items-center justify-center rounded-2xl border border-gray-200 bg-white text-gray-600 text-sm font-semibold py-3 hover:bg-gray-50 transition-colors"
           >
-            Back to Sessions
+            <L en="Back to Sessions" zh="回到課程" />
           </Link>
         </div>
       </div>

@@ -118,7 +118,7 @@ function ConfirmationScreen({
           <p className="text-sm font-semibold text-gray-800">
             NT$ {(session.price_twd ?? 0).toLocaleString()}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Choose a payment method below to complete your booking.</p>
+          <p className="text-xs text-gray-500 mt-1">{locale === "zh" ? "請選擇以下付款方式完成預約。" : "Choose a payment method below to complete your booking."}</p>
         </div>
 
         {/* Payment buttons */}
@@ -129,7 +129,7 @@ function ConfirmationScreen({
             className="flex items-center justify-center gap-2 w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-sm active:scale-95 transition-all"
             style={{ backgroundColor: "#0066CC" }}
           >
-            台灣在地支付 (信用卡 / ATM / 行動支付)
+            {locale === "zh" ? "台灣在地支付（信用卡／ATM／行動支付）" : "Pay in Taiwan (card / ATM / mobile wallet)"}
           </a>
           {/* LINE Pay — shown only once the merchant account is live (NEXT_PUBLIC_LINEPAY_ENABLED=true) */}
           {LINEPAY_ENABLED && (
@@ -166,15 +166,15 @@ function ConfirmationScreen({
 
 
 // ── Contact value validator ───────────────────────────────────────────────────
-function validateContact(method: ContactMethod, value: string): string | null {
+function validateContact(method: ContactMethod, value: string, zh: boolean): string | null {
   const v = value.trim();
-  if (!v) return "請填寫聯絡方式";
+  if (!v) return zh ? "請填寫聯絡方式" : "Please enter your contact details.";
   if (method === "whatsapp" || method === "sms") {
     if (!/^[+\d\s\-\(\)]{8,20}$/.test(v))
-      return "請輸入有效電話號碼（例：+886 912 345 678）";
+      return zh ? "請輸入有效電話號碼（例：+886 912 345 678）" : "Please enter a valid phone number (e.g. +886 912 345 678).";
   }
   if (method === "line") {
-    if (v.length < 4) return "LINE ID 太短（至少 4 個字元）";
+    if (v.length < 4) return zh ? "LINE ID 太短（至少 4 個字元）" : "That LINE ID is too short (at least 4 characters).";
   }
   // email: browser validates via type="email"
   return null;
@@ -259,7 +259,7 @@ export default function BookingSection({
             className="flex flex-col gap-5"
             onSubmit={(e) => {
               const val = (e.currentTarget.elements.namedItem("contact_value") as HTMLInputElement)?.value ?? "";
-              const err = validateContact(contactMethod, val);
+              const err = validateContact(contactMethod, val, locale === "zh");
               if (err) { e.preventDefault(); setContactError(err); }
               else setContactError(null);
             }}

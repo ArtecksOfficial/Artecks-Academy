@@ -1,5 +1,6 @@
 "use client";
 
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
 import LegalLinks from "@/app/components/LegalLinks";
@@ -11,13 +12,14 @@ type Step = "form" | "check-email";
 
 const AGE_GATE_KEY = "artecks_age_gate";
 
-const FIELD_MESSAGES: Record<string, string> = {
-  birth_year_required: "Please choose your birth year.",
-  birth_year_invalid: "Please choose a valid birth year.",
-  guardian_consent_required: "A parent or guardian needs to agree before you can create an account.",
+const FIELD_MESSAGES: Record<string, { en: string; zh: string }> = {
+  birth_year_required: { en: "Please choose your birth year.", zh: "請選擇出生年份。" },
+  birth_year_invalid: { en: "Please choose a valid birth year.", zh: "請選擇正確的出生年份。" },
+  guardian_consent_required: { en: "A parent or guardian needs to agree before you can create an account.", zh: "需要家長或監護人同意才能建立帳號。" },
 };
 
 export default function SignupPage() {
+  const zh = useLanguage().locale === "zh";
   const [step, setStep] = useState<Step>("form");
   // Keep ?next= (e.g. /teach) so signing in afterwards returns there.
   const [loginHref, setLoginHref] = useState("/login");
@@ -68,7 +70,7 @@ export default function SignupPage() {
       return;
     }
     setLoading(false);
-    setError({ detail: d.detail || "Google sign-up didn't work. Please try again." });
+    setError({ detail: d.detail || (zh ? "Google 註冊失敗，請再試一次。" : "Google sign-up didn't work. Please try again.") });
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -103,7 +105,7 @@ export default function SignupPage() {
     const errs: Record<string, string> = {};
     for (const [key, val] of Object.entries(data)) {
       const msg = Array.isArray(val) ? (val as string[])[0] : String(val);
-      errs[key] = FIELD_MESSAGES[msg] ?? msg;
+      errs[key] = FIELD_MESSAGES[msg] ? FIELD_MESSAGES[msg][zh ? "zh" : "en"] : msg;
     }
     if (errs.birth_year === "guardian_account_required") {
       try { sessionStorage.setItem(AGE_GATE_KEY, "1"); } catch {}
@@ -117,16 +119,16 @@ export default function SignupPage() {
     return (
       <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
-          <h1 className="text-2xl font-bold text-white mb-3">Ask a parent or guardian</h1>
+          <h1 className="text-2xl font-bold text-white mb-3">{zh ? "請找家長或監護人" : "Ask a parent or guardian"}</h1>
           <p className="text-white/60 text-sm leading-relaxed mb-8">
-            We can&apos;t create this account. A parent or guardian can sign up and add you to their
-            account, and then you can play from there.
+            {zh ? "我們無法建立這個帳號。請家長或監護人註冊，並把你加入他們的帳號，就可以從那裡開始玩。"
+                : "We can\u2019t create this account. A parent or guardian can sign up and add you to their account, and then you can play from there."}
           </p>
           <Link
             href="/"
             className="inline-block bg-[#C49A4A] hover:bg-[#D4AE63] text-[#0E1E3A] font-bold font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
           >
-            Back to Artecks Academy
+            {zh ? "回到 Artecks 學院" : "Back to Artecks Academy"}
           </Link>
         </div>
       </div>
@@ -138,22 +140,22 @@ export default function SignupPage() {
       <div className="min-h-screen bg-[#0E1E3A] flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
           <div className="text-5xl mb-6">📬</div>
-          <h1 className="text-2xl font-bold text-white mb-3">Check your inbox</h1>
+          <h1 className="text-2xl font-bold text-white mb-3">{zh ? "請查看收件匣" : "Check your inbox"}</h1>
           <p className="text-white/50 text-sm leading-relaxed mb-2">
-            We sent a verification link to
+            {zh ? "我們已寄出驗證連結到" : "We sent a verification link to"}
           </p>
           <p className="text-[#E7C98A] font-semibold text-sm mb-6">{registeredEmail}</p>
           <p className="text-white/40 text-xs leading-relaxed mb-8">
-            Click the link in the email to activate your account, then come back here to sign in.
+            {zh ? "點開信中的連結啟用帳號，再回來這裡登入。" : "Click the link in the email to activate your account, then come back here to sign in."}
           </p>
           <Link
             href={loginHref}
             className="inline-block bg-[#C49A4A] hover:bg-[#D4AE63] text-[#0E1E3A] font-bold font-semibold py-3 px-8 rounded-xl transition-colors text-sm"
           >
-            Go to sign in
+            {zh ? "前往登入" : "Go to sign in"}
           </Link>
           <p className="text-white/30 text-xs mt-6">
-            Didn&apos;t get it? Check your spam folder.
+            {zh ? "沒收到嗎？請查看垃圾信件匣。" : "Didn\u2019t get it? Check your spam folder."}
           </p>
         </div>
       </div>
@@ -167,8 +169,8 @@ export default function SignupPage() {
           <Link href="/" className="inline-block">
             <img src="/logo.png" alt="Artecks" className="h-10 w-auto mx-auto mb-4 invert" />
           </Link>
-          <h1 className="text-2xl font-bold text-white">Create your account</h1>
-          <p className="text-white/50 text-sm mt-1">Join Artecks Academy today</p>
+          <h1 className="text-2xl font-bold text-white">{zh ? "建立帳號" : "Create your account"}</h1>
+          <p className="text-white/50 text-sm mt-1">{zh ? "今天就加入 Artecks 學院" : "Join Artecks Academy today"}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -180,7 +182,7 @@ export default function SignupPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-white/70 mb-1.5">First name</label>
+              <label className="block text-sm font-medium text-white/70 mb-1.5">{zh ? "名字" : "First name"}</label>
               <input
                 type="text"
                 required
@@ -192,7 +194,7 @@ export default function SignupPage() {
               {error.first_name && <p className="text-red-400 text-xs mt-1">{error.first_name}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-white/70 mb-1.5">Last name</label>
+              <label className="block text-sm font-medium text-white/70 mb-1.5">{zh ? "姓氏" : "Last name"}</label>
               <input
                 type="text"
                 required
@@ -206,7 +208,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-1.5">Username</label>
+            <label className="block text-sm font-medium text-white/70 mb-1.5">{zh ? "使用者名稱" : "Username"}</label>
             <input
               type="text"
               required
@@ -219,7 +221,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-white/70 mb-1.5">{zh ? "電子郵件" : "Email"}</label>
             <input
               type="email"
               required
@@ -232,7 +234,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-1.5">Password</label>
+            <label className="block text-sm font-medium text-white/70 mb-1.5">{zh ? "密碼" : "Password"}</label>
             <input
               type="password"
               required
@@ -245,7 +247,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="birth-year" className="block text-sm font-medium text-white/70 mb-1.5">Birth year</label>
+            <label htmlFor="birth-year" className="block text-sm font-medium text-white/70 mb-1.5">{zh ? "出生年份" : "Birth year"}</label>
             <select
               id="birth-year"
               required
@@ -253,7 +255,7 @@ export default function SignupPage() {
               onChange={(e) => setBirthYear(e.target.value)}
               className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C49A4A] transition-colors"
             >
-              <option value="" className="text-gray-900">Select year</option>
+              <option value="" className="text-gray-900">{zh ? "選擇年份" : "Select year"}</option>
               {Array.from({ length: 100 }, (_, i) => thisYear - i).map((y) => (
                 <option key={y} value={y} className="text-gray-900">{y}</option>
               ))}
@@ -270,7 +272,7 @@ export default function SignupPage() {
                   onChange={(e) => setConsent(e.target.checked)}
                   className="mt-0.5 w-4 h-4 accent-[#13223F]"
                 />
-                <span>My parent or guardian knows about this account and agrees to me creating it.</span>
+                <span>{zh ? "我的家長或監護人知道並同意我建立這個帳號。" : "My parent or guardian knows about this account and agrees to me creating it."}</span>
               </label>
               {error.guardian_consent && <p className="text-red-400 text-xs mt-1">{error.guardian_consent}</p>}
             </div>
@@ -281,27 +283,27 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full bg-[#C49A4A] hover:bg-[#D4AE63] disabled:opacity-50 disabled:cursor-not-allowed text-[#0E1E3A] font-bold font-semibold py-3 rounded-xl transition-colors text-sm"
           >
-            {loading ? "Creating account…" : "Create account"}
+            {loading ? (zh ? "建立中…" : "Creating account…") : (zh ? "建立帳號" : "Create account")}
           </button>
         </form>
 
         <div className="flex items-center gap-3 my-5 text-xs text-white/30">
-          <span className="flex-1 h-px bg-white/10" /> or · 或 <span className="flex-1 h-px bg-white/10" />
+          <span className="flex-1 h-px bg-white/10" /> {zh ? "或" : "or"} <span className="flex-1 h-px bg-white/10" />
         </div>
         <div className="space-y-3">
           <GoogleProvider>
             <GoogleLoginButton onToken={handleGoogle} onError={(m) => setError({ detail: m })} />
           </GoogleProvider>
-          <LineLoginButton label="Sign up with LINE · 使用 LINE 註冊" />
+          <LineLoginButton label={zh ? "使用 LINE 註冊" : "Sign up with LINE"} />
         </div>
-        <p className="text-center text-xs text-white/40 mt-3">For parents and adult learners. Kids get their login from a parent in Settings.</p>
+        <p className="text-center text-xs text-white/40 mt-3">{zh ? "適用於家長與成人學員。孩子的登入帳號由家長在「設定」中建立。" : "For parents and adult learners. Kids get their login from a parent in Settings."}</p>
 
         <p className="text-center mt-4"><LegalLinks className="justify-center text-xs text-white/40" /></p>
 
         <p className="text-center text-sm text-white/40 mt-6">
-          Already have an account?{" "}
+          {zh ? "已經有帳號了？" : "Already have an account?"}{" "}
           <Link href={loginHref} className="text-[#E7C98A] hover:text-[#F3DFAE] font-medium transition-colors">
-            Sign in
+            {zh ? "登入" : "Sign in"}
           </Link>
         </p>
       </div>
