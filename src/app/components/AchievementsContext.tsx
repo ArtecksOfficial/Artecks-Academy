@@ -14,6 +14,7 @@ import { authHeaders } from "@/lib/auth-client";
 import { getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { rewardText, type Badge, type BellData } from "@/lib/achievements";
+import { ACHIEVEMENTS_ENABLED } from "@/lib/achievements-flag";
 
 const POLL_MS = 60_000;
 const MAX_SINGLE_POPUPS = 2; // more than this at once (first visit) → one summary pop-up
@@ -39,7 +40,8 @@ export function AchievementsProvider({ children }: { children: React.ReactNode }
   const [enabled, setEnabled] = useState(false);
   const shown = useRef<Set<string>>(new Set());
 
-  useEffect(() => { setEnabled(!!user && getKidSession() === null); }, [user, path]);
+  // Paused for now (ACHIEVEMENTS_ENABLED): no bell, no pop-ups, no requests.
+  useEffect(() => { setEnabled(ACHIEVEMENTS_ENABLED && !!user && getKidSession() === null); }, [user, path]);
 
   const refresh = useCallback(() => {
     if (!enabled) return;
