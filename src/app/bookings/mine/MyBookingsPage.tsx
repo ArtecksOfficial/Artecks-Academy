@@ -9,19 +9,20 @@ import { Phone, Loader2, ArrowLeft, ChevronRight, Clock, MapPin } from "lucide-r
 import type { MyBooking } from "@/lib/api";
 
 const TZ = "Asia/Taipei";
-function fmtDateTime(iso: string) {
-  return new Date(iso).toLocaleString("en-US", {
+function fmtDateTime(iso: string, zh = false) {
+  return new Date(iso).toLocaleString(zh ? "zh-TW" : "en-US", {
     timeZone: TZ, weekday: "short", month: "short", day: "numeric",
     hour: "numeric", minute: "2-digit", hour12: true,
   });
 }
 
 function StatusBadge({ status }: { status: string }) {
+  const zh = useLanguage().locale === "zh";
   const map: Record<string, { label: string; cls: string }> = {
-    confirmed: { label: "Confirmed", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-    pending:   { label: "Pending",   cls: "bg-amber-50 text-amber-700 border-amber-200" },
-    cancelled: { label: "Cancelled", cls: "bg-red-50 text-red-600 border-red-200" },
-    attended:  { label: "Attended",  cls: "bg-[#FBF5E8] text-[#A07C34] border-[#E7C98A]" },
+    confirmed: { label: zh ? "已確認" : "Confirmed", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+    pending:   { label: zh ? "待確認" : "Pending",   cls: "bg-amber-50 text-amber-700 border-amber-200" },
+    cancelled: { label: zh ? "已取消" : "Cancelled", cls: "bg-red-50 text-red-600 border-red-200" },
+    attended:  { label: zh ? "已上課" : "Attended",  cls: "bg-[#FBF5E8] text-[#A07C34] border-[#E7C98A]" },
   };
   const s = map[status] ?? { label: status, cls: "bg-gray-100 text-gray-500 border-gray-200" };
   return (
@@ -35,6 +36,7 @@ function payPath(url: string): string {
 }
 
 function BookingCard({ booking }: { booking: MyBooking }) {
+  const zh = useLanguage().locale === "zh";
   return (
     <div className="rounded-2xl border border-gray-200 bg-white hover:border-[#C49A4A] hover:shadow-sm transition-all overflow-hidden">
     <a href={`/report/${booking.id}`} className="block">
@@ -45,7 +47,7 @@ function BookingCard({ booking }: { booking: MyBooking }) {
             <p className="font-black text-sm text-gray-900 leading-tight truncate">{booking.session_title}</p>
             <div className="flex items-center gap-1.5 mt-1">
               <Clock size={11} className="text-gray-400 flex-shrink-0" />
-              <p className="text-xs text-gray-500">{fmtDateTime(booking.session_start)}</p>
+              <p className="text-xs text-gray-500">{fmtDateTime(booking.session_start, zh)}</p>
             </div>
             {(booking.location_name) && (
               <div className="flex items-center gap-1.5 mt-0.5">
@@ -63,10 +65,10 @@ function BookingCard({ booking }: { booking: MyBooking }) {
           <p className="text-xs font-bold text-gray-700">
             NT${Number(booking.price_twd).toLocaleString()}
             {booking.applied_discount_amount > 0 ? (
-              <span className="ml-1.5 text-emerald-600 font-semibold">(member discount applied)</span>
+              <span className="ml-1.5 text-emerald-600 font-semibold">{zh ? "（已套用會員折扣）" : "(member discount applied)"}</span>
             ) : null}
             {(booking.gem_discount_twd ?? 0) > 0 ? (
-              <span className="ml-1.5 text-[#A07C34] font-semibold">(−NT${booking.gem_discount_twd} with {booking.gems_used} gems)</span>
+              <span className="ml-1.5 text-[#A07C34] font-semibold">{zh ? `（${booking.gems_used} 顆寶石折抵 NT$${booking.gem_discount_twd}）` : `(−NT$${booking.gem_discount_twd} with ${booking.gems_used} gems)`}</span>
             ) : null}
           </p>
         )}
@@ -76,7 +78,7 @@ function BookingCard({ booking }: { booking: MyBooking }) {
       <div className="px-4 pb-4 -mt-1">
         <a href={payPath(booking.pay_url)}
           className="flex items-center justify-center w-full rounded-xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-2.5">
-          付款 / Pay · NT${Number(booking.price_twd).toLocaleString()}
+          {zh ? "付款" : "Pay"} · NT${Number(booking.price_twd).toLocaleString()}
         </a>
       </div>
     )}

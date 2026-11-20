@@ -11,6 +11,7 @@
  * CRITICAL: transactionId is passed through as a string — never parse
  * it as a JS Number (64-bit BigInt loses precision).
  */
+import L from "@/app/components/L";
 import Link from "next/link";
 import { CheckCircle, XCircle } from "lucide-react";
 
@@ -84,12 +85,12 @@ export default async function LinePayConfirmPage({
             <XCircle size={48} className="mx-auto mb-3" />
           )}
           <h1 className="text-xl font-black">
-            {result.success ? "Payment Confirmed!" : "Payment Not Completed"}
+            {result.success ? <L en="Payment Confirmed!" zh="付款成功！" /> : <L en="Payment Not Completed" zh="尚未完成付款" />}
           </h1>
           <p className={`text-sm mt-1 ${result.success ? "text-emerald-100" : "text-red-100"}`}>
             {result.success
-              ? "Your LINE Pay payment is confirmed. See you at the session!"
-              : (result.error ?? "Something went wrong. Your booking is saved — try paying again.")}
+              ? <L en="Your LINE Pay payment is confirmed. See you at the session!" zh="LINE Pay 付款成功，上課見！" />
+              : <L en="Something went wrong. Your booking is saved — try paying again." zh="付款沒有完成，預約已保留，請再試一次。" />}
           </p>
         </div>
 
@@ -100,12 +101,12 @@ export default async function LinePayConfirmPage({
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#06C755" aria-hidden="true">
               <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
             </svg>
-            <span className="text-xs font-semibold text-gray-500">Paid via LINE Pay</span>
+            <span className="text-xs font-semibold text-gray-500"><L en="Paid via LINE Pay" zh="透過 LINE Pay 付款" /></span>
           </div>
 
           {bookingId && (
             <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3">
-              <p className="text-xs text-gray-400">Booking Reference</p>
+              <p className="text-xs text-gray-400"><L en="Booking Reference" zh="預約編號" /></p>
               <p className="text-sm font-mono font-bold text-gray-800">#{bookingId}</p>
             </div>
           )}
@@ -115,7 +116,7 @@ export default async function LinePayConfirmPage({
               href={`/report/${bookingId}`}
               className="w-full flex items-center justify-center rounded-2xl bg-[#13223F] hover:bg-[#1C3157] text-white text-sm font-bold py-4 transition-colors shadow-sm shadow-[#13223F]/10"
             >
-              View My Booking Details
+              <L en="View My Booking Details" zh="查看預約詳情" />
             </Link>
           )}
 
@@ -124,7 +125,7 @@ export default async function LinePayConfirmPage({
               href={`/api/pay/linepay/${bookingId}`}
               className="w-full flex items-center justify-center rounded-2xl bg-[#06C755] hover:opacity-90 text-white text-sm font-bold py-4 transition-opacity"
             >
-              Try LINE Pay Again
+              <L en="Try LINE Pay Again" zh="再試一次 LINE Pay" />
             </Link>
           )}
 
@@ -132,7 +133,7 @@ export default async function LinePayConfirmPage({
             href="/"
             className="w-full flex items-center justify-center rounded-2xl border border-gray-200 bg-white text-gray-600 text-sm font-semibold py-3 hover:bg-gray-50 transition-colors"
           >
-            Back to Sessions
+            <L en="Back to Sessions" zh="回到課程" />
           </Link>
         </div>
       </div>

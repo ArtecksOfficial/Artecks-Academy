@@ -4,6 +4,7 @@
 //   State A — not a member: CTA to subscribe via the provider's Stripe plan.
 //   State B — active member: discount badge with plan name and expiry info.
 
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useState } from "react";
 import { Crown, ArrowRight, Loader2 } from "lucide-react";
 import type { Provider, MembershipCheckResult } from "@/lib/types";
@@ -21,11 +22,12 @@ export default function MemberBanner({
   onSubscribeClick,
 }: MemberBannerProps) {
   const [loading, setLoading] = useState(false);
+  const zh = useLanguage().locale === "zh";
 
   // ── State B: active member ────────────────────────────────────────────────
   if (membershipResult?.is_member) {
     const expiry = membershipResult.current_period_end
-      ? new Date(membershipResult.current_period_end).toLocaleDateString("en-US", {
+      ? new Date(membershipResult.current_period_end).toLocaleDateString(zh ? "zh-TW" : "en-US", {
           month: "short", day: "numeric", year: "numeric",
         })
       : null;
@@ -35,18 +37,18 @@ export default function MemberBanner({
         <Crown size={15} className="text-emerald-600 flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-emerald-700 truncate">
-            {provider.name} Member
+            {zh ? `${provider.name} 會員` : `${provider.name} Member`}
           </p>
           <p className="text-[10px] text-emerald-600 leading-tight mt-0.5">
             {membershipResult.plan_name
               ? `${membershipResult.plan_name} · `
               : ""}
-            {membershipResult.discount_percent}% off all sessions
-            {expiry ? ` · renews ${expiry}` : ""}
+            {zh ? `所有課程省 ${membershipResult.discount_percent}%` : `${membershipResult.discount_percent}% off all sessions`}
+            {expiry ? (zh ? ` · ${expiry} 續訂` : ` · renews ${expiry}`) : ""}
           </p>
         </div>
         <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full flex-shrink-0">
-          Active
+          {zh ? "有效" : "Active"}
         </span>
       </div>
     );
@@ -68,11 +70,11 @@ export default function MemberBanner({
   return (
     <div className="rounded-xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
       <p className="text-xs font-bold text-[#A07C34]">
-        Become a {provider.name} Member
+        {zh ? `成為 ${provider.name} 會員` : `Become a ${provider.name} Member`}
       </p>
       {bestPlan && (
         <p className="text-[10px] text-[#A07C34] mt-0.5 leading-tight">
-          Save {bestPlan.discount_percent}% on every session
+          {zh ? `每堂課省 ${bestPlan.discount_percent}%` : `Save ${bestPlan.discount_percent}% on every session`}
         </p>
       )}
       {onSubscribeClick && bestPlan && (
@@ -84,7 +86,7 @@ export default function MemberBanner({
           {loading ? (
             <Loader2 size={12} className="animate-spin" />
           ) : (
-            <>Subscribe <ArrowRight size={12} /></>
+            <>{zh ? "訂閱" : "Subscribe"} <ArrowRight size={12} /></>
           )}
         </button>
       )}

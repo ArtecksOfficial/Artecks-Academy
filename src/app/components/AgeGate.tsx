@@ -4,6 +4,7 @@
 // (under 18). This watches fetch() for those answers: it asks the birth year
 // once, saves it, and retries the payment; under-18s are told to ask a parent.
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type Ask = { kind: "year" | "adult"; done: (year: number | null) => void };
 let open: ((a: Ask) => void) | null = null;
@@ -57,6 +58,7 @@ function patchFetch() {
 export default function AgeGate() {
   const [current, setCurrent] = useState<Ask | null>(null);
   const [year, setYear] = useState("");
+  const zh = useLanguage().locale === "zh";
   useEffect(() => {
     patchFetch();
     open = (a) => { setYear(""); setCurrent(a); };
@@ -74,30 +76,30 @@ export default function AgeGate() {
       <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl text-[#13223F]">
         {current.kind === "year" ? (
           <form onSubmit={(e) => { e.preventDefault(); if (year) close(Number(year)); }} className="flex flex-col gap-4">
-            <h2 id="agegate-title" className="text-xl font-bold">Confirm your birth year · 確認出生年份</h2>
+            <h2 id="agegate-title" className="text-xl font-bold">{zh ? "確認出生年份" : "Confirm your birth year"}</h2>
             <p className="text-sm text-gray-600">
-              Only adults can pay on Artecks. We ask once and keep it on your account.
-              <br />只有成人可以付款。只會詢問一次。
+              {zh ? "只有成人可以在 Artecks 付款。我們只會詢問一次，並儲存在你的帳號中。"
+                  : "Only adults can pay on Artecks. We ask once and keep it on your account."}
             </p>
             <select value={year} onChange={(e) => setYear(e.target.value)} required autoFocus
               className="w-full rounded-xl border border-gray-300 px-3 py-3 text-base">
-              <option value="">Select year · 選擇年份</option>
+              <option value="">{zh ? "選擇年份" : "Select year"}</option>
               {years.map((y) => <option key={y} value={y}>{y}</option>)}
             </select>
-            <p className="text-xs text-gray-500">You can&apos;t change this later. 儲存後無法修改。</p>
+            <p className="text-xs text-gray-500">{zh ? "儲存後無法修改。" : "You can\u2019t change this later."}</p>
             <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={() => close(null)} className="rounded-xl border border-gray-300 py-3 font-semibold">Cancel · 取消</button>
-              <button type="submit" disabled={!year} className="rounded-xl bg-[#13223F] py-3 font-semibold text-white disabled:opacity-50">Continue · 繼續</button>
+              <button type="button" onClick={() => close(null)} className="rounded-xl border border-gray-300 py-3 font-semibold">{zh ? "取消" : "Cancel"}</button>
+              <button type="submit" disabled={!year} className="rounded-xl bg-[#13223F] py-3 font-semibold text-white disabled:opacity-50">{zh ? "繼續" : "Continue"}</button>
             </div>
           </form>
         ) : (
           <div className="flex flex-col gap-4">
-            <h2 id="agegate-title" className="text-xl font-bold">Ask a parent to pay · 請家長付款</h2>
+            <h2 id="agegate-title" className="text-xl font-bold">{zh ? "請家長付款" : "Ask a parent to pay"}</h2>
             <p className="text-sm text-gray-600">
-              Only adults can make payments on Artecks. Ask a parent or guardian to sign in on their own account to buy this.
-              <br />只有成人可以付款。請爸爸媽媽用他們自己的帳號登入購買。
+              {zh ? "只有成人可以在 Artecks 付款。請爸爸媽媽用他們自己的帳號登入購買。"
+                  : "Only adults can make payments on Artecks. Ask a parent or guardian to sign in on their own account to buy this."}
             </p>
-            <button type="button" onClick={() => close(null)} className="rounded-xl bg-[#13223F] py-3 font-semibold text-white">OK</button>
+            <button type="button" onClick={() => close(null)} className="rounded-xl bg-[#13223F] py-3 font-semibold text-white">{zh ? "好" : "OK"}</button>
           </div>
         )}
       </div>
