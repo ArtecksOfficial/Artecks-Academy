@@ -13,6 +13,8 @@ import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
+import { ReferralWelcome } from "@/app/components/Referral";
+import { captureRef, myReferral, type MyReferral } from "@/lib/referral";
 
 interface SlotResp {
   price_twd: number;
@@ -96,12 +98,21 @@ export default function BookPage() {
   const gemsAvailable = Math.min(gems, data?.max_gems ?? 0);
   const gemsToUse = !payWithCredit && useGems ? gemsAvailable : 0;
   const gemDiscount = gemsToUse * (data?.gem_value_twd ?? 3);
-  const priceToPay = Math.max(0, (data?.price_twd ?? 0) - gemDiscount);
+
+  // Referral half-off (the server decides; this only previews it for signed-in parents):
+  // a new family through an invite link, or a sharing family with a reward waiting.
+  const [mineRef, setMineRef] = useState<MyReferral | null>(null);
+  useEffect(() => {
+    if (!user) { setMineRef(null); return; }
+    myReferral(authHeaders(), ref).then(setMineRef);
+  }, [user, ref]);
+  const refKind = mineRef?.welcome_available ? "welcome" : (mineRef?.rewards_available ?? 0) > 0 ? "reward" : "";
+  const refDiscount = !payWithCredit && refKind ? Math.floor((data?.price_twd ?? 0) / 2) : 0;
+  const priceToPay = Math.max(0, (data?.price_twd ?? 0) - gemDiscount - refDiscount);
 
   useEffect(() => {
-    // Referral links look like /book?ref=ABC1234
-    const r = new URLSearchParams(window.location.search).get("ref") ?? "";
-    if (/^[A-Za-z0-9]{4,12}$/.test(r)) setRef(r.toUpperCase());
+    // Referral links look like /book?ref=ABC1234; the code is kept for 30 days.
+    setRef(captureRef());
   }, []);
 
   useEffect(() => {
@@ -203,6 +214,7 @@ export default function BookPage() {
       <SiteHeader />
 
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
+        {!mineRef || mineRef.welcome_available ? <ReferralWelcome code={ref} /> : null}
         {pending ? (
           <div className="rounded-3xl bg-white border border-gray-200 p-8 text-center shadow-sm">
             <CheckCircle size={44} className="mx-auto text-emerald-500 mb-3" />
@@ -395,6 +407,13 @@ export default function BookPage() {
                     </span>
                     <span className="ml-auto text-xs text-[#5B6478]">{zh ? `共 ${gems} 顆` : `${gems} gems`}</span>
                   </label>
+                )}
+
+                {refDiscount > 0 && (
+                  <p className="flex items-center justify-between rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3 text-sm font-semibold text-[#13223F]">
+                    <span>🎁 {t(refKind === "reward" ? "refDiscountReward" : "refDiscountWelcome")}</span>
+                    <span>− NT$ {refDiscount.toLocaleString()}</span>
+                  </p>
                 )}
 
                 {error && <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
