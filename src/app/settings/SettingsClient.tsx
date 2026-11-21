@@ -80,7 +80,7 @@ export default function SettingsClient() {
             <section className={card}>
               <h2 className={h2}><Users size={16} className="text-[#A07C34]" /> {zh ? "我的孩子" : "My kids"}</h2>
               <p className="mt-1 mb-4 text-xs text-gray-500">
-                {zh ? "設定排行榜上的暱稱，以及是否顯示在排行榜。" : "Choose each child's leaderboard nickname and whether they appear on the leaderboard."}
+                {zh ? "每個孩子都會出現在排行榜上。設定一個暱稱，排行榜就不會顯示孩子的名字。" : "Every child appears on the leaderboard. Set a nickname so it doesn't show your child's first name."}
               </p>
               {kids === null ? (
                 <Loader2 className="animate-spin text-gray-300" size={18} />

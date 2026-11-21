@@ -167,7 +167,6 @@ export default function AccountClient() {
                     <li key={k.id} className="flex items-center justify-between rounded-2xl bg-gray-50 px-4 py-3">
                       <span className="text-sm font-bold text-gray-900">
                         {k.first_name} <span className="text-xs font-normal text-gray-500">· {k.age}</span>
-                        {!k.leaderboard_opt_in && <span className="ml-2 text-[10px] text-gray-400">{zh ? "未上榜" : "not on board"}</span>}
                       </span>
                       <span className="text-xs text-gray-600 text-right">
                         <b className="text-amber-600 text-sm">{k.xp_month}</b> {zh ? "本月 XP" : "XP this month"}<br />{k.xp_total} {zh ? "總計" : "total"}

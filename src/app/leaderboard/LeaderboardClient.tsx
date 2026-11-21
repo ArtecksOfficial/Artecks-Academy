@@ -171,11 +171,6 @@ export function KidCard({ kid, onChange }: { kid: Kid; onChange: () => void }) {
           {t("lbThisMonth")} <b className="text-[#A07C34]">{kid.xp_month}</b> · {t("lbTotal")} <b>{kid.xp_total}</b>
         </span>
       </div>
-      <label className="flex items-center gap-3 text-sm cursor-pointer">
-        <input type="checkbox" checked={kid.leaderboard_opt_in} disabled={busy}
-          onChange={(e) => patch({ leaderboard_opt_in: e.target.checked })} className="accent-[#13223F] w-4 h-4" />
-        <span className="font-semibold text-gray-800">{t("lbOptIn")}</span>
-      </label>
       <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); patch({ nickname }); }}>
         <input value={nickname} onChange={(e) => setNickname(e.target.value.slice(0, 20))} placeholder={kid.first_name}
           aria-label={t("lbNickname")} className={input} />
@@ -202,7 +197,7 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
       first_name: String(f.get("first_name") || "").trim(),
       age: Number(f.get("age") || 0),
       nickname: String(f.get("nickname") || "").trim(),
-      leaderboard_opt_in: f.get("opt_in") === "on",
+      leaderboard_opt_in: true, // every child is on the leaderboard; kept so the field stays consistent
     });
     setBusy(false);
     if (r?.ok) {
@@ -231,10 +226,6 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
         <input name="nickname" maxLength={20} placeholder={t("lbNickname")} aria-label={t("lbNickname")} className={input} />
         <p className="text-[11px] text-gray-500 mt-1">{t("lbNickHint")}</p>
       </div>
-      <label className="flex items-center gap-3 text-sm cursor-pointer">
-        <input type="checkbox" name="opt_in" className="accent-[#13223F] w-4 h-4" />
-        <span className="font-semibold text-gray-800">{t("lbOptIn")}</span>
-      </label>
       {err && <p role="alert" className="text-xs text-red-600">{err}</p>}
       <button type="submit" disabled={busy} className="rounded-xl bg-[#13223F] disabled:opacity-60 text-white text-sm font-bold py-2.5">
         {busy ? "…" : t("lbAddKid")}
