@@ -19,7 +19,7 @@ const privacy: LegalDoc = {
       body: [
         { zh: "家長或監護人：姓名、電話、LINE ID 或其他聯絡方式、Email，以及您使用 LINE 登入時 LINE 提供的顯示名稱與使用者識別碼。", en: "Parents and guardians: name, phone number, LINE ID or other contact detail, email, and, if you log in with LINE, the display name and user identifier LINE gives us." },
         { zh: "學生：姓名或暱稱、年齡或出生年、西洋棋程度、上課地區偏好，以及您在備註中提供的資訊。", en: "Students: name or nickname, age or birth year, chess level, preferred lesson area, and anything you tell us in the notes field." },
-        { zh: "上課與學習紀錄：預約與出席紀錄、教練的課後報告與作業、經驗值（XP）與寶石、排行榜暱稱（僅在家長選擇加入時顯示）、您填寫的課後回饋。", en: "Lesson and learning records: bookings and attendance, coach reports and homework, XP and gems, a leaderboard nickname (shown only if a parent opts in), and the feedback you submit after lessons." },
+        { zh: "上課與學習紀錄：預約與出席紀錄、教練的課後報告與作業、經驗值（XP）與寶石、排行榜上顯示的暱稱（未設定暱稱時顯示名字）、您填寫的課後回饋。", en: "Lesson and learning records: bookings and attendance, coach reports and homework, XP and gems, the name shown on the leaderboard (the nickname, or the first name if no nickname is set), and the feedback you submit after lessons." },
         { zh: "付款資料：付款方式、金額與狀態；以銀行轉帳付款時，您回報的帳號末五碼。信用卡資料由金流服務商（綠界 ECPay）處理，我們不會取得或保存完整卡號。", en: "Payment records: method, amount and status; for bank transfers, the last five digits of the account you report. Card details are handled by our payment provider (ECPay); we never receive or store full card numbers." },
         { zh: "網站使用資料：瀏覽的頁面、來源頁面與基本的裝置資訊，用於了解網站使用情況。", en: "Site usage: pages viewed, the referring page and basic device information, used to understand how the site is used." },
       ],
@@ -44,7 +44,7 @@ const privacy: LegalDoc = {
       heading: { zh: "四、兒童與青少年的資料", en: "4. Children's and teenagers' data" },
       body: [
         { zh: "未滿 13 歲的學生不能自行註冊帳號，只能由家長或監護人在自己的帳號下建立學生檔案。13 至 17 歲的學生須經家長或監護人同意，才能建立自己的帳號。", en: "Students under 13 cannot register on their own; a parent or guardian creates a student profile under their own account. Students aged 13 to 17 need a parent's or guardian's agreement to have their own account." },
-        { zh: "學生是否出現在排行榜、以及顯示的暱稱，由家長決定，並可隨時在「設定」中變更。", en: "Whether a student appears on the leaderboard, and under what nickname, is the parent's choice and can be changed at any time in Settings." },
+        { zh: "所有學生都會依年齡組別出現在排行榜上，顯示暱稱或名字，以及 XP。家長可以隨時在「設定」中更改暱稱；若不希望孩子出現在排行榜上，請與我們聯繫，我們會將孩子隱藏。", en: "Every student appears on the leaderboard in their age group, shown by nickname or first name with their XP. Parents can change the nickname at any time in Settings. If you don't want your child on the leaderboard, contact us and we will hide them." },
       ],
     },
     {
@@ -121,7 +121,7 @@ const terms: LegalDoc = {
     {
       heading: { zh: "六、回饋與排行榜", en: "6. Feedback and the leaderboard" },
       body: [
-        { zh: "您提交的課後回饋會以匿名方式提供給教練，用於改善教學品質。排行榜僅顯示家長選擇公開的暱稱。請勿使用不雅或冒用他人的暱稱。", en: "Feedback you submit after a lesson is passed to coaches anonymously to improve teaching. The leaderboard shows only the nickname a parent has chosen to make public. Please do not use nicknames that are offensive or impersonate someone else." },
+        { zh: "您提交的課後回饋會以匿名方式提供給教練，用於改善教學品質。排行榜顯示每位學生的暱稱（未設定時顯示名字）與 XP。請勿使用不雅或冒用他人的暱稱。", en: "Feedback you submit after a lesson is passed to coaches anonymously to improve teaching. The leaderboard shows each student's nickname (or first name if none is set) and XP. Please do not use nicknames that are offensive or impersonate someone else." },
       ],
     },
     {

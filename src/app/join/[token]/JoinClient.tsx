@@ -113,11 +113,7 @@ export default function JoinClient({ token }: { token: string }) {
                     </div>
                     {user && (
                       <>
-                        <label className="flex items-center gap-3 text-sm cursor-pointer">
-                          <input type="checkbox" className="w-4 h-4 accent-[#C49A4A]" checked={picks[k.id]?.opt_in ?? true}
-                            onChange={(e) => setPicks((p) => ({ ...p, [k.id]: { ...p[k.id], opt_in: e.target.checked } }))} />
-                          <span className="text-gray-800">{zh ? "顯示在排行榜上（只顯示暱稱）" : "Show on the leaderboard (nickname only)"}</span>
-                        </label>
+                        <p className="text-sm text-gray-800">{zh ? "排行榜上的名字" : "Name on the leaderboard"}</p>
                         <input className={input} maxLength={20} placeholder={zh ? `暱稱（留空 = ${k.first_name}）` : `Nickname (empty = ${k.first_name})`}
                           value={picks[k.id]?.nickname ?? ""}
                           onChange={(e) => setPicks((p) => ({ ...p, [k.id]: { ...p[k.id], nickname: e.target.value } }))} />
