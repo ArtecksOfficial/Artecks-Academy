@@ -13,6 +13,8 @@ import { authHeaders } from "@/lib/auth-client";
 import { getKidSession, KidSession } from "@/lib/kid-mode";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 import { GEMS_ENABLED } from "@/lib/gems";
+import { ReferralShare } from "@/app/components/Referral";
+import { myReferral, type MyReferral } from "@/lib/referral";
 
 interface Kid { id: number; first_name: string; display_name: string; age: number; xp_month: number; xp_total: number; leaderboard_opt_in: boolean; linked?: boolean }
 interface Mine { gems: number; gem_value_twd: number; credits: Record<"private" | "pair" | "group", number> }
@@ -20,12 +22,13 @@ interface Mine { gems: number; gem_value_twd: number; credits: Record<"private" 
 const card = "rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm";
 
 export default function AccountClient() {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const zh = locale === "zh";
   const { user, isLoading } = useAuth();
   const [mine, setMine] = useState<Mine | null>(null);
   const [kids, setKids] = useState<Kid[] | null>(null);
   const [tracker, setTracker] = useState<TrackerPackage[] | null>(null);
+  const [referral, setReferral] = useState<MyReferral | null>(null);
 
   // Set while this device is in Kid Mode: the page then shows no money or settings.
   const [kidSession, setKidSession] = useState<KidSession | null>(null);
@@ -43,6 +46,7 @@ export default function AccountClient() {
     loadKids();
     if (getKidSession()) return; // packages are not reachable in Kid Mode
     fetch("/api/packages/mine", { headers: authHeaders() }).then((r) => (r.ok ? r.json() : null)).then(setMine).catch(() => {});
+    myReferral(authHeaders()).then(setReferral);
     fetch("/api/packages/tracker", { headers: authHeaders() })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => setTracker(d && Array.isArray(d.packages) ? d.packages : []))
@@ -173,6 +177,13 @@ export default function AccountClient() {
                 </ul>
               )}
             </section>
+
+            {/* Invite other parents: half off for them, half off for this family. */}
+            {referral?.url ? (
+              <ReferralShare url={referral.url} rewards={referral.rewards_available} families={referral.families_joined} />
+            ) : referral ? (
+              <p className={`${card} text-sm text-gray-600`}>🎁 <b className="text-gray-900">{t("refTitle")}</b> · {t("refNoLinkYet")}</p>
+            ) : null}
 
             {/* Everything editable (kids, Kid Mode PIN, teen links, name, password) is on the settings page. */}
             <Link href="/settings" className={`${card} flex items-center justify-between gap-4 hover:border-[#C49A4A] transition-colors`}>
