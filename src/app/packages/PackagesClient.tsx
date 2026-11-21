@@ -12,6 +12,8 @@ import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import { GEMS_ENABLED } from "@/lib/gems";
+import { ReferralWelcome } from "@/app/components/Referral";
+import { captureRef, myReferral, type MyReferral } from "@/lib/referral";
 
 type Format = "private" | "pair" | "group";
 
@@ -25,6 +27,7 @@ interface Pkg {
   per_lesson_twd: number;
   valid_days: number;
   max_gems: number;
+  half_lesson_twd: number;
 }
 interface Bank { bank_name: string; bank_code: string; account: string; holder: string; contact_line_id: string }
 interface Purchase {
@@ -35,6 +38,8 @@ interface Purchase {
   price_twd: number;
   gems_used: number;
   gem_discount_twd: number;
+  referral_discount_twd: number;
+  referral_discount_kind: "" | "welcome" | "reward";
   amount_due_twd: number;
   status: "pending" | "paid" | "cancelled";
   expires_at: string | null;
@@ -63,6 +68,14 @@ export default function PackagesClient() {
   const [gems, setGems] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ref, setRef] = useState("");
+  const [mineRef, setMineRef] = useState<MyReferral | null>(null);
+
+  useEffect(() => { setRef(captureRef()); }, []);
+  useEffect(() => {
+    if (!user) { setMineRef(null); return; }
+    myReferral(authHeaders(), ref).then(setMineRef);
+  }, [user, ref]);
 
   useEffect(() => {
     fetch("/api/packages").then((r) => r.json()).then((d) => {
@@ -82,6 +95,10 @@ export default function PackagesClient() {
   const maxGems = pkg ? Math.min(pkg.max_gems, mine?.gems ?? 0) : 0;
   useEffect(() => { setGems(maxGems); }, [selected, maxGems]);
 
+  // Referral half-off preview (the server decides when the order is placed).
+  const refKind = mineRef?.welcome_available ? "welcome" : (mineRef?.rewards_available ?? 0) > 0 ? "reward" : "";
+  const refDiscount = pkg && refKind ? pkg.half_lesson_twd ?? 0 : 0;
+
   const pending = (mine?.purchases ?? []).filter((p) => p.status === "pending");
   const active = (mine?.purchases ?? []).filter((p) => p.status === "paid");
 
@@ -93,7 +110,7 @@ export default function PackagesClient() {
       const r = await fetch("/api/packages/buy", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...authHeaders() },
-        body: JSON.stringify({ package_id: pkg.id, gems }),
+        body: JSON.stringify({ package_id: pkg.id, gems, ref }),
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) {
@@ -102,6 +119,7 @@ export default function PackagesClient() {
       }
       setSelected(null);
       loadMine();
+      if (user) myReferral(authHeaders(), ref).then(setMineRef);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setBusy(false);
@@ -113,6 +131,7 @@ export default function PackagesClient() {
       <SiteHeader />
 
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-5">
+        {!mineRef || mineRef.welcome_available ? <ReferralWelcome code={ref} /> : null}
         <div>
           <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("pkgTitle")}</h1>
           <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t(GEMS_ENABLED ? "pkgSub" : "pkgSubXp")}</p>
@@ -208,9 +227,15 @@ export default function PackagesClient() {
                     </div>
                   </div>
                 )}
+                {refDiscount > 0 && (
+                  <div className="flex items-center justify-between rounded-2xl bg-[#FBF5E8] px-4 py-3 text-sm font-semibold text-[#13223F]">
+                    <span>🎁 {t(refKind === "reward" ? "refDiscountReward" : "refDiscountWelcome")}</span>
+                    <span>− {nt(refDiscount)}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                   <span className="text-sm font-bold text-gray-900">{t("pkgTotal")}</span>
-                  <span className="text-xl font-black text-[#A07C34]">{nt(pkg.price_twd - gems * gemValue)}</span>
+                  <span className="text-xl font-black text-[#A07C34]">{nt(Math.max(0, pkg.price_twd - gems * gemValue - refDiscount))}</span>
                 </div>
                 {error && <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
                 <button type="button" onClick={order} disabled={busy || !user}
@@ -265,6 +290,9 @@ function PendingOrder({ p, onChange }: { p: Purchase; onChange: () => void }) {
       <p className="text-sm text-gray-700">
         {t(`pkgFormat_${p.format}` as DictionaryKey)} × {p.lessons_total}
         {p.gems_used > 0 && <> · {p.gems_used} 💎 (−{nt(p.gem_discount_twd)})</>}
+        {p.referral_discount_twd > 0 && (
+          <> · 🎁 {t(p.referral_discount_kind === "reward" ? "refDiscountReward" : "refDiscountWelcome")} (−{nt(p.referral_discount_twd)})</>
+        )}
       </p>
       <p className="text-2xl font-black text-[#A07C34]">{nt(p.amount_due_twd)}</p>
       {p.bank && (

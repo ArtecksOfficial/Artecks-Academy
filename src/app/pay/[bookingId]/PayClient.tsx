@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CheckCircle, Clock, Copy, MapPin } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { GEMS_ENABLED } from "@/lib/gems";
+import { ReferralShare } from "@/app/components/Referral";
 
 export interface PayInfo {
   booking_id: number;
@@ -27,6 +28,8 @@ export interface PayInfo {
   contact_line_id: string;
   referral_url?: string | null;
   referral_coach_name?: string;
+  referral_discount_twd?: number;
+  referral_discount_kind?: "" | "welcome" | "reward";
   feedback?: "ok" | "not_attended" | "too_late" | "done";
 }
 
@@ -123,6 +126,12 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
         {paid && info.private_access_notes && (
           <p className="text-xs text-gray-600 mt-2 bg-gray-50 rounded-xl px-3 py-2">{info.private_access_notes}</p>
         )}
+        {!!info.referral_discount_twd && (
+          <p className="mt-4 flex items-center justify-between rounded-xl bg-[#FBF5E8] px-3 py-2 text-xs font-semibold text-[#13223F]">
+            <span>🎁 {t(info.referral_discount_kind === "reward" ? "refDiscountReward" : "refDiscountWelcome")}</span>
+            <span>− NT$ {info.referral_discount_twd.toLocaleString()}</span>
+          </p>
+        )}
         <div className="mt-4 pt-4 border-t border-gray-100 flex items-baseline justify-between">
           <span className="text-xs font-bold uppercase tracking-widest text-gray-400">{t("payAmount")}</span>
           <span className="text-2xl font-black text-gray-900">NT$ {info.amount_twd.toLocaleString()}</span>
@@ -150,7 +159,7 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
         </Link>
       )}
 
-      {paid && info.referral_url && <ReferralBox url={info.referral_url} coach={info.referral_coach_name || "Issac"} />}
+      {paid && info.referral_url && <ReferralShare url={info.referral_url} />}
 
       {!paid && !cancelled && (
         <>
@@ -248,28 +257,5 @@ export default function PayClient({ info, token }: { info: PayInfo | null; token
         </a>
       )}
     </>,
-  );
-}
-
-function ReferralBox({ url, coach }: { url: string; coach: string }) {
-  const { t } = useLanguage();
-  const [copied, setCopied] = useState(false);
-  const share = `https://line.me/R/share?text=${encodeURIComponent(`${t("refShareText")} ${url}`)}`;
-  return (
-    <section className="rounded-3xl bg-white border border-[#E7C98A] p-5 shadow-sm">
-      <h2 className="text-base font-black text-gray-900">🎁 {t("refTitle")}</h2>
-      <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">{t("refBody").replace("{coach}", coach)}</p>
-      <div className="mt-3 flex items-center gap-2 rounded-xl bg-gray-50 border border-gray-200 px-3 py-2">
-        <span className="flex-1 truncate font-mono text-xs text-gray-700">{url}</span>
-        <button type="button" className="text-xs font-bold text-[#A07C34] flex-shrink-0"
-          onClick={() => navigator.clipboard?.writeText(url).then(() => setCopied(true)).catch(() => {})}>
-          {copied ? t("refCopied") : t("refCopy")}
-        </button>
-      </div>
-      <a href={share} target="_blank" rel="noopener noreferrer"
-        className="mt-3 flex items-center justify-center rounded-xl py-3 text-sm font-bold text-white" style={{ backgroundColor: "#06C755" }}>
-        {t("refShareLine")}
-      </a>
-    </section>
   );
 }
