@@ -252,7 +252,7 @@ export default function HomePageContent({ sessions, provider }: Props) {
             </h1>
             <p className="text-base sm:text-lg text-[#C9D2E3] max-w-md leading-relaxed">{t("whyChessSub")}</p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <a href="https://lin.ee/6cna1xVd" target="_blank" rel="noopener noreferrer"
+              <a href="/book"
                 className="inline-flex justify-center items-center rounded-xl px-6 py-3.5 text-base font-black text-[#0E1E3A] bg-[#C49A4A] hover:bg-[#D3AB5C] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E9DCC0]">
                 {t("heroTrialCta")}
               </a>

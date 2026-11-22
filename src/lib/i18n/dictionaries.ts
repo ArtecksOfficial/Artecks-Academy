@@ -14,7 +14,7 @@ const zh = {
   heroTitle2: "孩子真正愛上學習。",
   heroCta: "瀏覽課程",
   heroTrialCta: "預約體驗課 NT$800",
-  heroTrialNote: "透過 LINE 聯絡我們，安排一堂全英語一對一西洋棋體驗課（NT$800，原價 NT$1,200）。",
+  heroTrialNote: "線上選時間即可預約。新家庭的第一堂一對一體驗課 NT$800（原價 NT$1,200）。",
   heroSubscribe: "訂閱會員",
 
   // Location pill
@@ -380,8 +380,8 @@ const zh = {
   refDiscountReward: "推薦獎勵",
   // ── Slot booking (/book) ───────────────────────────────────────────────────
   heroBookCta: "預約上課時間",
-  bookTitle: "預約一對一課程",
-  bookSub: "選擇地區和時間，我們會安排合適的教練。每堂 60 分鐘。",
+  bookTitle: "預約課程",
+  bookSub: "全英語授課，每堂 60 分鐘。選擇上課方式、地區和時間，我們會安排合適的教練。",
   bookArea: "上課地區",
   bookPickTime: "選擇時間",
   bookCoachAny: "任何教練",
@@ -557,7 +557,7 @@ const en: typeof zh = {
   heroTitle2: "Kids Actually Love.",
   heroCta: "Browse Classes",
   heroTrialCta: "Book a Trial Lesson – NT$800",
-  heroTrialNote: "Message us on LINE to schedule a 1-on-1 English-language chess trial lesson (NT$800, normally NT$1,200).",
+  heroTrialNote: "Pick a time online. A new family's first 1-on-1 lesson is a trial: NT$800 (normally NT$1,200).",
   heroSubscribe: "Subscribe",
 
   // Location pill
@@ -923,8 +923,8 @@ const en: typeof zh = {
   refDiscountReward: "Referral reward",
   // ── Slot booking (/book) ───────────────────────────────────────────────────
   heroBookCta: "Book a lesson time",
-  bookTitle: "Book a 1-on-1 lesson",
-  bookSub: "Pick an area and a time — we'll match the right coach. Each lesson is 60 minutes.",
+  bookTitle: "Book a lesson",
+  bookSub: "Taught fully in English, 60 minutes each. Pick a lesson type, area and time — we'll match the right coach.",
   bookArea: "Area",
   bookPickTime: "Pick a time",
   bookCoachAny: "Any coach",
