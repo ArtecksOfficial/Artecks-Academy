@@ -27,3 +27,26 @@ export async function startLineLogin(next: string): Promise<string | null> {
     return "LINE sign-in is not available right now.";
   }
 }
+
+// Signed-in user connects LINE to their existing account (coaches: booking alerts).
+export async function startLineLink(next: string, headers: Record<string, string>): Promise<string | null> {
+  try {
+    const res = await fetch("/api/auth/line/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...headers },
+      body: JSON.stringify({
+        purpose: "link",
+        next: safeNext(next),
+        redirect_uri: `${window.location.origin}/auth/line/callback`,
+      }),
+    });
+    const d = await res.json().catch(() => ({}));
+    if (res.ok && d.authorize_url) {
+      window.location.href = d.authorize_url;
+      return null;
+    }
+    return d.detail || "LINE is not available right now.";
+  } catch {
+    return "LINE is not available right now.";
+  }
+}
