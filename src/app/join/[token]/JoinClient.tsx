@@ -111,14 +111,6 @@ export default function JoinClient({ token }: { token: string }) {
                       <span className="text-sm font-bold text-[#13223F]">{k.first_name} · {k.age}</span>
                       {k.past_xp > 0 && <span className="text-sm font-black text-[#A07C34] tabular-nums">⚡ {k.past_xp.toLocaleString()} XP</span>}
                     </div>
-                    {user && (
-                      <>
-                        <p className="text-sm text-gray-800">{zh ? "排行榜上的名字" : "Name on the leaderboard"}</p>
-                        <input className={input} maxLength={20} placeholder={zh ? `暱稱（留空 = ${k.first_name}）` : `Nickname (empty = ${k.first_name})`}
-                          value={picks[k.id]?.nickname ?? ""}
-                          onChange={(e) => setPicks((p) => ({ ...p, [k.id]: { ...p[k.id], nickname: e.target.value } }))} />
-                      </>
-                    )}
                   </div>
                 ))}
 
