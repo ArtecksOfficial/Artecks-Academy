@@ -4,45 +4,8 @@
 import { useEffect, useState, FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { authHeaders } from "@/lib/auth-client";
-import { startLineLink } from "@/lib/line-login";
-import ProfileFields, { EMPTY_PROFILE, type CoachProfile } from "./ProfileFields";
-
-// Coaches get a LINE message for every lesson booked with them once LINE is
-// connected here and they've added the Artecks Academy LINE account.
-function LineAlertsCard({ zh }: { zh: boolean }) {
-  const [st, setSt] = useState<{ linked: boolean; is_friend?: boolean; display_name?: string } | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-  useEffect(() => {
-    fetch("/api/auth/line", { headers: authHeaders(), cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : { linked: false })).then(setSt).catch(() => setSt({ linked: false }));
-  }, []);
-  if (!st) return null;
-  const on = st.linked && st.is_friend !== false;
-  return (
-    <div className={`rounded-3xl border p-5 flex flex-col gap-3 ${on ? "bg-emerald-50 border-emerald-200" : "bg-[#FBF5E8] border-[#E7C98A]"}`}>
-      <p className="text-sm font-black text-[#13223F]">
-        {on ? (zh ? "✅ LINE 預約通知：已開啟" : "✅ LINE booking alerts: on")
-            : (zh ? "🔔 開啟 LINE 預約通知" : "🔔 Turn on LINE booking alerts")}
-      </p>
-      <p className="text-xs text-gray-600 leading-relaxed">
-        {on ? (zh ? `每當家長預約你的課，Artecks Academy 會傳 LINE 給你（${st.display_name ?? ""}）。`
-                  : `Artecks Academy will message you on LINE (${st.display_name ?? ""}) whenever a parent books you.`)
-            : st.linked
-              ? (zh ? "你的 LINE 已連結，但還沒加 Artecks Academy 為好友（或已封鎖）。請再按一次並加入好友。"
-                    : "Your LINE is connected, but you haven't added Artecks Academy as a friend (or blocked it). Tap below again and add it as a friend.")
-              : (zh ? "連結你的 LINE，並在下一步「加入好友」，家長預約你時就會收到通知。"
-                    : "Connect your LINE and tap \"Add friend\" on the next screen. You'll get a message whenever a parent books you.")}
-      </p>
-      {!on && (
-        <button type="button" onClick={async () => setErr(await startLineLink("/coach?tab=profile", authHeaders()))}
-          className="self-start rounded-xl bg-[#06C755] hover:bg-[#05b34c] text-white font-bold px-5 py-2.5 text-sm">
-          {zh ? "連結 LINE" : "Connect LINE"}
-        </button>
-      )}
-      {err && <p role="alert" className="text-xs text-red-500">{err}</p>}
-    </div>
-  );
-}
+import LineAlertsCard from "./LineAlertsCard";
+import ProfileFields, { EMPTY_PROFILE, bankComplete, type CoachProfile } from "./ProfileFields";
 
 export default function ProfilePanel({ zh, onSaved }: { zh: boolean; onSaved: (name: string) => void }) {
   const [profile, setProfile] = useState<CoachProfile | null>(null);
@@ -60,13 +23,13 @@ export default function ProfilePanel({ zh, onSaved }: { zh: boolean; onSaved: (n
     e.preventDefault();
     if (!profile) return;
     setBusy(true); setMsg(null);
-    const { name, name_zh, title, bio, subjects, avatar_initials, line_id } = profile;
+    const { name, name_zh, title, bio, subjects, avatar_initials, line_id, bank_name, bank_code, bank_account } = profile;
     const r = await fetch("/api/coach/me", {
       method: "PATCH", headers: { "Content-Type": "application/json", ...authHeaders() },
-      body: JSON.stringify({ name, name_zh, title, bio, subjects, avatar_initials, line_id }),
+      body: JSON.stringify({ name, name_zh, title, bio, subjects, avatar_initials, line_id, bank_name, bank_code, bank_account }),
     }).catch(() => null);
     setBusy(false);
-    if (!r || !r.ok) return setMsg({ ok: false, text: zh ? "無法儲存，請確認姓名已填寫。" : "Couldn't save. Make sure your name is filled in." });
+    if (!r || !r.ok) return setMsg({ ok: false, text: zh ? "無法儲存，請確認姓名、銀行代碼（3 碼）和完整帳號。" : "Couldn't save. Check your name, the 3-digit bank code and the full account number." });
     setMsg({ ok: true, text: zh ? "已儲存。" : "Saved." });
     onSaved(name);
   }
@@ -75,6 +38,11 @@ export default function ProfilePanel({ zh, onSaved }: { zh: boolean; onSaved: (n
   return (
     <div className="flex flex-col gap-4">
     <LineAlertsCard zh={zh} />
+    {!bankComplete(profile) && (
+      <p className="rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-800">
+        {zh ? "⚠️ 請在下方填寫收款帳戶，學院才能把課酬匯給你。" : "⚠️ Add your payout account below so the academy can pay you."}
+      </p>
+    )}
     <form onSubmit={save} className="rounded-3xl bg-white border border-gray-200 p-5 flex flex-col gap-4">
       <p className="text-sm text-gray-600">
         {zh ? "這些資料會顯示在「教練與課程」頁，讓家長認識你。" : "This is what parents see about you on the Coaches & programs page."}
