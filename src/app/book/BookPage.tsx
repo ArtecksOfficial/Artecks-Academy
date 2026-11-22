@@ -1,7 +1,7 @@
 "use client";
 // ─── Slot booking — area → 60-min slot → details → pay / pending ─────────────
-// One merged calendar across coaches. Parents never pick a coach: every
-// booking waits for the owner, who assigns the coach and place.
+// Parents pick a coach and see that coach's own calendar (Nov 2026).
+// New families' bookings still wait for the owner to confirm the place.
 
 import SiteHeader from "@/app/components/SiteHeader";
 import AuthButton from "@/app/components/AuthButton";
@@ -80,6 +80,9 @@ export default function BookPage() {
   const [areas, setAreas] = useState<string[] | null>(null);
   const [area, setArea] = useState<string>("");
   const [data, setData] = useState<SlotResp | null>(null);
+  // Parents pick the coach; each coach's calendar is shown on its own.
+  const [coachList, setCoachList] = useState<SlotResp["coaches"]>([]);
+  const [coach, setCoach] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [day, setDay] = useState<string>("");
   const [slot, setSlot] = useState<string>("");
@@ -123,7 +126,7 @@ export default function BookPage() {
   const showTrial = !!trialPrice && data?.first_time !== false && !payWithCredit && !refDiscount && !ref;
   const trialDiscount = showTrial ? Math.max(0, (data?.price_twd ?? 0) - (trialPrice ?? 0)) : 0;
   const priceToPay = Math.max(0, (data?.price_twd ?? 0) - gemDiscount - refDiscount - trialDiscount);
-  const coachNames = (data?.coaches ?? []).map((c) => c.name.split(" ")[0]);
+  const coachName = coachList.find((c) => c.id === coach)?.name.split(" ")[0] ?? "";
   const subjectLabel = subjects.find((x) => x.key === subject) ?? { en: "Chess", zh: "西洋棋" };
 
   useEffect(() => {
@@ -150,16 +153,28 @@ export default function BookPage() {
   }, [subject]);
 
   useEffect(() => {
+    // Which coaches teach here: one call without a coach filter.
+    setCoachList([]); setCoach(null); setData(null);
     if (!area) return;
+    const p = new URLSearchParams({ area, days: "14", subject });
+    fetch(`/api/slots?${p.toString()}`, { headers: authHeaders() }).then((r) => r.json()).then((d: SlotResp) => {
+      const list = d?.coaches ?? [];
+      setCoachList(list);
+      if (list.length === 1) setCoach(list[0].id);
+    }).catch(() => setCoachList([]));
+  }, [area, subject, user]);
+
+  useEffect(() => {
+    if (!area || coach == null) return;
     setLoading(true);
     setSlot("");
-    const p = new URLSearchParams({ area, days: "14", subject });
+    const p = new URLSearchParams({ area, days: "14", subject, coach: String(coach) });
     fetch(`/api/slots?${p.toString()}`, { headers: authHeaders() }).then((r) => r.json()).then((d: SlotResp) => {
       setData(d);
       const first = d.slots?.[0];
       setDay(first ? tpeDayKey(first.start) : "");
     }).catch(() => setData(null)).finally(() => setLoading(false));
-  }, [area, subject, user]);
+  }, [area, subject, user, coach]);
 
   const byDay = useMemo(() => {
     const m = new Map<string, { start: string; end: string }[]>();
@@ -181,6 +196,7 @@ export default function BookPage() {
         headers: { "Content-Type": "application/json", ...authHeaders() },
         body: JSON.stringify({
           use_package: payWithCredit,
+          coach,
           gems: gemsToUse,
           subject,
           start: slot,
@@ -332,12 +348,32 @@ export default function BookPage() {
               )}
             </section>
 
+            {/* Coach */}
+            {area && coachList.length > 0 && (
+              <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400">{zh ? "選擇教練" : "Pick a coach"}</h2>
+                  <Link href="/coaches" className="text-xs font-bold text-[#A07C34] hover:text-[#8A6A2C]">{zh ? "認識教練 →" : "Meet the coaches →"}</Link>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {coachList.map((c) => (
+                    <button key={c.id} type="button" onClick={() => { setCoach(c.id); setSlot(""); }} aria-pressed={coach === c.id}
+                      className={`rounded-2xl px-4 py-2.5 text-left transition-colors ${
+                        coach === c.id ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
+                      <span className="block text-sm font-bold">{c.name}</span>
+                      {c.title && <span className={`block text-[11px] ${coach === c.id ? "text-[#E7C98A]" : "text-gray-500"}`}>{c.title}</span>}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* Time */}
-            {area && (
+            {area && coach != null && (
               <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400">{t("bookPickTime")}</h2>
-                  {data && <span className="text-xs text-gray-500">NT$ {data.price_twd.toLocaleString()} {t("bookPerLesson")} · {data.slot_minutes} min</span>}
+                  {data && <span className="text-xs text-gray-500">{coachName ? `${coachName} · ` : ""}NT$ {data.price_twd.toLocaleString()} {t("bookPerLesson")} · {data.slot_minutes} min</span>}
                 </div>
 
                 {loading && <Loader2 className="animate-spin text-gray-300 my-4" size={20} />}
@@ -372,14 +408,6 @@ export default function BookPage() {
                   </>
                 )}
 
-                {coachNames.length > 0 && (
-                  <p className="mt-4 text-xs text-gray-600">
-                    {zh ? "您的教練：" : "Your coach: "}
-                    <span className="font-bold text-[#13223F]">{coachNames.join(zh ? " 或 " : " or ")}</span>
-                    {zh ? "，預約後透過 LINE 確認。" : ", confirmed on LINE after you book. "}
-                    <Link href="/coaches" className="font-bold text-[#A07C34] hover:text-[#8A6A2C]">{zh ? "認識教練 →" : "Meet the coaches →"}</Link>
-                  </p>
-                )}
                 <Link href="/request" className="block mt-3 text-xs font-semibold text-gray-500 hover:text-[#8A6A2C]">
                   {t("bookCantFind")}
                 </Link>
@@ -396,7 +424,7 @@ export default function BookPage() {
               <form onSubmit={submit} className="rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm flex flex-col gap-4">
                 <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#FBF5E8] px-4 py-3">
                   <span className="flex items-center gap-2 text-sm font-bold text-[#13223F]">
-                    <Clock size={15} /> {fmtFull(slot, locale)} · {area}
+                    <Clock size={15} /> {fmtFull(slot, locale)} · {area}{coachName ? ` · ${coachName}` : ""}
                   </span>
                   <button type="button" onClick={() => setSlot("")} className="text-xs font-semibold text-[#A07C34]">{t("bookChange")}</button>
                 </div>

@@ -381,7 +381,7 @@ const zh = {
   // ── Slot booking (/book) ───────────────────────────────────────────────────
   heroBookCta: "預約上課時間",
   bookTitle: "預約課程",
-  bookSub: "全英語授課，每堂 60 分鐘。選擇上課方式、地區和時間，我們會安排合適的教練。",
+  bookSub: "全英語授課，每堂 60 分鐘。選擇上課方式、地區、教練和時間。",
   bookArea: "上課地區",
   bookPickTime: "選擇時間",
   bookCoachAny: "任何教練",
@@ -396,7 +396,7 @@ const zh = {
   bookSending: "預約中…",
   bookTaken: "這個時段剛被預約走了，請選擇其他時間。",
   bookPendingTitle: "已保留您的時段！",
-  bookPendingBody: "我們會在 1 天內透過 LINE 與您聯絡，確認上課地點和最適合的教練，確認後再傳付款連結給您。",
+  bookPendingBody: "我們會在 1 天內透過 LINE 與您聯絡，確認上課地點，確認後再傳付款連結給您。",
   bookNoAreas: "教練們正在設定上課時間，請先告訴我們您方便的時段。",
   // ── Pay page (/pay/[id]) ───────────────────────────────────────────────────
   payTitle: "課程付款",
@@ -924,7 +924,7 @@ const en: typeof zh = {
   // ── Slot booking (/book) ───────────────────────────────────────────────────
   heroBookCta: "Book a lesson time",
   bookTitle: "Book a lesson",
-  bookSub: "Taught fully in English, 60 minutes each. Pick a lesson type, area and time — we'll match the right coach.",
+  bookSub: "Taught fully in English, 60 minutes each. Pick a lesson type, area, coach and time.",
   bookArea: "Area",
   bookPickTime: "Pick a time",
   bookCoachAny: "Any coach",
@@ -939,7 +939,7 @@ const en: typeof zh = {
   bookSending: "Booking…",
   bookTaken: "Someone just booked that time. Please pick another.",
   bookPendingTitle: "Your time is held!",
-  bookPendingBody: "We'll message you on LINE within a day to agree on the place and the best coach for your child, then send the payment link.",
+  bookPendingBody: "We'll message you on LINE within a day to agree on the place, then send the payment link.",
   bookNoAreas: "Our coaches are still setting their hours. Tell us when you're free instead.",
   // ── Pay page (/pay/[id]) ───────────────────────────────────────────────────
   payTitle: "Pay for your lesson",
