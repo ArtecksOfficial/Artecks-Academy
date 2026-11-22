@@ -3,7 +3,7 @@
 // No slots, no payment, no account. The owner follows up on LINE and assigns
 // a coach, time and place from the admin.
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
@@ -37,12 +37,20 @@ const input =
 const label = "block text-xs font-semibold text-gray-600 mb-1.5";
 
 export default function RequestForm() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [contactMethod, setContactMethod] = useState<ContactMethod>("line");
   const [windows, setWindows] = useState<string[]>([]);
   const [level, setLevel] = useState("beginner");
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
+  // /request?type=pair|group comes from the booking page's lesson-type choice.
+  const [lessonType, setLessonType] = useState<"" | "pair" | "group">("");
+  const zh = locale === "zh";
+  useEffect(() => {
+    const v = new URLSearchParams(window.location.search).get("type");
+    if (v === "pair" || v === "group") setLessonType(v);
+  }, []);
+  const typeTag = lessonType === "pair" ? "[Pair lesson / 一對二]" : lessonType === "group" ? "[Group lesson / 小班]" : "";
 
   function toggleWindow(v: string) {
     setWindows((w) => (w.includes(v) ? w.filter((x) => x !== v) : [...w, v]));
@@ -67,7 +75,7 @@ export default function RequestForm() {
       chess_experience_level: level,
       preferred_windows: windows,
       area: String(f.get("area") || "").trim(),
-      notes: String(f.get("notes") || "").trim(),
+      notes: [typeTag, String(f.get("notes") || "").trim()].filter(Boolean).join(" "),
       account_consent: f.get("account_consent") === "on",
     };
     setState("sending");
@@ -103,6 +111,19 @@ export default function RequestForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
+      {lessonType && (
+        <div className="rounded-3xl bg-[#13223F] text-white px-5 py-4 shadow-sm">
+          <p className="text-sm font-black">
+            {lessonType === "pair"
+              ? (zh ? "一對二課程 · 每人每堂 NT$1,000" : "Pair lesson · NT$1,000 per student")
+              : (zh ? "小班課程（3 人以上）· 每人每堂 NT$800" : "Small group (3+) · NT$800 per student")}
+          </p>
+          <p className="text-xs text-[#C9D2E3] mt-1">
+            {zh ? "我們會依孩子的年齡和程度配對同學，配好後透過 LINE 通知您時間和地點。"
+                : "We match kids by age and level, then message you on LINE with the time and place."}
+          </p>
+        </div>
+      )}
       {/* Parent */}
       <section className="rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm flex flex-col gap-4">
         <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400">{t("reqParentSection")}</h2>

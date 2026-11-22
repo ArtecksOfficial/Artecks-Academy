@@ -23,7 +23,17 @@ interface SlotResp {
   gem_value_twd?: number;
   coaches: { id: number; name: string; title: string }[];
   slots: { start: string; end: string }[];
+  // First chess lesson of a first-time family is a trial; first_time is null for guests.
+  trial_price_twd?: number | null;
+  first_time?: boolean | null;
 }
+
+// Pair and group lessons are matched by age and level, so they go through a request.
+const LESSON_TYPES = [
+  { key: "private", en: "1-on-1", zh: "一對一", price: 1200, href: null },
+  { key: "pair", en: "Pair (2 kids)", zh: "一對二", price: 1000, href: "/request?type=pair" },
+  { key: "group", en: "Small group (3+)", zh: "小班（3 人以上）", price: 800, href: "/request?type=group" },
+] as const;
 
 type ContactMethod = "line" | "whatsapp" | "sms" | "email";
 
@@ -108,7 +118,13 @@ export default function BookPage() {
   }, [user, ref]);
   const refKind = mineRef?.welcome_available ? "welcome" : (mineRef?.rewards_available ?? 0) > 0 ? "reward" : "";
   const refDiscount = !payWithCredit && refKind ? Math.floor((data?.price_twd ?? 0) / 2) : 0;
-  const priceToPay = Math.max(0, (data?.price_twd ?? 0) - gemDiscount - refDiscount);
+  // Trial: shown unless we know this family isn't new, or a referral/package already applies.
+  const trialPrice = data?.trial_price_twd ?? null;
+  const showTrial = !!trialPrice && data?.first_time !== false && !payWithCredit && !refDiscount && !ref;
+  const trialDiscount = showTrial ? Math.max(0, (data?.price_twd ?? 0) - (trialPrice ?? 0)) : 0;
+  const priceToPay = Math.max(0, (data?.price_twd ?? 0) - gemDiscount - refDiscount - trialDiscount);
+  const coachNames = (data?.coaches ?? []).map((c) => c.name.split(" ")[0]);
+  const subjectLabel = subjects.find((x) => x.key === subject) ?? { en: "Chess", zh: "西洋棋" };
 
   useEffect(() => {
     // Referral links look like /book?ref=ABC1234; the code is kept for 30 days.
@@ -138,12 +154,12 @@ export default function BookPage() {
     setLoading(true);
     setSlot("");
     const p = new URLSearchParams({ area, days: "14", subject });
-    fetch(`/api/slots?${p.toString()}`).then((r) => r.json()).then((d: SlotResp) => {
+    fetch(`/api/slots?${p.toString()}`, { headers: authHeaders() }).then((r) => r.json()).then((d: SlotResp) => {
       setData(d);
       const first = d.slots?.[0];
       setDay(first ? tpeDayKey(first.start) : "");
     }).catch(() => setData(null)).finally(() => setLoading(false));
-  }, [area, subject]);
+  }, [area, subject, user]);
 
   const byDay = useMemo(() => {
     const m = new Map<string, { start: string; end: string }[]>();
@@ -228,7 +244,51 @@ export default function BookPage() {
             <div>
               <h1 className="font-serif-tc text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{t("bookTitle")}</h1>
               <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t("bookSub")}</p>
+              {subjects.length <= 1 && (
+                <span className="inline-flex items-center gap-1.5 mt-3 rounded-full bg-white border border-gray-200 px-3 py-1 text-xs font-bold text-[#13223F]">
+                  ♟ {zh ? subjectLabel.zh : subjectLabel.en} · {zh ? "全英語授課" : "taught in English"}
+                </span>
+              )}
             </div>
+
+            {showTrial && (
+              <div className="rounded-3xl bg-[#13223F] text-white px-5 py-4 shadow-sm">
+                <p className="text-sm font-black">🎁 {zh ? `第一次來？第一堂一對一是體驗課：NT$ ${trialPrice!.toLocaleString()}` : `New here? Your first 1-on-1 lesson is a trial: NT$ ${trialPrice!.toLocaleString()}`}</p>
+                <p className="text-xs text-[#C9D2E3] mt-1">
+                  {zh ? `原價 NT$ ${(data?.price_twd ?? 0).toLocaleString()}。選個時間就好，不用另外申請。之後的課程照原價。`
+                      : `Normally NT$ ${(data?.price_twd ?? 0).toLocaleString()}. Just pick a time below, no code needed. Lessons after that are the normal price.`}
+                </p>
+              </div>
+            )}
+
+            {/* Lesson type */}
+            <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">{zh ? "上課方式" : "Lesson type"}</h2>
+              <div className="grid sm:grid-cols-3 gap-2">
+                {LESSON_TYPES.map((lt) => {
+                  const body = (
+                    <>
+                      <span className="block text-sm font-bold">{zh ? lt.zh : lt.en}</span>
+                      <span className={`block text-xs mt-0.5 ${lt.href ? "text-gray-500" : "text-[#E7C98A]"}`}>
+                        NT$ {lt.price.toLocaleString()} / {zh ? "人・堂" : "student"}
+                        {lt.href ? (zh ? " · 依年齡程度配對" : " · we match kids by age & level") : ""}
+                      </span>
+                    </>
+                  );
+                  return lt.href ? (
+                    <Link key={lt.key} href={lt.href} className="rounded-2xl px-4 py-3 text-left bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+                      {body}
+                      <span className="block text-[11px] font-bold text-[#A07C34] mt-1">{zh ? "申請配對 →" : "Request a match →"}</span>
+                    </Link>
+                  ) : (
+                    <div key={lt.key} aria-current="true" className="rounded-2xl px-4 py-3 text-left bg-[#13223F] text-white">
+                      {body}
+                      <span className="block text-[11px] font-bold text-[#E7C98A] mt-1">{zh ? "直接選下方時間" : "Pick a time below"}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
 
             {/* Subject */}
             {subjects.length > 1 && (
@@ -265,6 +325,11 @@ export default function BookPage() {
                   </button>
                 ))}
               </div>
+              {area && (
+                <p className="text-xs text-gray-500 mt-3">
+                  {zh ? `確切上課地點（${area}）會在預約後透過 LINE 與您確認。` : `We'll confirm the exact place in ${area} with you on LINE after you book.`}
+                </p>
+              )}
             </section>
 
             {/* Time */}
@@ -307,7 +372,15 @@ export default function BookPage() {
                   </>
                 )}
 
-                <Link href="/request" className="block mt-4 text-xs font-semibold text-gray-500 hover:text-[#8A6A2C]">
+                {coachNames.length > 0 && (
+                  <p className="mt-4 text-xs text-gray-600">
+                    {zh ? "您的教練：" : "Your coach: "}
+                    <span className="font-bold text-[#13223F]">{coachNames.join(zh ? " 或 " : " or ")}</span>
+                    {zh ? "，預約後透過 LINE 確認。" : ", confirmed on LINE after you book. "}
+                    <Link href="/coaches" className="font-bold text-[#A07C34] hover:text-[#8A6A2C]">{zh ? "認識教練 →" : "Meet the coaches →"}</Link>
+                  </p>
+                )}
+                <Link href="/request" className="block mt-3 text-xs font-semibold text-gray-500 hover:text-[#8A6A2C]">
                   {t("bookCantFind")}
                 </Link>
                 {subject === "chess" && credits === 0 && (
@@ -413,6 +486,18 @@ export default function BookPage() {
                   <p className="flex items-center justify-between rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3 text-sm font-semibold text-[#13223F]">
                     <span>🎁 {t(refKind === "reward" ? "refDiscountReward" : "refDiscountWelcome")}</span>
                     <span>− NT$ {refDiscount.toLocaleString()}</span>
+                  </p>
+                )}
+
+                {showTrial && trialDiscount > 0 && (
+                  <p className="flex items-center justify-between rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3 text-sm font-semibold text-[#13223F]">
+                    <span>🎁 {zh ? "體驗課（新家庭第一堂）" : "Trial lesson (new family's first lesson)"}</span>
+                    <span>− NT$ {trialDiscount.toLocaleString()}</span>
+                  </p>
+                )}
+                {showTrial && data?.first_time == null && (
+                  <p className="text-[11px] text-gray-500 -mt-2">
+                    {zh ? "已經上過課的家庭將以原價計算，下一頁會顯示實際金額。" : "Families who've had lessons before pay the normal price; the next page shows the exact amount."}
                   </p>
                 )}
 

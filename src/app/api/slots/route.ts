@@ -20,7 +20,8 @@ export async function GET(req: NextRequest) {
     url = `${BACKEND}/api/academy/slots/?${p.toString()}`;
   }
   try {
-    const res = await fetch(url, { cache: "no-store" });
+    const auth = req.headers.get("authorization");
+    const res = await fetch(url, { cache: "no-store", headers: auth ? { Authorization: auth } : undefined });
     return new NextResponse(await res.text(), { status: res.status, headers: { "Content-Type": "application/json" } });
   } catch {
     return NextResponse.json({ detail: "Backend unreachable." }, { status: 502 });
