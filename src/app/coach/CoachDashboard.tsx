@@ -111,13 +111,16 @@ export default function CoachDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   const [approval, setApproval] = useState<"approved" | "pending" | "rejected">("approved");
+  // Setup still missing: LINE booking alerts and/or the payout bank account.
+  const [setup, setSetup] = useState<{ line: boolean; payout: boolean }>({ line: true, payout: true });
 
   const load = useCallback(async () => {
-    const me = await api<{ name: string; approval_status?: "approved" | "pending" | "rejected" }>("me");
+    const me = await api<{ name: string; approval_status?: "approved" | "pending" | "rejected"; line_alerts_on?: boolean; payout_ready?: boolean }>("me");
     if (me.status === 401) return setStatus("anon");
     if (!me.ok) return setStatus("not_coach");
     setCoachName(me.data?.name ?? "");
     setApproval(me.data?.approval_status ?? "approved");
+    setSetup({ line: me.data?.line_alerts_on !== false, payout: me.data?.payout_ready !== false });
     const [s, a, f] = await Promise.all([api<CoachSession[]>("sessions"), api<Slot[]>("availability"), api<typeof fb>("feedback")]);
     setSessions(s.data ?? []);
     setSlots(a.data ?? []);
@@ -250,6 +253,22 @@ export default function CoachDashboard() {
                 </button>
               ))}
             </div>
+
+            {(!setup.line || !setup.payout) && tab !== "profile" && (
+              <div role="alert" className="mb-5 rounded-2xl bg-[#FBF5E8] border-2 border-[#C49A4A] px-5 py-4">
+                <p className="text-sm font-black text-[#13223F]">
+                  {locale === "zh" ? "⚠️ 還差一步才能開始接課" : "⚠️ Finish setting up so you don't miss bookings or pay"}
+                </p>
+                <ul className="mt-2 text-sm text-[#13223F] list-disc pl-5">
+                  {!setup.line && <li>{locale === "zh" ? "連結 LINE 並加 Artecks Academy 為好友（家長預約你時會通知你）" : "Connect LINE and add Artecks Academy as a friend (you get a message for every booking)"}</li>}
+                  {!setup.payout && <li>{locale === "zh" ? "填寫收款帳戶（學院把課酬匯到這裡）" : "Add your payout bank account (where the academy pays you)"}</li>}
+                </ul>
+                <button type="button" onClick={() => setTab("profile")}
+                  className="mt-3 rounded-xl bg-[#13223F] px-4 py-2 text-sm font-bold text-white">
+                  {locale === "zh" ? "前往設定 →" : "Set it up now →"}
+                </button>
+              </div>
+            )}
 
             {error && <p role="alert" className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
 
