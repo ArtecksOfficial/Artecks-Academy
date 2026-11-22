@@ -7,7 +7,10 @@ export async function POST(req: NextRequest) {
   try {
     const res = await fetch(`${BACKEND}/api/auth/line/start/`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(req.headers.get("authorization") ? { Authorization: req.headers.get("authorization")! } : {}),
+      },
       body: await req.text(),
       cache: "no-store",
     });
