@@ -13,8 +13,8 @@ const zh = {
   heroTitle1: "全英語西洋棋課",
   heroTitle2: "孩子真正愛上學習。",
   heroCta: "瀏覽課程",
-  heroTrialCta: "預約免費體驗課",
-  heroTrialNote: "透過 LINE 聯絡我們，安排一堂免費的全英語西洋棋體驗課。",
+  heroTrialCta: "預約體驗課 NT$800",
+  heroTrialNote: "透過 LINE 聯絡我們，安排一堂全英語一對一西洋棋體驗課（NT$800，原價 NT$1,200）。",
   heroSubscribe: "訂閱會員",
 
   // Location pill
@@ -87,10 +87,10 @@ const zh = {
   footerBookings: "我的報名",
 
   // ── Trial CTA ───────────────────────────────────────────────────────────────
-  trialBadge: "免費體驗",
+  trialBadge: "首堂 NT$800",
   trialTitle: "不確定適不適合？先試一堂。",
-  trialSub: "體驗課免費，60 分鐘，孩子將學會用棋盤將死對手。沒有壓力，沒有承諾。",
-  trialCta: "預約免費體驗課",
+  trialSub: "首堂一對一體驗課 NT$800（原價 NT$1,200），60 分鐘，孩子將學會用棋盤將死對手。不需購買套票，沒有壓力。",
+  trialCta: "預約體驗課",
 
   // ── Skill roadmap ───────────────────────────────────────────────────────────
   roadmapTitle: "清晰的學習路徑",
@@ -556,8 +556,8 @@ const en: typeof zh = {
   heroTitle1: "English-Immersion Chess",
   heroTitle2: "Kids Actually Love.",
   heroCta: "Browse Classes",
-  heroTrialCta: "Book a Free Trial Class",
-  heroTrialNote: "Message us on LINE to schedule a free English-language chess trial class.",
+  heroTrialCta: "Book a Trial Lesson – NT$800",
+  heroTrialNote: "Message us on LINE to schedule a 1-on-1 English-language chess trial lesson (NT$800, normally NT$1,200).",
   heroSubscribe: "Subscribe",
 
   // Location pill
@@ -630,10 +630,10 @@ const en: typeof zh = {
   footerBookings: "My Bookings",
 
   // ── Trial CTA ───────────────────────────────────────────────────────────────
-  trialBadge: "Free Trial",
+  trialBadge: "First lesson NT$800",
   trialTitle: "Not sure yet? Try one class.",
-  trialSub: "One free 60-minute trial lesson. Your child will learn to checkmate an opponent before the class ends. No pressure, no commitment.",
-  trialCta: "Book a Free Trial",
+  trialSub: "Your first 60-minute 1-on-1 lesson is NT$800 (normally NT$1,200). Your child will learn to checkmate an opponent before the class ends. No package required, no pressure.",
+  trialCta: "Book a Trial Lesson",
 
   // ── Skill roadmap ───────────────────────────────────────────────────────────
   roadmapTitle: "A clear path forward",
