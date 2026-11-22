@@ -22,7 +22,7 @@ export default function ProfileFields({ value, onChange, zh }: { value: CoachPro
       </label>
       <label className="text-xs font-semibold text-gray-600 sm:col-span-2">{zh ? "教授科目 *" : "What you teach *"}
         <input value={value.subjects} onChange={set("subjects")} required maxLength={200}
-          placeholder={zh ? "例如：西洋棋、英文、數學" : "e.g. Chess, English, Math"} className={field} />
+          placeholder={zh ? "例如：西洋棋、數學、科學" : "e.g. Chess, Math, Science"} className={field} />
       </label>
       <label className="text-xs font-semibold text-gray-600 sm:col-span-2">{zh ? "一句話介紹（顯示在名字下方）" : "Headline (shown under your name)"}
         <input value={value.title} onChange={set("title")} maxLength={200}
