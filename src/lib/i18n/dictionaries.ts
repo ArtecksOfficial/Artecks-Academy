@@ -545,6 +545,8 @@ const zh = {
   lbTotal: "總 XP",
   lbError: "出了點問題，請再試一次。",
   lbDuplicate: "已經有同名的孩子了。",
+  lbBadName: "這個名字不能用在排行榜上，請填孩子的真實名字。",
+  lbNameHint: "排行榜會顯示這個名字。只填名字，不要填姓氏。",
 };
 
 const en: typeof zh = {
@@ -1088,6 +1090,8 @@ const en: typeof zh = {
   lbTotal: "Total XP",
   lbError: "Something went wrong. Please try again.",
   lbDuplicate: "You already added a child with that name.",
+  lbBadName: "That name isn't allowed on the leaderboard. Please use your child's real first name.",
+  lbNameHint: "This name shows on the leaderboard. First name only, no surname.",
 };
 
 export const dictionaries = { zh, en } satisfies Record<Locale, Record<string, string>>;

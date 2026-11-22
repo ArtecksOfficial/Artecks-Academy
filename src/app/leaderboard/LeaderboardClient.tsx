@@ -148,21 +148,8 @@ async function send(path: string, method: string, body?: object) {
   }).catch(() => null);
 }
 
-export function KidCard({ kid, onChange }: { kid: Kid; onChange: () => void }) {
+export function KidCard({ kid }: { kid: Kid; onChange?: () => void }) {
   const { t } = useLanguage();
-  const [nickname, setNickname] = useState(kid.nickname);
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState(false);
-
-  async function patch(body: object) {
-    setBusy(true);
-    setErr(false);
-    const r = await send(`/${kid.id}`, "PATCH", body);
-    setBusy(false);
-    if (!r || !r.ok) setErr(true);
-    else onChange();
-  }
-
   return (
     <div className="rounded-2xl bg-gray-50 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
@@ -171,13 +158,6 @@ export function KidCard({ kid, onChange }: { kid: Kid; onChange: () => void }) {
           {t("lbThisMonth")} <b className="text-[#A07C34]">{kid.xp_month}</b> · {t("lbTotal")} <b>{kid.xp_total}</b>
         </span>
       </div>
-      <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); patch({ nickname }); }}>
-        <input value={nickname} onChange={(e) => setNickname(e.target.value.slice(0, 20))} placeholder={kid.first_name}
-          aria-label={t("lbNickname")} className={input} />
-        <button type="submit" disabled={busy || nickname === kid.nickname}
-          className="rounded-xl bg-[#13223F] disabled:opacity-40 text-white text-xs font-bold px-4 whitespace-nowrap">{t("lbSave")}</button>
-      </form>
-      {err && <p role="alert" className="text-xs text-red-600">{t("lbError")}</p>}
     </div>
   );
 }
@@ -196,7 +176,6 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
     const r = await send("", "POST", {
       first_name: String(f.get("first_name") || "").trim(),
       age: Number(f.get("age") || 0),
-      nickname: String(f.get("nickname") || "").trim(),
       leaderboard_opt_in: true, // every child is on the leaderboard; kept so the field stays consistent
     });
     setBusy(false);
@@ -206,7 +185,8 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
       return;
     }
     const d = await r?.json().catch(() => ({}));
-    setErr(d?.detail === "duplicate" ? t("lbDuplicate") : t("lbError"));
+    const badName = JSON.stringify(d?.first_name ?? "").includes("isn't allowed");
+    setErr(d?.detail === "duplicate" ? t("lbDuplicate") : badName ? t("lbBadName") : t("lbError"));
   }
 
   if (!open) {
@@ -222,10 +202,7 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
         <input name="first_name" required maxLength={50} placeholder={t("lbFirstName")} aria-label={t("lbFirstName")} className={input} />
         <input name="age" required type="number" min={3} max={99} placeholder={t("lbAge")} aria-label={t("lbAge")} className={input} />
       </div>
-      <div>
-        <input name="nickname" maxLength={20} placeholder={t("lbNickname")} aria-label={t("lbNickname")} className={input} />
-        <p className="text-[11px] text-gray-500 mt-1">{t("lbNickHint")}</p>
-      </div>
+      <p className="text-[11px] text-gray-500 -mt-1">{t("lbNameHint")}</p>
       {err && <p role="alert" className="text-xs text-red-600">{err}</p>}
       <button type="submit" disabled={busy} className="rounded-xl bg-[#13223F] disabled:opacity-60 text-white text-sm font-bold py-2.5">
         {busy ? "…" : t("lbAddKid")}
