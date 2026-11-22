@@ -2,7 +2,6 @@
 // ─── HomePageContent ──────────────────────────────────────────────────────────
 // Client component — receives server-fetched data and renders with live i18n.
 
-import EnglishLessonsLink from "./EnglishLessonsLink";
 import SiteHeader from "@/app/components/SiteHeader";
 import LegalLinks from "@/app/components/LegalLinks";
 import TeachWithUs from "@/app/components/TeachWithUs";
@@ -263,7 +262,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
               </a>
             </div>
             <p className="text-xs text-[#9FAAC0] -mt-3">{t("heroTrialNote")}</p>
-            <EnglishLessonsLink zh={zh} />
           </div>
           <HeroBoard caption={zh ? "每一步都用英文說出來——孩子邊下棋邊學英文。" : "Every move is said in English — kids learn the language while they play."} />
         </div>
