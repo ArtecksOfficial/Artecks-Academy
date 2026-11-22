@@ -4,7 +4,7 @@
 // will see and apply. They can set their hours and calendar straight away in
 // the coach dashboard; they stay hidden from parents until the owner approves.
 
-import { useEffect, useState, FormEvent } from "react";
+import { useCallback, useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Clock, GraduationCap, Loader2 } from "lucide-react";
@@ -12,7 +12,8 @@ import SiteHeader from "@/app/components/SiteHeader";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import ProfileFields, { EMPTY_PROFILE, type CoachProfile } from "@/app/coach/ProfileFields";
+import ProfileFields, { EMPTY_PROFILE, bankComplete, type CoachProfile } from "@/app/coach/ProfileFields";
+import LineAlertsCard from "@/app/coach/LineAlertsCard";
 
 interface ApplyStatus { applied: boolean; status: "approved" | "pending" | "rejected" | null; is_active: boolean }
 
@@ -27,6 +28,16 @@ export default function TeachClient() {
   const [profile, setProfile] = useState<CoachProfile>(EMPTY_PROFILE);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [lineOn, setLineOn] = useState(false);
+  const [agree, setAgree] = useState(false);
+  const onLine = useCallback((on: boolean) => setLineOn(on), []);
+  // Keep what they typed across the LINE round-trip.
+  useEffect(() => {
+    try { const d = sessionStorage.getItem("teach_draft"); if (d) setProfile((p) => ({ ...p, ...JSON.parse(d) })); } catch { /* ignore */ }
+  }, []);
+  useEffect(() => {
+    try { const { bank_account: _omit, ...rest } = profile; void _omit; sessionStorage.setItem("teach_draft", JSON.stringify(rest)); } catch { /* ignore */ }
+  }, [profile]);
 
   useEffect(() => {
     if (!user) return;
@@ -42,7 +53,10 @@ export default function TeachClient() {
       method: "POST", headers: { "Content-Type": "application/json", ...authHeaders() }, body: JSON.stringify(profile),
     }).catch(() => null);
     setBusy(false);
-    if (r && r.status === 201) { router.push("/coach"); return; }
+    if (r && r.status === 201) { try { sessionStorage.removeItem("teach_draft"); } catch { /* ignore */ } router.push("/coach"); return; }
+    const body = r ? await r.json().catch(() => ({})) : {};
+    if (body.line) { setErr(zh ? "請先連結 LINE 並加 Artecks Academy 為好友。" : "Connect LINE and add Artecks Academy as a friend first."); return; }
+    if (body.bank || body.bank_code || body.bank_account) { setErr(zh ? "請填寫完整的收款帳戶（銀行代碼 3 碼、完整帳號）。" : "Fill in your payout account (3-digit bank code, full account number)."); return; }
     if (r && r.status === 409) { router.push("/coach"); return; }
     setErr(zh ? "無法送出，請確認姓名與教授科目都已填寫。" : "Couldn't send that. Please check your name and what you teach are filled in.");
   }
@@ -104,8 +118,15 @@ export default function TeachClient() {
             <h2 className="text-base font-black text-[#13223F]">{zh ? "你的老師檔案" : "Your teacher profile"}</h2>
             <p className="-mt-2 text-xs text-gray-500">{zh ? "審核通過後，家長會在「教練與課程」頁看到這些資料。" : "Parents see this on the Coaches & programs page once you're approved."}</p>
             <ProfileFields value={profile} onChange={setProfile} zh={zh} />
+            <h3 className="mt-2 text-sm font-black text-[#13223F]">{zh ? "LINE 預約通知（必填）" : "LINE booking alerts (required)"}</h3>
+            <LineAlertsCard zh={zh} next="/teach" onStatus={onLine} />
+            <label className="flex items-start gap-3 text-xs text-gray-700 leading-relaxed">
+              <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} required className="mt-0.5 w-4 h-4 accent-[#13223F]" />
+              <span>{zh ? "我同意透過 LINE 接收預約通知，並會留意家長的預約。"
+                        : "I agree to receive booking alerts on LINE and to keep an eye on parents' bookings."}</span>
+            </label>
             {err && <p role="alert" className="text-sm text-red-600">{err}</p>}
-            <button type="submit" disabled={busy || !profile.name.trim() || !profile.subjects.trim()}
+            <button type="submit" disabled={busy || !profile.name.trim() || !profile.subjects.trim() || !bankComplete(profile) || !lineOn || !agree}
               className="self-start rounded-xl bg-[#C49A4A] px-6 py-3 text-sm font-black text-[#0E1E3A] disabled:opacity-50">
               {busy ? "…" : zh ? "送出申請" : "Apply"}
             </button>
