@@ -117,7 +117,7 @@ export default function XpRulesClient() {
                   {zh ? " 歲。" : " years."}
                 </li>
                 <li>{zh ? "累積總 XP 會一直保留，不會因每月重新開始而消失。" : "Total XP is kept forever. The monthly restart only affects the monthly board."}</li>
-                <li>{zh ? "家長同意後才會出現在排行榜上，只顯示暱稱，不會顯示照片或姓氏。" : "Kids only appear if a parent opts in, and only by nickname: no photo, no surname."}</li>
+                <li>{zh ? "每位學生都會出現在排行榜上，只顯示名字，不會顯示照片或姓氏。" : "Every student is on the leaderboard by first name only: no photo, no surname."}</li>
               </ul>
               {rules.prize && (
                 <p className="mt-4 inline-block rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5">🏆 {rules.prize}</p>

@@ -519,7 +519,7 @@ const zh = {
   // ── Leaderboard ──
   lbNav: "排行榜",
   lbTitle: "林口小棋手排行榜",
-  lbSub: "孩子每上一堂課、每次表現優秀都能賺 XP。依年齡分組，只顯示暱稱。",
+  lbSub: "孩子每上一堂課、每次表現優秀都能賺 XP。依年齡分組，只顯示名字（不顯示姓氏）。",
   lbMonth: "本月",
   lbAll: "總排行",
   lbGroup: "歲",
@@ -1064,7 +1064,7 @@ const en: typeof zh = {
   // ── Leaderboard ──
   lbNav: "Leaderboard",
   lbTitle: "Linkou young players leaderboard",
-  lbSub: "Kids earn XP for every lesson and great effort. Ranked by age group, nicknames only.",
+  lbSub: "Kids earn XP for every lesson and great effort. Ranked by age group, first names only.",
   lbMonth: "This month",
   lbAll: "All time",
   lbGroup: "yrs",

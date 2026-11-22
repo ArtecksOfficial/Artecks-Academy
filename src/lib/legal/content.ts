@@ -18,7 +18,7 @@ const privacy: LegalDoc = {
       heading: { zh: "一、我們蒐集的資料", en: "1. What we collect" },
       body: [
         { zh: "家長或監護人：姓名、電話、LINE ID 或其他聯絡方式、Email，以及您使用 LINE 登入時 LINE 提供的顯示名稱與使用者識別碼。", en: "Parents and guardians: name, phone number, LINE ID or other contact detail, email, and, if you log in with LINE, the display name and user identifier LINE gives us." },
-        { zh: "學生：姓名或暱稱、年齡或出生年、西洋棋程度、上課地區偏好，以及您在備註中提供的資訊。", en: "Students: name or nickname, age or birth year, chess level, preferred lesson area, and anything you tell us in the notes field." },
+        { zh: "學生：姓名、年齡或出生年、西洋棋程度、上課地區偏好，以及您在備註中提供的資訊。學生會以名字（不含姓氏、不含照片）出現在學院的公開排行榜上。", en: "Students: name, age or birth year, chess level, preferred lesson area, and anything you tell us in the notes field. Students appear on the academy's public leaderboard by first name only (no surname, no photo)." },
         { zh: "上課與學習紀錄：預約與出席紀錄、教練的課後報告與作業、經驗值（XP）與寶石、排行榜上顯示的名字、您填寫的課後回饋。", en: "Lesson and learning records: bookings and attendance, coach reports and homework, XP and gems, the name shown on the leaderboard, and feedback you submit." },
         { zh: "付款資料：付款方式、金額與狀態；以銀行轉帳付款時，您回報的帳號末五碼。信用卡資料由金流服務商（綠界 ECPay）處理，我們不會取得或保存完整卡號。", en: "Payment records: method, amount and status; for bank transfers, the last five digits of the account you report. Card details are handled by our payment provider (ECPay); we never receive or store full card numbers." },
         { zh: "網站使用資料：瀏覽的頁面、來源頁面與基本的裝置資訊，用於了解網站使用情況。", en: "Site usage: pages viewed, the referring page and basic device information, used to understand how the site is used." },

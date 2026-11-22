@@ -1,6 +1,6 @@
 "use client";
 // ─── Kids' XP leaderboard — by age group, this month / all time ──────────────
-// Opted-in kids only, nicknames only. Parents manage their kids below.
+// Every kid, by first name only (Nov 2026). Parents manage their kids below.
 
 import SiteHeader from "@/app/components/SiteHeader";
 import AuthButton from "@/app/components/AuthButton";
