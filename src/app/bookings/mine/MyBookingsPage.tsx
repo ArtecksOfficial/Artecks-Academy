@@ -185,7 +185,7 @@ export default function MyBookingsPage() {
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col gap-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h1 className="font-serif-tc text-3xl font-black text-[#13223F]">{zh ? "我的課程" : "My lessons"}</h1>
+            <h1 className="font-serif-tc text-3xl font-black text-[#13223F]">{zh ? "孩子的課程" : "My kids' lessons"}</h1>
             <p className="mt-1 text-sm text-[#5B6478]">{zh ? "即將到來與過去的課程、付款和課後報告。" : "Upcoming and past lessons, payments and lesson reports."}</p>
           </div>
           <Link href="/book" className="rounded-xl bg-[#C49A4A] px-4 py-2.5 text-sm font-bold text-[#0E1E3A] hover:bg-[#D4AE63]">

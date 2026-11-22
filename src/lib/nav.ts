@@ -28,7 +28,7 @@ export const GROUPS: Group[] = [
     en: "My learning", zh: "我的學習", signedInOnly: true,
     items: [
       { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
-      { href: "/bookings/mine", en: "My lessons", zh: "我的課程", icon: BookOpen, guardianOnly: true },
+      { href: "/bookings/mine", en: "My kids' lessons", zh: "孩子的課程", icon: BookOpen, guardianOnly: true },
       ...(ACHIEVEMENTS_ENABLED ? [{ href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true }] : []),
       { href: "/account", en: GEMS_ENABLED ? "Account & gems" : "Account", zh: GEMS_ENABLED ? "帳戶與寶石" : "帳戶", icon: UserRound },
       { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
