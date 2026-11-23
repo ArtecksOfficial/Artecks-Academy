@@ -144,7 +144,7 @@ export default function SiteSidebar() {
               <div className={`grid ${GEMS_ENABLED ? "grid-cols-2" : "grid-cols-1"} gap-2 text-xs font-bold`}>
                 <span className="rounded-lg bg-white/5 px-2.5 py-2 text-center" title={zh ? "我的經驗值" : "My XP"}>⚡ {wallet.xp.toLocaleString()} XP</span>
                 {GEMS_ENABLED && (
-                  <Link href="/account" className="rounded-lg bg-white/5 px-2.5 py-2 text-center text-[#E7C98A] hover:bg-white/10" title={zh ? "家庭寶石" : "Family gems"}>
+                  <Link href="/packages" className="rounded-lg bg-white/5 px-2.5 py-2 text-center text-[#E7C98A] hover:bg-white/10" title={zh ? "家庭寶石" : "Family gems"}>
                     💎 {wallet.gems.toLocaleString()}
                   </Link>
                 )}

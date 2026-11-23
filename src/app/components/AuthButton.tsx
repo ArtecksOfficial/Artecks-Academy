@@ -129,7 +129,7 @@ export default function AuthButton({ variant = "light", locale = "en" }: Props) 
               </div>
             )}
             {[
-              ["/account", zh ? "我的帳戶" : "My account"],
+              ["/dashboard", zh ? "學習總覽" : "Dashboard"],
               ["/bookings/mine", zh ? "我的預約" : "My bookings"],
               ["/packages", zh ? "我的套票" : "My packages"],
               ["/leaderboard", zh ? "我的孩子 · 排行榜" : "My kids · Leaderboard"],

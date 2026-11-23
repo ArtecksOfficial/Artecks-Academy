@@ -16,6 +16,8 @@ import { getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { GEMS_ENABLED } from "@/lib/gems";
 import { routes } from "@/lib/platform";
+import { ReferralShare } from "@/app/components/Referral";
+import { myReferral, type MyReferral } from "@/lib/referral";
 
 interface Lesson { booking_id: number; start: string; coach: string; title: string }
 interface Kid {
@@ -42,6 +44,8 @@ export default function DashboardClient() {
   const [data, setData] = useState<Dashboard | null | "error">(null);
   const [tracker, setTracker] = useState<TrackerPackage[]>([]);
   const [kidMode, setKidMode] = useState(false);
+  // Invite other parents (moved here from the old account page).
+  const [referral, setReferral] = useState<MyReferral | null>(null);
   // Open homework per child (from the kids list), keyed by child id.
   const [homework, setHomework] = useState<Record<number, Homework[]>>({});
 
@@ -49,6 +53,7 @@ export default function DashboardClient() {
     if (!user) return;
     if (getKidSession()) { setKidMode(true); return; }
     const h = { headers: authHeaders() };
+    myReferral(authHeaders()).then(setReferral);
     fetch("/api/dashboard", h).then((r) => (r.ok ? r.json() : Promise.reject())).then(setData).catch(() => setData("error"));
     fetch("/api/students", h).then((r) => (r.ok ? r.json() : null))
       .then((d) => {
@@ -96,7 +101,7 @@ export default function DashboardClient() {
               <Tile icon={<Package size={15} />} label={zh ? "剩餘堂數" : "Classes left"} value={data.family.classes_left}
                 hint={data.family.active_packages ? (zh ? `${data.family.active_packages} 組套票` : `${data.family.active_packages} active package${data.family.active_packages === 1 ? "" : "s"}`) : (zh ? "尚無套票" : "No package yet")}
                 href={data.family.active_packages ? "#tracker" : "/packages"} />
-              {GEMS_ENABLED && <Tile icon={<Gem size={15} />} label={zh ? "家庭寶石" : "Family gems"} value={data.family.gems} hint={zh ? "可折抵套票" : "For package discounts"} href="/account" />}
+              {GEMS_ENABLED && <Tile icon={<Gem size={15} />} label={zh ? "家庭寶石" : "Family gems"} value={data.family.gems} hint={zh ? "可折抵套票" : "For package discounts"} href="/packages" />}
               <Tile icon={<BookOpen size={15} />} label={zh ? "本月上課" : "Lessons this month"} value={data.kids.reduce((n, k) => n + k.lessons_this_month, 0)} hint={zh ? "所有孩子" : "All kids"} />
               <Tile icon={<Sparkles size={15} />} label={zh ? "本月 XP" : "XP this month"} value={data.kids.reduce((n, k) => n + k.xp_month, 0)} hint={zh ? "所有孩子" : "All kids"} href="/leaderboard" />
             </section>
@@ -116,6 +121,10 @@ export default function DashboardClient() {
                 <p className="mt-1 mb-4 text-xs text-gray-500">{zh ? "每上完一堂，這裡會顯示套票還剩幾堂。" : "After every class, see how many are left in the package."}</p>
                 <PackageTracker packages={tracker} zh={zh} />
               </section>
+            )}
+
+            {referral?.url && (
+              <ReferralShare url={referral.url} rewards={referral.rewards_available} families={referral.families_joined} />
             )}
           </>
         )}

@@ -20,6 +20,12 @@ const webConfig: NextConfig = {
   async redirects() {
     return [
       {
+        // The old account page was folded into /dashboard and /settings.
+        source: "/account",
+        destination: "/dashboard",
+        permanent: false,
+      },
+      {
         source: "/bookings",
         destination: "/bookings/mine",
         permanent: true,

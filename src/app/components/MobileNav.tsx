@@ -73,7 +73,7 @@ export default function MobileNav() {
     user && !kidMode
       ? { href: "/dashboard", en: "Learning", zh: "學習", icon: LayoutDashboard }
       : user
-        ? { href: "/account", en: "Me", zh: "我的", icon: LayoutDashboard }
+        ? { href: "/leaderboard", en: "Me", zh: "我的", icon: LayoutDashboard }
         : { href: `/login?next=${encodeURIComponent(path)}`, en: "Log in", zh: "登入", icon: LogIn },
   ];
   const tabs = mode === "coach" ? coachTabs : parentTabs;
