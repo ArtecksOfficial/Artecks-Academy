@@ -96,7 +96,7 @@ export default function SiteFooter() {
   ].filter(Boolean);
 
   return (
-    <footer className="mt-16 bg-[#0E1E3A] text-white">
+    <footer className="bg-[#0E1E3A] text-white">
       {/* 1. Call to action */}
       <div className="border-b border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
