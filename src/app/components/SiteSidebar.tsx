@@ -1,7 +1,7 @@
 "use client";
 // ─── Left sidebar (desktop) — the main navigation on wide screens ────────────
 // Same shape as the other Artecks sites (chess.artecks.com): brand at the top,
-// grouped links with icons, account and wallet (XP, gems) at the bottom.
+// grouped links with icons, account and earned XP + store coupons at the bottom.
 // Language is changed in Settings (and in the top bar on phones), not here.
 // Below the `lg` breakpoint the sidebar is hidden and SiteHeader (the top bar)
 // takes over; on `lg` and up SiteHeader hides and the page is shifted right
@@ -20,7 +20,6 @@ import NotificationBell from "./NotificationBell";
 import { COACH_GROUPS, GROUPS, type Item } from "@/lib/nav";
 import { useMode } from "./ModeContext";
 import { useShowSidebar } from "./useShowSidebar";
-import { GEMS_ENABLED } from "@/lib/gems";
 
 export default function SiteSidebar() {
   const { locale } = useLanguage();
@@ -28,7 +27,7 @@ export default function SiteSidebar() {
   const path = usePathname() || "/";
   const router = useRouter();
   const { user, isLoading, logout } = useAuth();
-  const [wallet, setWallet] = useState<{ xp: number; gems: number } | null>(null);
+  const [wallet, setWallet] = useState<{ xp: number; coupons: number } | null>(null);
   const [kidMode, setKidMode] = useState(false);
   const { isCoach, mode, switchTo, coachTab } = useMode();
 
@@ -40,7 +39,7 @@ export default function SiteSidebar() {
     if (!token) return;
     fetch("/api/wallet", { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (d && typeof d.xp === "number") setWallet({ xp: d.xp, gems: d.gems ?? 0 }); })
+      .then((d) => { if (d && typeof d.xp === "number") setWallet({ xp: d.academy_xp ?? 0, coupons: d.active_coupons ?? 0 }); })
       .catch(() => {});
   }, [user]);
 
@@ -141,13 +140,11 @@ export default function SiteSidebar() {
               )}
             </div>
             {wallet && (
-              <div className={`grid ${GEMS_ENABLED ? "grid-cols-2" : "grid-cols-1"} gap-2 text-xs font-bold`}>
+              <div className="grid grid-cols-2 gap-2 text-xs font-bold">
                 <span className="rounded-lg bg-white/5 px-2.5 py-2 text-center" title={zh ? "我的經驗值" : "My XP"}>⚡ {wallet.xp.toLocaleString()} XP</span>
-                {GEMS_ENABLED && (
-                  <Link href="/packages" className="rounded-lg bg-white/5 px-2.5 py-2 text-center text-[#E7C98A] hover:bg-white/10" title={zh ? "家庭寶石" : "Family gems"}>
-                    💎 {wallet.gems.toLocaleString()}
-                  </Link>
-                )}
+                <a href="https://store.artecks.com/coupons" className="rounded-lg bg-white/5 px-2.5 py-2 text-center text-[#E7C98A] hover:bg-white/10" title={zh ? "可用的商店折扣券" : "Store coupons you can use"}>
+                  🎟 {wallet.coupons.toLocaleString()}
+                </a>
               </div>
             )}
           </>
