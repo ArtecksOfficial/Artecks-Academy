@@ -157,7 +157,9 @@ export default function MobileNav() {
                 if (!items.length) return null;
                 return (
                   <div key={group.en} className="mt-3">
-                    <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">{zh ? group.zh : group.en}</p>
+                    {!group.hideTitle && (
+                      <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">{zh ? group.zh : group.en}</p>
+                    )}
                     <ul className="grid grid-cols-2 gap-1">
                       {items.map((item) => {
                         const active = isActive(item.href, item);
