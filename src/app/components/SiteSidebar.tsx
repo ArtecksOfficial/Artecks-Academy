@@ -81,7 +81,7 @@ export default function SiteSidebar() {
         )}
         {groups.map((group) => {
           if (group.signedInOnly && !user) return null;
-          const items = group.items.filter((i) => !(kidMode && i.guardianOnly) && !(!kidMode && i.kidOnly) && !(user && i.guestOnly));
+          const items = group.items.filter((i) => !(kidMode && i.guardianOnly) && !(user && i.guestOnly));
           if (items.length === 0) return null;
           return (
             <div key={group.en} className="mt-4 first:mt-0">

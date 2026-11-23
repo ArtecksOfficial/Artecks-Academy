@@ -104,7 +104,6 @@ export default function AccountClient() {
                   </p>
                 )}
                 <ul className="mt-4 grid grid-cols-2 gap-2 text-xs text-gray-600">
-                  <li className="rounded-xl bg-gray-50 px-3 py-2">♟ {zh ? "孩子在 chess.artecks.com 下棋" : "Kids playing on chess.artecks.com"}</li>
                   <li className="rounded-xl bg-gray-50 px-3 py-2">✅ {zh ? "每出席一堂 +5" : "+5 per lesson attended"}</li>
                   <li className="rounded-xl bg-gray-50 px-3 py-2">📝 {zh ? "每次課後回饋 +15" : "+15 per lesson feedback"}</li>
                   <li className="rounded-xl bg-gray-50 px-3 py-2">🎉 {zh ? "上完整套課程 +100" : "+100 for finishing a package"}</li>

@@ -2,15 +2,14 @@
 import {
   BookOpenCheck, CalendarDays, ClipboardList, MessageSquareHeart, UserCog,
   Award, BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, MessageCircle,
-  Languages, Package, Settings, ShoppingBag, Sparkles, Swords, Trophy, UserRound, Users, type LucideIcon,
+  Languages, Package, Settings, ShoppingBag, Sparkles, Trophy, UserRound, Users, type LucideIcon,
 } from "lucide-react";
-import { CHESS_URL } from "@/lib/kid-mode";
 import { STORE_URL } from "@/lib/store";
 import { TEACH_URL } from "@/lib/teach";
 import { GEMS_ENABLED } from "@/lib/gems";
 import { ACHIEVEMENTS_ENABLED } from "@/lib/achievements-flag";
 
-export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean; guestOnly?: boolean; kidOnly?: boolean }
+export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean; guestOnly?: boolean }
 export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
 
 export const GROUPS: Group[] = [
@@ -38,9 +37,7 @@ export const GROUPS: Group[] = [
   {
     en: "More", zh: "更多",
     items: [
-      // Parents go to the store; kids (Kid Mode) keep their link to play chess.
       { href: STORE_URL, en: "Artecks Store", zh: "Artecks 商店", icon: ShoppingBag, external: true, guardianOnly: true },
-      { href: CHESS_URL, en: "Play chess", zh: "線上下棋", icon: Swords, external: true, kidOnly: true },
       { href: "/coach", en: "For coaches", zh: "教練專區", icon: GraduationCap, guardianOnly: true },
       { href: TEACH_URL, en: "Be a teacher", zh: "成為老師", icon: Languages, guardianOnly: true },
       { href: "/#faq", en: "FAQ", zh: "常見問題", icon: HelpCircle },
@@ -74,7 +71,7 @@ export const COACH_GROUPS: Group[] = [
   {
     en: "More", zh: "更多",
     items: [
-      { href: CHESS_URL, en: "Play chess", zh: "線上下棋", icon: Swords, external: true },
+      { href: STORE_URL, en: "Artecks Store", zh: "Artecks 商店", icon: ShoppingBag, external: true },
       { href: "/coaches", en: "Coaches page", zh: "教練與課程", icon: Users },
       { href: "/#faq", en: "FAQ", zh: "常見問題", icon: HelpCircle },
       { href: "/#line-contact", en: "Contact", zh: "聯絡我們", icon: MessageCircle },
