@@ -14,7 +14,7 @@ export const OPERATOR = {
   /** Registered or correspondence address. */
   address: "",
   /** Customer-service email parents can write to. */
-  email: "",
+  email: "service@artecks.com",
   /** LINE Official Account ID. */
   line: "@843yqhoa",
   /** Date these policies take effect, e.g. "2026-12-01". */

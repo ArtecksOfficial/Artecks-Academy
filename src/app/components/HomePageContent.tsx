@@ -3,7 +3,6 @@
 // Client component — receives server-fetched data and renders with live i18n.
 
 import SiteHeader from "@/app/components/SiteHeader";
-import LegalLinks from "@/app/components/LegalLinks";
 import TeachWithUs from "@/app/components/TeachWithUs";
 import HeroBoard from "./HeroBoard";
 import AuthButton from "./AuthButton";
@@ -378,18 +377,6 @@ export default function HomePageContent({ sessions, provider }: Props) {
             ))}
           </div>
         </section>
-
-
-        {/* ── Footer ── */}
-        <footer className="border-t border-gray-200 pt-8 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-gray-400">
-          <div className="flex items-center gap-2">
-            <span className="text-base text-[#C49A4A]">♞</span>
-            <span className="font-bold text-gray-500">Artecks Academy</span>
-            <span>· Linkou, New Taipei</span>
-          </div>
-          <LegalLinks />
-
-        </footer>
 
       </div>
     </div>
