@@ -10,11 +10,19 @@ import { GEMS_ENABLED } from "@/lib/gems";
 import { ACHIEVEMENTS_ENABLED } from "@/lib/achievements-flag";
 
 export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean; guestOnly?: boolean }
-export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean }
+/** hideTitle: no heading is shown; the group is separated by spacing only. `en` stays as the React key. */
+export interface Group { en: string; zh: string; items: Item[]; signedInOnly?: boolean; hideTitle?: boolean }
 
 export const GROUPS: Group[] = [
   {
-    en: "Academy", zh: "學院",
+    en: "My learning", zh: "我的學習", signedInOnly: true, hideTitle: true,
+    items: [
+      { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
+      { href: "/bookings/mine", en: "My kids' lessons", zh: "孩子的課程", icon: BookOpen, guardianOnly: true },
+    ],
+  },
+  {
+    en: "Academy", zh: "學院", hideTitle: true,
     items: [
       { href: "/", en: "Home", zh: "首頁", icon: Home, guestOnly: true },
       { href: "/coaches", en: "Coaches & programs", zh: "教練與課程", icon: Users, guestOnly: true },
@@ -25,10 +33,8 @@ export const GROUPS: Group[] = [
     ],
   },
   {
-    en: "My learning", zh: "我的學習", signedInOnly: true,
+    en: "Account", zh: "帳戶", signedInOnly: true, hideTitle: true,
     items: [
-      { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
-      { href: "/bookings/mine", en: "My kids' lessons", zh: "孩子的課程", icon: BookOpen, guardianOnly: true },
       ...(ACHIEVEMENTS_ENABLED ? [{ href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true }] : []),
       { href: "/account", en: GEMS_ENABLED ? "Account & gems" : "Account", zh: GEMS_ENABLED ? "帳戶與寶石" : "帳戶", icon: UserRound },
       { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
