@@ -10,6 +10,7 @@ const ALLOWED = [
   /^me$/,
   /^apply$/,
   /^sessions$/,
+  /^classes$/,
   /^sessions\/\d+$/,
   /^bookings\/\d+\/(attend|report)$/,
   /^availability$/,

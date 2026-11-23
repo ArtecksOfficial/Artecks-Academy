@@ -15,6 +15,7 @@ import ArenaPanel from "./ArenaPanel";
 import CoachCalendar from "./CoachCalendar";
 import HomeworkPanel from "./HomeworkPanel";
 import ProfilePanel from "./ProfilePanel";
+import CreateClassForm from "./CreateClassForm";
 import { PRICE_REVIEWED_KEY } from "./PriceCard";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 
@@ -43,6 +44,8 @@ interface CoachSession {
   location_address: string;
   private_access_notes: string;
   is_private: boolean;
+  awaiting_approval?: boolean;
+  max_seats?: number;
   students: Student[];
 }
 
@@ -280,6 +283,7 @@ export default function CoachDashboard() {
 
             {tab === "sessions" && (
               <div className="flex flex-col gap-4">
+                <CreateClassForm zh={locale === "zh"} onCreated={load} />
                 {sessions.length === 0 && <p className="text-sm text-gray-500">{t("coachNoSessions")}</p>}
                 {sessions.map((s) => (
                   <SessionCard key={s.id} s={s} locale={locale} t={t} onAttend={markAttended} onSaveReport={saveReport} />
@@ -362,6 +366,11 @@ function SessionCard({
         {s.is_private && (
           <span className="flex-shrink-0 text-[11px] font-bold text-[#A07C34] bg-[#FBF5E8] border border-[#E7C98A] rounded-full px-2.5 py-0.5">
             {t("coachPrivate")}
+          </span>
+        )}
+        {s.awaiting_approval && (
+          <span className="flex-shrink-0 text-[11px] font-bold text-amber-800 bg-amber-100 border border-amber-300 rounded-full px-2.5 py-0.5">
+            {locale === "zh" ? "等待學院審核" : "Waiting for approval"}
           </span>
         )}
       </div>
