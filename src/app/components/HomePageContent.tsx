@@ -336,9 +336,8 @@ export default function HomePageContent({ sessions, provider }: Props) {
               <h2 className="font-serif-tc text-3xl font-black text-white">{t("lineTitle")}</h2>
               <p className="text-sm text-green-100/80 mt-1">{t("lineSub")}</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="mx-auto grid max-w-md grid-cols-1 gap-4">
               {([
-                { labelKey: "lineClubLabel" as DictionaryKey, descKey: "lineClubDesc" as DictionaryKey, href: "https://line.me/R/ti/g/t8ChQN7Uxm", btnKey: "lineJoin" as DictionaryKey },
                 { labelKey: "linePrivateLabel" as DictionaryKey, descKey: "linePrivateDesc" as DictionaryKey, href: "https://lin.ee/6cna1xVd", btnKey: "lineContact" as DictionaryKey },
               ]).map(({ labelKey, descKey, href, btnKey }) => (
                 <a key={labelKey} href={href} target="_blank" rel="noopener noreferrer"

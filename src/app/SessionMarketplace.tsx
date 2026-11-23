@@ -764,31 +764,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
                         {zh ? "排定課程後，日期會在這裡標示出來。" : "Highlighted dates will appear here once sessions are scheduled."}
                       </p>
                       
-                      <a
-                        href="https://line.me/R/ti/g/wFsD8CkSGR"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white text-xs font-semibold shadow-sm transition-opacity hover:opacity-90 active:opacity-80"
-                        style={{ backgroundColor: "#06C755" }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                          <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
-                        </svg>
-                        {zh ? "加入 LINE 群組預約" : "Join LINE Group"}
-                      </a>
-                      <a
-                        href="https://line.me/R/ti/g/t8ChQN7Uxm"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white text-xs font-semibold shadow-sm transition-opacity hover:opacity-90 active:opacity-80 mt-2"
-                        style={{ backgroundColor: "#06C755" }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                          <path d="M19.952 11.034C19.952 6.583 15.49 2.953 10 2.953S.048 6.583.048 11.034c0 4.02 3.566 7.389 8.382 8.028.326.07.771.215.883.494.102.254.067.652.033.909l-.143.857c-.044.254-.202 1.002.878.546 1.08-.455 5.826-3.432 7.949-5.878 1.465-1.607 2.922-3.636 2.922-5.956z"/>
-                        </svg>
-                        {zh ? "加入棋藝俱樂部" : "Join Chess Club"}
-                      </a>
-                      <a href="/book" className="block mt-3 text-xs font-bold text-[#A07C34] hover:text-[#8A6A2C]">
+                      <a href="/book" className="block text-xs font-bold text-[#A07C34] hover:text-[#8A6A2C]">
                         {zh ? "想要一對一課程？預約上課時間 →" : "Book a 1-on-1 lesson →"}
                       </a>
                     </div>
