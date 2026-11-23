@@ -3,7 +3,7 @@
 // until LEGAL_PUBLISHED is true. Fill in the operator details and the effective
 // date, read the three policies in content.ts, then flip the switch.
 
-export const LEGAL_PUBLISHED = false;
+export const LEGAL_PUBLISHED = true;
 
 export const OPERATOR = {
   brand: "Artecks Academy",
@@ -18,5 +18,5 @@ export const OPERATOR = {
   /** LINE Official Account ID. */
   line: "@843yqhoa",
   /** Date these policies take effect, e.g. "2026-12-01". */
-  effectiveDate: "",
+  effectiveDate: "2026-12-01",
 };
