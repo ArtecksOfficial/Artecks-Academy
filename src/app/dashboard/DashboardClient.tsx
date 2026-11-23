@@ -30,7 +30,7 @@ interface Kid {
   chess: { elo: number; best_elo: number; wins: number; losses: number; draws: number; last_played: string | null } | null;
 }
 interface Homework { id: number; title: string; details: string; due_date: string | null }
-interface Dashboard { family: { gems: number; classes_left: number; active_packages: number }; kids: Kid[] }
+interface Dashboard { family: { gems: number; classes_left: number; active_packages: number; xp_coupon?: { step: number; percent: number } }; kids: Kid[] }
 
 const TZ = "Asia/Taipei";
 const card = "rounded-3xl bg-white border border-[#E2DDD2] p-5 sm:p-6 shadow-sm";
@@ -107,7 +107,7 @@ export default function DashboardClient() {
                 <Link href="/leaderboard" className="mt-3 inline-block text-sm font-bold text-[#A07C34]">{zh ? "新增孩子 →" : "Add a child →"}</Link>
               </section>
             ) : (
-              data.kids.map((k) => <KidCard key={k.id} kid={k} zh={zh} fmtDay={fmtDay} fmtTime={fmtTime} homework={homework[k.id] ?? []} />)
+              data.kids.map((k) => <KidCard key={k.id} kid={k} zh={zh} fmtDay={fmtDay} fmtTime={fmtTime} homework={homework[k.id] ?? []} coupon={data.family.xp_coupon} />)
             )}
 
             {tracker.length > 0 && (
@@ -139,7 +139,7 @@ function Tile({ icon, label, value, hint, href }: { icon: React.ReactNode; label
     : <Link href={href} className={`${cls} hover:border-[#C49A4A] transition-colors`}>{body}</Link>;
 }
 
-function KidCard({ kid, zh, fmtDay, fmtTime, homework }: { kid: Kid; zh: boolean; fmtDay: (s: string) => string; fmtTime: (s: string) => string; homework: Homework[] }) {
+function KidCard({ kid, zh, fmtDay, fmtTime, homework, coupon }: { kid: Kid; zh: boolean; fmtDay: (s: string) => string; fmtTime: (s: string) => string; homework: Homework[]; coupon?: { step: number; percent: number } }) {
   const sources = [
     { key: "lesson", label: zh ? "上課" : "Lessons", xp: kid.xp_by_source.lesson },
     { key: "chess", label: zh ? "線上下棋" : "Chess site", xp: kid.xp_by_source.chess },
@@ -173,6 +173,8 @@ function KidCard({ kid, zh, fmtDay, fmtTime, homework }: { kid: Kid; zh: boolean
         <Stat label={zh ? "棋力分數" : "Chess rating"} value={kid.chess ? String(kid.chess.elo) : "—"}
           sub={kid.chess ? (games ? (zh ? `${kid.chess.wins} 勝 ${kid.chess.losses} 敗 ${kid.chess.draws} 和` : `${kid.chess.wins}W ${kid.chess.losses}L ${kid.chess.draws}D`) : (zh ? "還沒下過棋" : "No games yet")) : (zh ? "開始兒童模式後顯示" : "Shown after Kid Mode play")} />
       </dl>
+
+      {coupon && coupon.step > 0 && <CouponProgress name={kid.first_name} total={kid.xp_total} step={coupon.step} percent={coupon.percent} zh={zh} />}
 
       <div className="mt-5 grid gap-5 md:grid-cols-2">
         <div>
@@ -263,6 +265,31 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
 
 // Eight bars, one per week (Monday start, Taipei). The value sits on each bar,
 // so the chart reads without hovering; a text summary is provided for screen readers.
+/** Progress toward the next XP milestone, which gives the family a store coupon. */
+function CouponProgress({ name, total, step, percent, zh }: { name: string; total: number; step: number; percent: number; zh: boolean }) {
+  const into = total % step;
+  const next = total - into + step;
+  const left = next - total;
+  const pct = Math.round((into / step) * 100);
+  return (
+    <div className="mt-4 rounded-2xl bg-[#FBF5E8] border border-[#E7C98A] px-4 py-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <p className="text-sm font-bold text-[#13223F]">
+          {zh ? `再 ${left.toLocaleString()} XP，就送 ${percent}% 商店折扣券` : `${left.toLocaleString()} XP to a ${percent}% off store coupon`}
+        </p>
+        <p className="text-xs text-[#5B6478]">{total.toLocaleString()} / {next.toLocaleString()} XP</p>
+      </div>
+      <div className="mt-2 h-2 rounded-full bg-white overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={step} aria-valuenow={into}
+        aria-label={zh ? `${name} 距離下一張折扣券的進度` : `${name}'s progress to the next coupon`}>
+        <div className="h-full rounded-full bg-[#C49A4A]" style={{ width: `${pct}%` }} />
+      </div>
+      <p className="mt-1.5 text-[11px] text-[#5B6478]">
+        {zh ? `每累積 ${step.toLocaleString()} XP，就會收到一張可在 Artecks 商店使用的折扣券（LINE 通知）。` : `Every ${step.toLocaleString()} XP, you get a coupon for the Artecks Store (sent on LINE).`}
+      </p>
+    </div>
+  );
+}
+
 function WeekBars({ weeks, zh }: { weeks: { week_start: string; xp: number }[]; zh: boolean }) {
   const max = Math.max(1, ...weeks.map((w) => w.xp));
   const label = (iso: string) => {
