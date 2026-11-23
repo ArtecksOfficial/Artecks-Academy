@@ -866,8 +866,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
         </section>
 
         {/* ── Footer ── */}
-        <footer className="py-6 border-t border-gray-200 flex items-center justify-between">
-          <p className="text-xs text-gray-400">© {new Date().getFullYear()} Artecks · academy.artecks.com</p>
+        <footer className="py-4 flex items-center justify-end">
           <a href="https://store.artecks.com/admin/academy/" target="_blank" rel="noopener noreferrer"
              className="text-xs text-gray-300 hover:text-gray-400 transition-colors">Admin ↗</a>
         </footer>

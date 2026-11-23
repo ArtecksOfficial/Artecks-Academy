@@ -1,3 +1,4 @@
+import SiteFooter from "./components/SiteFooter";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
@@ -61,6 +62,7 @@ export default function RootLayout({
               <SiteSidebar />
               <KidModeBar />
               {children}
+              <SiteFooter />
               <MobileNav />
               </ModeProvider>
             </AchievementsProvider>
