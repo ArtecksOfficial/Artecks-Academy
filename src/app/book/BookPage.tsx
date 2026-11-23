@@ -22,7 +22,7 @@ interface SlotResp {
   slot_minutes: number;
   max_gems?: number;
   gem_value_twd?: number;
-  coaches: { id: number; name: string; title: string }[];
+  coaches: { id: number; name: string; title: string; price_twd?: number }[];
   slots: { start: string; end: string }[];
   // First chess lesson of a first-time family is a trial; first_time is null for guests.
   trial_price_twd?: number | null;
@@ -289,8 +289,9 @@ export default function BookPage() {
                     <>
                       <span className="block text-sm font-bold">{zh ? lt.zh : lt.en}</span>
                       <span className={`block text-xs mt-0.5 ${lt.href ? "text-gray-500" : "text-[#E7C98A]"}`}>
-                        NT$ {lt.price.toLocaleString()} / {zh ? "人・堂" : "student"}
-                        {lt.href ? (zh ? " · 依年齡程度配對" : " · we match kids by age & level") : ""}
+                        {lt.href
+                          ? <>NT$ {lt.price.toLocaleString()} / {zh ? "人・堂" : "student"}{zh ? " · 依年齡程度配對" : " · we match kids by age & level"}</>
+                          : (zh ? "價格依教練而定，選教練時會看到" : "Each coach sets their price; you'll see it below")}
                       </span>
                     </>
                   );
@@ -365,6 +366,11 @@ export default function BookPage() {
                         coach === c.id ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
                       <span className="block text-sm font-bold">{c.name}</span>
                       {c.title && <span className={`block text-[11px] ${coach === c.id ? "text-[#E7C98A]" : "text-gray-500"}`}>{c.title}</span>}
+                      {c.price_twd != null && (
+                        <span className={`mt-0.5 block text-xs font-bold ${coach === c.id ? "text-white" : "text-[#13223F]"}`}>
+                          NT$ {c.price_twd.toLocaleString()} {zh ? "／堂" : "/ lesson"}
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>

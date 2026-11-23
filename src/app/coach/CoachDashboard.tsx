@@ -15,6 +15,8 @@ import ArenaPanel from "./ArenaPanel";
 import CoachCalendar from "./CoachCalendar";
 import HomeworkPanel from "./HomeworkPanel";
 import ProfilePanel from "./ProfilePanel";
+import CreateClassForm from "./CreateClassForm";
+import { PRICE_REVIEWED_KEY } from "./PriceCard";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
 
 interface Student {
@@ -42,6 +44,8 @@ interface CoachSession {
   location_address: string;
   private_access_notes: string;
   is_private: boolean;
+  awaiting_approval?: boolean;
+  max_seats?: number;
   students: Student[];
 }
 
@@ -112,15 +116,19 @@ export default function CoachDashboard() {
 
   const [approval, setApproval] = useState<"approved" | "pending" | "rejected">("approved");
   // Setup still missing: LINE booking alerts and/or the payout bank account.
-  const [setup, setSetup] = useState<{ line: boolean; payout: boolean }>({ line: true, payout: true });
+  const [setup, setSetup] = useState<{ line: boolean; payout: boolean; price: boolean }>({ line: true, payout: true, price: true });
 
   const load = useCallback(async () => {
-    const me = await api<{ name: string; approval_status?: "approved" | "pending" | "rejected"; line_alerts_on?: boolean; payout_ready?: boolean }>("me");
+    const me = await api<{ name: string; approval_status?: "approved" | "pending" | "rejected"; line_alerts_on?: boolean; payout_ready?: boolean; price_private_twd?: number | null }>("me");
     if (me.status === 401) return setStatus("anon");
     if (!me.ok) return setStatus("not_coach");
     setCoachName(me.data?.name ?? "");
     setApproval(me.data?.approval_status ?? "approved");
-    setSetup({ line: me.data?.line_alerts_on !== false, payout: me.data?.payout_ready !== false });
+    let reviewed = false;
+    try { reviewed = localStorage.getItem(PRICE_REVIEWED_KEY) === "1"; } catch { /* private mode */ }
+    // Price is "done" once the coach set one, or saved/kept the standard price once.
+    setSetup({ line: me.data?.line_alerts_on !== false, payout: me.data?.payout_ready !== false,
+               price: !!me.data?.price_private_twd || reviewed });
     const [s, a, f] = await Promise.all([api<CoachSession[]>("sessions"), api<Slot[]>("availability"), api<typeof fb>("feedback")]);
     setSessions(s.data ?? []);
     setSlots(a.data ?? []);
@@ -254,7 +262,7 @@ export default function CoachDashboard() {
               ))}
             </div>
 
-            {(!setup.line || !setup.payout) && tab !== "profile" && (
+            {(!setup.line || !setup.payout || !setup.price) && tab !== "profile" && (
               <div role="alert" className="mb-5 rounded-2xl bg-[#FBF5E8] border-2 border-[#C49A4A] px-5 py-4">
                 <p className="text-sm font-black text-[#13223F]">
                   {locale === "zh" ? "⚠️ 還差一步才能開始接課" : "⚠️ Finish setting up so you don't miss bookings or pay"}
@@ -262,6 +270,7 @@ export default function CoachDashboard() {
                 <ul className="mt-2 text-sm text-[#13223F] list-disc pl-5">
                   {!setup.line && <li>{locale === "zh" ? "連結 LINE 並加 Artecks Academy 為好友（家長預約你時會通知你）" : "Connect LINE and add Artecks Academy as a friend (you get a message for every booking)"}</li>}
                   {!setup.payout && <li>{locale === "zh" ? "填寫收款帳戶（學院把課酬匯到這裡）" : "Add your payout bank account (where the academy pays you)"}</li>}
+                  {!setup.price && <li>{locale === "zh" ? "設定你的一對一課程價格（或使用標準價格）" : "Set your 1-on-1 lesson price (or keep the standard price)"}</li>}
                 </ul>
                 <button type="button" onClick={() => setTab("profile")}
                   className="mt-3 rounded-xl bg-[#13223F] px-4 py-2 text-sm font-bold text-white">
@@ -274,6 +283,7 @@ export default function CoachDashboard() {
 
             {tab === "sessions" && (
               <div className="flex flex-col gap-4">
+                <CreateClassForm zh={locale === "zh"} onCreated={load} />
                 {sessions.length === 0 && <p className="text-sm text-gray-500">{t("coachNoSessions")}</p>}
                 {sessions.map((s) => (
                   <SessionCard key={s.id} s={s} locale={locale} t={t} onAttend={markAttended} onSaveReport={saveReport} />
@@ -356,6 +366,11 @@ function SessionCard({
         {s.is_private && (
           <span className="flex-shrink-0 text-[11px] font-bold text-[#A07C34] bg-[#FBF5E8] border border-[#E7C98A] rounded-full px-2.5 py-0.5">
             {t("coachPrivate")}
+          </span>
+        )}
+        {s.awaiting_approval && (
+          <span className="flex-shrink-0 text-[11px] font-bold text-amber-800 bg-amber-100 border border-amber-300 rounded-full px-2.5 py-0.5">
+            {locale === "zh" ? "等待學院審核" : "Waiting for approval"}
           </span>
         )}
       </div>

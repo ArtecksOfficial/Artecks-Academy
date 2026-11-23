@@ -5,6 +5,7 @@ import { useEffect, useState, FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { authHeaders } from "@/lib/auth-client";
 import LineAlertsCard from "./LineAlertsCard";
+import PriceCard from "./PriceCard";
 import ProfileFields, { EMPTY_PROFILE, bankComplete, type CoachProfile } from "./ProfileFields";
 
 export default function ProfilePanel({ zh, onSaved }: { zh: boolean; onSaved: (name: string) => void }) {
@@ -38,6 +39,7 @@ export default function ProfilePanel({ zh, onSaved }: { zh: boolean; onSaved: (n
   return (
     <div className="flex flex-col gap-4">
     <LineAlertsCard zh={zh} />
+    <PriceCard zh={zh} />
     {!bankComplete(profile) && (
       <p className="rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-800">
         {zh ? "⚠️ 請在下方填寫收款帳戶，學院才能把課酬匯給你。" : "⚠️ Add your payout account below so the academy can pay you."}
