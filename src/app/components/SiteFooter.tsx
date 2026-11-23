@@ -18,7 +18,7 @@ import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { OPERATOR } from "@/lib/legal/operator";
 import { STORE_URL } from "@/lib/store";
 import { TEACH_URL } from "@/lib/teach";
-import { getKidSession } from "@/lib/kid-mode";
+import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 
 export const CLUB_FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61574222435834";
 export const CLUB_INSTAGRAM_URL = "https://www.instagram.com/linkoucoffeechessclub/";
