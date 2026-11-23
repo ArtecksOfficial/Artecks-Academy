@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BookOpen, CalendarClock, Gem, Loader2, Package, Sparkles, Swords, Trophy } from "lucide-react";
+import { BookOpen, CalendarClock, Loader2, Package, Sparkles, Swords, Ticket, Trophy } from "lucide-react";
 import SiteHeader from "@/app/components/SiteHeader";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
@@ -32,7 +32,7 @@ interface Kid {
   chess: { elo: number; best_elo: number; wins: number; losses: number; draws: number; last_played: string | null } | null;
 }
 interface Homework { id: number; title: string; details: string; due_date: string | null }
-interface Dashboard { family: { gems: number; classes_left: number; active_packages: number; xp_coupon?: { step: number; percent: number } }; kids: Kid[] }
+interface Dashboard { family: { gems: number; classes_left: number; active_packages: number; xp_coupon?: { step: number; percent: number }; active_coupons?: number }; kids: Kid[] }
 
 const TZ = "Asia/Taipei";
 const card = "rounded-3xl bg-white border border-[#E2DDD2] p-5 sm:p-6 shadow-sm";
@@ -97,13 +97,14 @@ export default function DashboardClient() {
         ) : (
           <>
             {/* Family at a glance */}
-            <section className={`grid grid-cols-2 ${GEMS_ENABLED ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-3`}>
+            <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <Tile icon={<Package size={15} />} label={zh ? "剩餘堂數" : "Classes left"} value={data.family.classes_left}
                 hint={data.family.active_packages ? (zh ? `${data.family.active_packages} 組套票` : `${data.family.active_packages} active package${data.family.active_packages === 1 ? "" : "s"}`) : (zh ? "尚無套票" : "No package yet")}
                 href={data.family.active_packages ? "#tracker" : "/packages"} />
-              {GEMS_ENABLED && <Tile icon={<Gem size={15} />} label={zh ? "家庭寶石" : "Family gems"} value={data.family.gems} hint={zh ? "可折抵套票" : "For package discounts"} href="/packages" />}
               <Tile icon={<BookOpen size={15} />} label={zh ? "本月上課" : "Lessons this month"} value={data.kids.reduce((n, k) => n + k.lessons_this_month, 0)} hint={zh ? "所有孩子" : "All kids"} />
               <Tile icon={<Sparkles size={15} />} label={zh ? "本月 XP" : "XP this month"} value={data.kids.reduce((n, k) => n + k.xp_month, 0)} hint={zh ? "所有孩子" : "All kids"} href="/leaderboard" />
+              <Tile icon={<Ticket size={15} />} label={zh ? "商店折扣券" : "Store coupons"} value={data.family.active_coupons ?? 0}
+                hint={zh ? "在 Artecks 商店使用" : "Use them at the Artecks Store"} href="https://store.artecks.com/coupons" />
             </section>
 
             {data.kids.length === 0 ? (
