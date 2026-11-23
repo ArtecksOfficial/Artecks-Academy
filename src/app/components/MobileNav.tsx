@@ -7,11 +7,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeftRight, BookOpen, BookOpenCheck, CalendarDays, CalendarPlus, ClipboardList, Home, LayoutDashboard, LogIn, LogOut, Menu, Sparkles, Swords, Trophy, UserCog, X, type LucideIcon } from "lucide-react";
+import { ArrowLeftRight, BookOpen, BookOpenCheck, CalendarDays, CalendarPlus, ClipboardList, Home, LayoutDashboard, LogIn, LogOut, Menu, ShoppingBag, Sparkles, Swords, Trophy, UserCog, X, type LucideIcon } from "lucide-react";
 import { useAuth } from "./AuthContext";
 import LegalLinks from "./LegalLinks";
 import { getAccessToken } from "@/lib/auth-client";
 import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
+import { STORE_URL } from "@/lib/store";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { COACH_GROUPS, GROUPS, type Item } from "@/lib/nav";
 import { useMode } from "./ModeContext";
@@ -66,7 +67,9 @@ export default function MobileNav() {
     kidMode
       ? { href: "/leaderboard", en: "Leaderboard", zh: "排行榜", icon: Trophy }
       : { href: "/book", en: "Book", zh: "預約", icon: CalendarPlus },
-    { href: CHESS_URL, en: "Play chess", zh: "下棋", icon: Swords, external: true, primary: true },
+    kidMode
+      ? { href: CHESS_URL, en: "Play chess", zh: "下棋", icon: Swords, external: true, primary: true }
+      : { href: STORE_URL, en: "Store", zh: "商店", icon: ShoppingBag, external: true, primary: true },
     user && !kidMode
       ? { href: "/dashboard", en: "Learning", zh: "學習", icon: LayoutDashboard }
       : user
@@ -150,7 +153,7 @@ export default function MobileNav() {
             <div className="px-3">
               {groups.map((group) => {
                 if (group.signedInOnly && !user) return null;
-                const items = group.items.filter((i) => !(kidMode && i.guardianOnly) && !(user && i.guestOnly));
+                const items = group.items.filter((i) => !(kidMode && i.guardianOnly) && !(!kidMode && i.kidOnly) && !(user && i.guestOnly));
                 if (!items.length) return null;
                 return (
                   <div key={group.en} className="mt-3">
