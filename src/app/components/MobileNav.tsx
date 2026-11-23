@@ -16,7 +16,6 @@ import { STORE_URL } from "@/lib/store";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { COACH_GROUPS, GROUPS, type Item } from "@/lib/nav";
 import { useMode } from "./ModeContext";
-import { GEMS_ENABLED } from "@/lib/gems";
 
 interface Tab { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; primary?: boolean }
 
@@ -28,7 +27,7 @@ export default function MobileNav() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [kidMode, setKidMode] = useState(false);
-  const [wallet, setWallet] = useState<{ xp: number; gems: number } | null>(null);
+  const [wallet, setWallet] = useState<{ xp: number; coupons: number } | null>(null);
   const { isCoach, mode, switchTo, coachTab } = useMode();
 
   useEffect(() => { setKidMode(getKidSession() !== null); setOpen(false); }, [path, user]);
@@ -48,7 +47,7 @@ export default function MobileNav() {
     if (!token) return;
     fetch("/api/wallet", { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (d && typeof d.xp === "number") setWallet({ xp: d.xp, gems: d.gems ?? 0 }); })
+      .then((d) => { if (d && typeof d.xp === "number") setWallet({ xp: d.academy_xp ?? 0, coupons: d.active_coupons ?? 0 }); })
       .catch(() => {});
   }, [open, user]);
 
@@ -136,7 +135,7 @@ export default function MobileNav() {
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#C49A4A] text-sm font-black text-[#0E1E3A]">{name[0]?.toUpperCase() ?? "?"}</span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold">{name}</p>
-                    {wallet && <p className="text-xs text-white/60">⚡ {wallet.xp.toLocaleString()} XP{GEMS_ENABLED && <> · <span className="text-[#E7C98A]">💎 {wallet.gems.toLocaleString()}</span></>}</p>}
+                    {wallet && <p className="text-xs text-white/60">⚡ {wallet.xp.toLocaleString()} XP · <span className="text-[#E7C98A]">🎟 {wallet.coupons.toLocaleString()}</span></p>}
                   </div>
                 </div>
               ) : (
