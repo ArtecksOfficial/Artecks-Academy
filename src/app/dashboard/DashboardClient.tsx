@@ -15,6 +15,7 @@ import { authHeaders } from "@/lib/auth-client";
 import { getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { GEMS_ENABLED } from "@/lib/gems";
+import { routes } from "@/lib/platform";
 
 interface Lesson { booking_id: number; start: string; coach: string; title: string }
 interface Kid {
@@ -235,7 +236,7 @@ function KidCard({ kid, zh, fmtDay, fmtTime, homework }: { kid: Kid; zh: boolean
                 {zh ? "教練最近的紀錄" : "Latest coach note"} · {fmtDay(kid.latest_note.start)}{kid.latest_note.coach && <> · {kid.latest_note.coach}</>}
               </h3>
               <p className="mt-1.5 text-sm text-[#13223F] leading-relaxed">{kid.latest_note.text}</p>
-              <Link href={`/report/${kid.latest_note.booking_id}`} className="mt-2 inline-block text-xs font-bold text-[#A07C34]">{zh ? "看完整課後報告 →" : "Open the full report →"}</Link>
+              <Link href={routes.report(kid.latest_note.booking_id)} className="mt-2 inline-block text-xs font-bold text-[#A07C34]">{zh ? "看完整課後報告 →" : "Open the full report →"}</Link>
             </div>
           )}
 

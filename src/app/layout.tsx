@@ -12,6 +12,8 @@ import { AchievementsProvider } from "@/app/components/AchievementsContext";
 import { ModeProvider } from "@/app/components/ModeContext";
 import PageViewTracker from '@/components/PageViewTracker'
 import { Analytics } from '@vercel/analytics/next';
+import NativeBridge from '@/components/NativeBridge';
+import { IS_NATIVE_BUILD } from '@/lib/platform';
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -49,6 +51,7 @@ export default function RootLayout({
         className={`${jakarta.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
+      <NativeBridge />
         <AgeGate />
       <Suspense fallback={null}><PageViewTracker /></Suspense>
         <AuthProvider>
@@ -63,7 +66,7 @@ export default function RootLayout({
             </AchievementsProvider>
           </LanguageProvider>
         </AuthProvider>
-        <Analytics />
+        {!IS_NATIVE_BUILD && <Analytics />}
       </body>
     </html>
   );

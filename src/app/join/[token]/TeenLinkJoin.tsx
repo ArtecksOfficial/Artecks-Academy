@@ -7,6 +7,7 @@ import Link from "next/link";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
+import { routes } from "@/lib/platform";
 
 export interface StudentLink { kind: "student_link"; first_name: string; claimed: boolean; expired: boolean }
 
@@ -32,7 +33,7 @@ export default function TeenLinkJoin({ token, link, zh }: { token: string; link:
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const here = `/join/${token}`;
+  const here = routes.join(token);
 
   async function claim() {
     setBusy(true);

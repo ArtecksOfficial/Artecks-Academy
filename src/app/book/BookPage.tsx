@@ -15,6 +15,7 @@ import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { ReferralWelcome } from "@/app/components/Referral";
 import { captureRef, myReferral, type MyReferral } from "@/lib/referral";
+import { IS_NATIVE_BUILD, webUrl } from "@/lib/platform";
 
 interface SlotResp {
   price_twd: number;
@@ -224,9 +225,11 @@ export default function BookPage() {
       if (body.status === "confirmed" && body.pay_url) {
         try {
           const u = new URL(body.pay_url);
-          router.push(u.pathname + u.search);
+          // iOS app: payment runs on the web site (opens in Safari).
+          if (IS_NATIVE_BUILD) window.location.href = webUrl(u.pathname + u.search);
+          else router.push(u.pathname + u.search);
         } catch {
-          window.location.href = body.pay_url;
+          window.location.href = IS_NATIVE_BUILD ? webUrl(body.pay_url) : body.pay_url;
         }
         return;
       }

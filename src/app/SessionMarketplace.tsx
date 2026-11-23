@@ -14,9 +14,10 @@ import {
   CheckCircle, AlertCircle, Loader2, Star, Crown,
 } from "lucide-react";
 import type { AcademySession, PriceVariant, Provider, MembershipCheckResult } from "@/lib/types";
-import { bookSession, checkMembership, type BookingState, type ContactMethod } from "./session/[id]/actions";
+import { bookSession, checkMembership, type BookingState, type ContactMethod } from "@/lib/academy-client";
 import MemberBanner from "./components/MemberBanner";
-import { createSubscriptionCheckoutAction } from "./session/[id]/actions";
+import { createSubscriptionCheckoutAction } from "@/lib/academy-client";
+import { publicOrigin, routes, webUrl } from "@/lib/platform";
 import AuthButton from "./components/AuthButton";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
@@ -364,7 +365,7 @@ function SuccessScreen({
   isMember?: boolean;
 }) {
   function handlePay() {
-    window.location.href = `/api/pay/${bookingId}`;
+    window.location.href = webUrl(`/api/pay/${bookingId}`);
   }
 
   const basePrice = session.price_twd ?? 0;
@@ -426,7 +427,7 @@ function SuccessScreen({
         <L en="Pay in Taiwan (card / ATM / mobile wallet)" zh="台灣在地支付（信用卡／ATM／行動支付）" />
       </a>
 
-      <a href={`/report/${bookingId}`} className="text-xs text-[#A07C34] hover:underline"><L en="View booking details" zh="查看預約詳情" /></a>
+      <a href={routes.report(bookingId)} className="text-xs text-[#A07C34] hover:underline"><L en="View booking details" zh="查看預約詳情" /></a>
     </div>
   );
 }
@@ -702,7 +703,7 @@ export default function SessionMarketplace({ sessions, provider: initialProvider
             provider={providerWithPlans}
             membershipResult={membershipResult}
             onSubscribeClick={async (planId) => {
-              const origin = window.location.origin;
+              const origin = publicOrigin();
               const result = await createSubscriptionCheckoutAction({
                 plan_id: planId,
                 success_url: `${origin}/payment/result?subscription=true`,

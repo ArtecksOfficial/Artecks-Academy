@@ -5,7 +5,8 @@
 import { useActionState, useState, useEffect } from "react";
 import { Loader2, CheckCircle, AlertCircle, MapPin, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { bookSession, type BookingState, type ContactMethod } from "./actions";
+import { bookSession, type BookingState, type ContactMethod } from "@/lib/academy-client";
+import { routes } from "@/lib/platform";
 
 // LINE Pay stays hidden until the merchant review is approved and keys are set on the backend.
 const LINEPAY_ENABLED = process.env.NEXT_PUBLIC_LINEPAY_ENABLED === "true";
@@ -153,7 +154,7 @@ function ConfirmationScreen({
             <p className="text-sm font-mono font-bold text-gray-700">#{bookingId}</p>
           </div>
           <a
-            href={`/report/${bookingId}`}
+            href={routes.report(bookingId)}
             className="text-xs text-[#A07C34] underline"
           >
             {t("viewParentCard")}
