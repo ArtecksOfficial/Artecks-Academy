@@ -39,7 +39,7 @@ const LESSONS: FooterLink[] = [
 
 const ARTECKS: FooterLink[] = [
   { href: STORE_URL, en: "Artecks Store", zh: "Artecks 商店", external: true },
-  { href: CLUB_FACEBOOK_URL, en: "Linkou Coffee Chess Club", zh: "林口咖啡西洋棋俱樂部", external: true },
+  { href: CHESS_URL, en: "Artecks Chess", zh: "Artecks Chess", external: true },
   { href: TEACH_URL, en: "Teach with us", zh: "成為老師" },
 ];
 
