@@ -44,3 +44,13 @@ yarn-error.log*
 # Vercel
 .vercel
 .env*
+
+# Capacitor / iOS — the native project in ios/ is tracked. Generated parts
+# (web assets copied by `cap sync`, Xcode build output) are ignored here and in
+# ios/.gitignore.
+ios/App/App/public/
+ios/App/build/
+ios/DerivedData/
+*.xcuserstate
+*.ipa
+*.dSYM.zip

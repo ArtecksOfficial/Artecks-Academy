@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Crown, Phone, Search, Loader2, CheckCircle, XCircle, Calendar, Tag, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { lookupMembershipByPhone, type MembershipLookupResult } from "./actions";
+import { lookupMembershipByPhone, type MembershipLookupResult } from "@/lib/academy-client";
 
 export default function MembershipLookup() {
   const zh = useLanguage().locale === "zh";

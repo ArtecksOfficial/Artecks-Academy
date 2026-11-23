@@ -7,6 +7,7 @@ import { Gem, Loader2, Star } from "lucide-react";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
+import { routes } from "@/lib/platform";
 
 interface FbInfo {
   status: "ok" | "not_attended" | "too_late" | "done";
@@ -45,7 +46,7 @@ export default function FeedbackClient({ bookingId, token, initialStars = 0 }: {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<{ credited: number; needsLogin: boolean } | null>(null);
 
-  const self = `/feedback/${bookingId}?t=${encodeURIComponent(token)}`;
+  const self = routes.feedback(bookingId, token);
 
   useEffect(() => {
     if (!/^\d+$/.test(bookingId) || !token) return setInfo(null);

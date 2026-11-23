@@ -14,6 +14,7 @@ import type { AcademySession, Coach, Provider } from "@/lib/types";
 import HomeSubscribeButton from "./HomeSubscribeButton";
 import { useLanguage, LanguageToggle } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { routes } from "@/lib/platform";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -57,7 +58,7 @@ function SessionCard({ session, locale, t }: {
 
   return (
     <a
-      href={`/session/${session.id}`}
+      href={routes.session(session.id)}
       className="group bg-white rounded-2xl border border-gray-200 p-5 flex flex-col gap-3 hover:shadow-md hover:border-[#C49A4A] transition-all"
     >
       <div className="flex items-center justify-between gap-2">

@@ -1,50 +1,13 @@
-// ─── Public Session Landing Page ──────────────────────────────────────────────
-// Server Component. Fetches session from Django API, then renders the static
-// shell + hands off interactivity to <BookingSection />.
+// ─── Session detail view ─────────────────────────────────────────────────────
+// Shared by the web page (page.web.tsx, server-rendered) and the iOS page
+// (../page.ios.tsx, fetched on the client). Keep it free of server-only code.
 
 import L, { LDate } from "@/app/components/L";
 import SiteHeader from "@/app/components/SiteHeader";
-import { notFound } from "next/navigation";
-import { fetchSession } from "@/lib/api";
 import BookingSection from "./BookingSection";
-import { LanguageToggle } from "@/lib/i18n/LanguageContext";
-import type { Metadata } from "next";
+import type { AcademySession } from "@/lib/types";
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
-  const session = await fetchSession(id).catch(() => null);
-  if (!session) return { title: "Session Not Found" };
-  const desc = [
-    session.coach?.name,
-    session.location_name,
-    session.price_twd ? `NT$${session.price_twd.toLocaleString()}` : null,
-  ].filter(Boolean).join(' · ')
-  return {
-    title: `${session.title} | Artecks Academy`,
-    description: session.topic ?? desc ?? undefined,
-    openGraph: {
-      title: session.title,
-      description: desc || session.topic || undefined,
-      images: [`/session/${id}/opengraph-image`],
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: session.title,
-      description: desc || session.topic || undefined,
-      images: [`/session/${id}/opengraph-image`],
-    },
-  };
-}
-
-export default async function SessionPage({ params }: PageProps) {
-  const { id } = await params;
-  const session = await fetchSession(id).catch(() => null);
-  if (!session) notFound();
+export default function SessionView({ session }: { session: AcademySession }) {
 
   const endDate = session.end_time ? new Date(session.end_time) : null;
 

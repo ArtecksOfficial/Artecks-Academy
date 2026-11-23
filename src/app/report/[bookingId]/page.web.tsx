@@ -5,6 +5,7 @@
 import { notFound } from "next/navigation";
 import { fetchBookingReport } from "@/lib/api";
 import ReportCard from "./ReportCard";
+import { toReportCardProps } from "./report-props";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -36,34 +37,5 @@ export default async function ReportPage({ params }: PageProps) {
     notFound();
   }
 
-  return (
-    <ReportCard
-      bookingId={bookingId}
-      studentName={report.student_name}
-      attended={report.attended ?? report.status === "attended"}
-      rewardsCredited={report.rewards_credited ?? (report.xp_awarded > 0 || report.coins_awarded > 0)}
-      artecksAccountId={report.artecks_account_id ?? null}
-      session={
-        report.session_title
-          ? {
-              title: report.session_title,
-              topic: null,
-              start_time: report.session_start,
-              location_name: report.location_name,
-            }
-          : null
-      }
-      report={
-        report.attended || report.status === "attended"
-          ? {
-              skill_tags: report.skill_tags ?? [],
-              coach_notes: report.coach_notes ?? null,
-              generated_summary: report.generated_summary ?? null,
-              xp_awarded: report.xp_awarded ?? null,
-              coins_awarded: report.coins_awarded ?? null,
-            }
-          : null
-      }
-    />
-  );
+  return <ReportCard {...toReportCardProps(bookingId, report)} />;
 }

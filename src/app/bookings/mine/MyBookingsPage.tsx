@@ -7,6 +7,7 @@ import { authHeaders } from "@/lib/auth-client";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { Phone, Loader2, ArrowLeft, ChevronRight, Clock, MapPin, Star } from "lucide-react";
 import type { MyBooking } from "@/lib/api";
+import { routes, webUrl } from "@/lib/platform";
 
 const TZ = "Asia/Taipei";
 function fmtDateTime(iso: string, zh = false) {
@@ -32,7 +33,8 @@ function StatusBadge({ status }: { status: string }) {
 
 function payPath(url: string): string {
   // Keep the parent on this site, whatever host the backend put in the link.
-  try { const u = new URL(url); return u.pathname + u.search; } catch { return url; }
+  // In the iOS app, payment opens on the web site (in Safari).
+  try { const u = new URL(url); return webUrl(u.pathname + u.search); } catch { return webUrl(url); }
 }
 
 /** One tap rates the lesson. Saved straight away; a comment is optional on the full page. */
@@ -88,7 +90,7 @@ function BookingCard({ booking }: { booking: MyBooking }) {
   const zh = useLanguage().locale === "zh";
   return (
     <div className="rounded-2xl border border-gray-200 bg-white hover:border-[#C49A4A] hover:shadow-sm transition-all overflow-hidden">
-    <a href={`/report/${booking.id}`} className="block">
+    <a href={routes.report(booking.id)} className="block">
       
       <div className="p-4 flex flex-col gap-2.5">
         <div className="flex items-start justify-between gap-3">
