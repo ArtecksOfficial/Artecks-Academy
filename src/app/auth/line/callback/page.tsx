@@ -31,7 +31,7 @@ export default function LineCallbackPage() {
       .then(async (r) => ({ ok: r.ok, d: await r.json().catch(() => ({})) }))
       .then(({ ok, d }) => {
         if (ok && d.result === "linked") {
-          window.location.replace(safeNext(d.next, "/account"));
+          window.location.replace(safeNext(d.next, "/dashboard"));
         } else if (ok && d.access && d.refresh && d.user) {
           saveAuth(d.access, d.refresh, d.user);
           window.location.replace(safeNext(d.next, "/packages"));

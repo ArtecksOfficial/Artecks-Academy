@@ -2,11 +2,10 @@
 import {
   BookOpenCheck, CalendarDays, ClipboardList, MessageSquareHeart, UserCog,
   Award, BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, MessageCircle,
-  Languages, Package, Settings, ShoppingBag, Sparkles, Trophy, UserRound, Users, type LucideIcon,
+  Languages, Package, Settings, ShoppingBag, Sparkles, Trophy, Users, type LucideIcon,
 } from "lucide-react";
 import { STORE_URL } from "@/lib/store";
 import { TEACH_URL } from "@/lib/teach";
-import { GEMS_ENABLED } from "@/lib/gems";
 import { ACHIEVEMENTS_ENABLED } from "@/lib/achievements-flag";
 
 export interface Item { tab?: string; href: string; en: string; zh: string; icon: LucideIcon; external?: boolean; newTab?: boolean; guardianOnly?: boolean; guestOnly?: boolean }
@@ -36,7 +35,6 @@ export const GROUPS: Group[] = [
     en: "Account", zh: "帳戶", signedInOnly: true, hideTitle: true,
     items: [
       ...(ACHIEVEMENTS_ENABLED ? [{ href: "/achievements", en: "Achievements", zh: "家長成就", icon: Award, guardianOnly: true }] : []),
-      { href: "/account", en: GEMS_ENABLED ? "Account & gems" : "Account", zh: GEMS_ENABLED ? "帳戶與寶石" : "帳戶", icon: UserRound },
       { href: "/settings", en: "Settings", zh: "設定", icon: Settings, guardianOnly: true },
     ],
   },

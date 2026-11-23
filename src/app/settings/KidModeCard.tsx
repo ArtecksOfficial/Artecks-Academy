@@ -12,7 +12,7 @@ import { authHeaders } from "@/lib/auth-client";
 
 export interface AccountKid { id: number; first_name: string; age: number; linked?: boolean; kid_login?: string | null }
 
-const card = "rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm";
+const card = "rounded-2xl bg-white border border-[#E2DDD2] p-5 sm:p-6 shadow-sm";
 const input = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#C49A4A]";
 const TEEN_MIN_AGE = 13;
 

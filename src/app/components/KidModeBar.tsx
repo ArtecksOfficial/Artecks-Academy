@@ -28,7 +28,7 @@ export default function KidModeBar() {
     setBusy(false);
     setPin("");
     if (failure) { setErr(pinErrorText(failure, zh)); return; }
-    window.location.assign("/account");
+    window.location.assign("/dashboard");
   }
 
   return (

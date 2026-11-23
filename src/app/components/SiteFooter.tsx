@@ -18,7 +18,7 @@ import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { OPERATOR } from "@/lib/legal/operator";
 import { STORE_URL } from "@/lib/store";
 import { TEACH_URL } from "@/lib/teach";
-import { getKidSession } from "@/lib/kid-mode";
+import { CHESS_URL, getKidSession } from "@/lib/kid-mode";
 
 export const CLUB_FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61574222435834";
 export const CLUB_INSTAGRAM_URL = "https://www.instagram.com/linkoucoffeechessclub/";
@@ -39,7 +39,7 @@ const LESSONS: FooterLink[] = [
 
 const ARTECKS: FooterLink[] = [
   { href: STORE_URL, en: "Artecks Store", zh: "Artecks 商店", external: true },
-  { href: CLUB_FACEBOOK_URL, en: "Linkou Coffee Chess Club", zh: "林口咖啡西洋棋俱樂部", external: true },
+  { href: CHESS_URL, en: "Artecks Chess", zh: "Artecks Chess", external: true },
   { href: TEACH_URL, en: "Teach with us", zh: "成為老師" },
 ];
 
