@@ -114,7 +114,6 @@ export default function LeaderboardClient() {
               </>
             )}
             <li className="flex justify-between"><span>{t("lbHow2")}</span><b className="text-[#A07C34]">+XP</b></li>
-            <li className="text-gray-400">{t("lbHow3")}</li>
           </ul>
         </section>
 

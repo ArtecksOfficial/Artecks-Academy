@@ -49,6 +49,12 @@ async function post(path: string, body: unknown) {
   return { ok: !!r?.ok, status: r?.status ?? 0, data };
 }
 
+/** Kid login (/kid): keep the kid's limited session on this site. */
+export function enterKidSession(access: string, refresh: string, kid: KidSession): void {
+  saveTokens(access, refresh);
+  localStorage.setItem(KEY, JSON.stringify(kid));
+}
+
 /** Returns the chess URL to open, or an error code (pin_not_set, not_found, failed). */
 export async function startKidMode(studentId: number): Promise<{ url?: string; error?: string }> {
   const forChess = await post("/api/kid-mode/enter", { student_id: studentId });

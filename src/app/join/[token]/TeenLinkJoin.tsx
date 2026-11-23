@@ -7,7 +7,6 @@ import Link from "next/link";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
-import { CHESS_URL } from "@/lib/kid-mode";
 
 export interface StudentLink { kind: "student_link"; first_name: string; claimed: boolean; expired: boolean }
 
@@ -61,18 +60,15 @@ export default function TeenLinkJoin({ token, link, zh }: { token: string; link:
         </h1>
         <p className="text-sm text-gray-600 mt-3 leading-relaxed">
           {zh
-            ? "連結之後，你在 chess.artecks.com 下棋賺到的寶石會進入家庭寶石，可以折抵課程套票；你的 XP 也會算進學院排行榜。"
-            : "Once linked, the gems you earn playing on chess.artecks.com go into your family's gems for lesson-package discounts, and your XP counts on the Academy leaderboard."}
+            ? "連結之後，你的 XP 會算進學院排行榜。"
+            : "Once linked, your XP counts on the Academy leaderboard."}
         </p>
       </div>
 
       {done ? (
         <section className={box}>
           <p className="text-sm font-bold text-[#13223F]">{zh ? "完成！帳戶已連結。" : "Done! Your account is linked."}</p>
-          <a href={CHESS_URL} className="rounded-xl bg-[#0E1E3A] hover:bg-[#1C3157] text-white text-sm font-bold py-3 text-center">
-            {zh ? "去 chess.artecks.com 下棋 →" : "Play on chess.artecks.com →"}
-          </a>
-          <Link href="/leaderboard" className="text-center text-sm font-bold text-[#A07C34]">{zh ? "看排行榜 →" : "See the leaderboard →"}</Link>
+          <Link href="/leaderboard" className="rounded-xl bg-[#0E1E3A] hover:bg-[#1C3157] text-white text-sm font-bold py-3 text-center">{zh ? "看排行榜 →" : "See the leaderboard →"}</Link>
         </section>
       ) : unusable ? (
         <p className={`${box} text-sm text-gray-700`}>{errorText(link.claimed ? "already_claimed" : "expired", zh)}</p>

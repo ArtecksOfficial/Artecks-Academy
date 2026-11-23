@@ -253,7 +253,7 @@ export default function PackagesClient() {
           <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm lg:sticky lg:top-6">
             <h2 className="text-sm font-black text-gray-900 inline-flex items-center gap-2"><Gem size={15} className="text-[#A07C34]" /> {t("pkgEarnTitle")}</h2>
             <ul className="mt-3 flex flex-col gap-1.5 text-sm text-gray-700">
-              {(["pkgEarn1", "pkgEarn2", "pkgEarn3", "pkgEarn4"] as DictionaryKey[]).map((k) => (
+              {(["pkgEarn2", "pkgEarn3", "pkgEarn4"] as DictionaryKey[]).map((k) => (
                 <li key={k} className="flex gap-2"><CheckCircle size={15} className="text-emerald-500 mt-0.5 flex-shrink-0" /> {t(k)}</li>
               ))}
             </ul>

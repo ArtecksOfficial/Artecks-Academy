@@ -1,12 +1,12 @@
 "use client";
 // ─── Kids log in here on their own device ────────────────────────────────────
 // The parent makes the login (Settings → My kids → Kid login). The child types
-// it here and goes straight to chess.artecks.com as themselves, in Kid Mode:
-// nothing to buy, no gems to spend, no account settings.
+// it here and lands on their XP page in Kid Mode: nothing to buy, no gems to
+// spend, no account settings.
 
 import { useState, FormEvent } from "react";
 import { Loader2, Swords } from "lucide-react";
-import { CHESS_URL } from "@/lib/kid-mode";
+import { enterKidSession } from "@/lib/kid-mode";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function KidLoginClient() {
@@ -36,9 +36,8 @@ export default function KidLoginClient() {
           : (zh ? "現在無法登入，請稍後再試。" : "Can't log in right now. Please try again soon."));
       return;
     }
-    // Same hand-off as "Start Kid Mode": tokens travel in the URL hash, which never reaches a server.
-    const hash = new URLSearchParams({ t: d.access, r: d.refresh, kid: String(d.kid?.id ?? "") });
-    window.location.assign(`${CHESS_URL}/#${hash.toString()}`);
+    enterKidSession(d.access, d.refresh, { id: Number(d.kid?.id), first_name: String(d.kid?.first_name ?? "") });
+    window.location.assign("/achievements");
   }
 
   const input = "w-full rounded-2xl border-2 border-[#E2DDD2] bg-white px-4 py-3.5 text-lg font-semibold text-[#13223F] focus:outline-none focus:border-[#C49A4A]";
@@ -52,7 +51,7 @@ export default function KidLoginClient() {
             <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#13223F] text-[#E7C98A]">
               <Swords size={30} aria-hidden />
             </span>
-            <h1 className="mt-4 font-serif-tc text-2xl font-black text-[#13223F]">{zh ? "小朋友登入" : "Kids, log in to play!"}</h1>
+            <h1 className="mt-4 font-serif-tc text-2xl font-black text-[#13223F]">{zh ? "小朋友登入" : "Kids, log in!"}</h1>
             <p className="mt-1 text-sm text-gray-600">{zh ? "用爸爸媽媽幫你設定的帳號和密碼。" : "Use the username and password your parent made for you."}</p>
           </div>
           <label className="text-sm font-bold text-[#13223F]">

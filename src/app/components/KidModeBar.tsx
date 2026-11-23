@@ -3,9 +3,10 @@
 // The only way out is the parent PIN (or logging in again).
 
 import { useEffect, useState, FormEvent } from "react";
+import Link from "next/link";
 import { Lock } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { CHESS_URL, exitKidMode, getKidSession, KidSession, pinErrorText } from "@/lib/kid-mode";
+import { exitKidMode, getKidSession, KidSession, pinErrorText } from "@/lib/kid-mode";
 
 export default function KidModeBar() {
   const { locale } = useLanguage();
@@ -36,9 +37,9 @@ export default function KidModeBar() {
         <span className="font-bold inline-flex items-center gap-2">
           <Lock size={14} aria-hidden /> {zh ? `兒童模式 · ${kid.first_name}` : `Kid Mode · ${kid.first_name}`}
         </span>
-        <a href={CHESS_URL} className="font-semibold text-[#E7C98A] underline-offset-2 hover:underline">
-          {zh ? "去下棋 →" : "Play chess →"}
-        </a>
+        <Link href="/leaderboard" className="font-semibold text-[#E7C98A] underline-offset-2 hover:underline">
+          {zh ? "看排行榜 →" : "Leaderboard →"}
+        </Link>
         <span className="flex-1" />
         {!open ? (
           <button type="button" onClick={() => setOpen(true)} className="font-semibold text-white/80 hover:text-white">
