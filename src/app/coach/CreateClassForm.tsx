@@ -2,11 +2,10 @@
 // Coach dashboard → Lessons: a coach creates a group class (optionally weekly).
 // Classes stay hidden until the academy publishes them.
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Loader2, Plus, X } from "lucide-react";
 import { authHeaders } from "@/lib/auth-client";
 
-const SHARE_HINT = 0.75; // shown as a guide; the payout uses the coach's actual share
 
 export default function CreateClassForm({ zh, onCreated }: { zh: boolean; onCreated: () => void }) {
   const [open, setOpen] = useState(false);
@@ -15,6 +14,14 @@ export default function CreateClassForm({ zh, onCreated }: { zh: boolean; onCrea
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [done, setDone] = useState<number | null>(null);
+  // The coach's real share (default 80%, or their own), from the same place payouts use.
+  const [SHARE_HINT, setShare] = useState(0.8);
+  useEffect(() => {
+    fetch("/api/coach/me", { headers: authHeaders(), cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (typeof d?.pricing?.coach_share === "number") setShare(d.pricing.coach_share); })
+      .catch(() => {});
+  }, []);
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF((x) => ({ ...x, [k]: e.target.value }));
 
   const price = Number(f.price_twd) || 0;
