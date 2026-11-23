@@ -368,10 +368,6 @@ function SuccessScreen({
   appliedDiscount?: number;
   isMember?: boolean;
 }) {
-  function handlePay() {
-    window.location.href = webUrl(`/api/pay/${bookingId}`);
-  }
-
   const basePrice = session.price_twd ?? 0;
   const finalPrice = Math.max(0, basePrice - appliedDiscount);
   const hasDiscount = appliedDiscount > 0;
@@ -401,15 +397,10 @@ function SuccessScreen({
           <span className="text-sm font-bold text-gray-700">NT${finalPrice.toLocaleString()}</span>
           <span className="text-xs text-gray-500">· {session.title}</span>
         </div>
-        <p className="text-xs text-gray-400">Pay securely via Stripe — credit or debit card accepted.</p>
+        <p className="text-xs text-gray-400">Pay securely via ECPay — credit card, ATM, or LINE Pay.</p>
       </div>
-      {/* ── Primary: Stripe ─────────────────────────────────────────── */}
-      <button onClick={handlePay}
-        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all">
-        Pay Now (Card / PayPal)
-      </button>
 
-      {/* ── Alternative: LINE Pay (hidden until NEXT_PUBLIC_LINEPAY_ENABLED=true) ── */}
+      {/* ── LINE Pay (hidden until NEXT_PUBLIC_LINEPAY_ENABLED=true) ── */}
       {process.env.NEXT_PUBLIC_LINEPAY_ENABLED === "true" && (
       <a
         href={`/api/pay/linepay/${bookingId}`}
