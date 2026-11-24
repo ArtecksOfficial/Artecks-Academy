@@ -17,10 +17,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [unverified, setUnverified] = useState(false);
+  const [resent, setResent] = useState<"" | "sending" | "sent" | "failed">("");
+
+  async function resend() {
+    setResent("sending");
+    const r = await fetch("/api/auth/resend-verification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }).catch(() => null);
+    setResent(r?.ok ? "sent" : "failed");
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
+    setUnverified(false);
+    setResent("");
     setLoading(true);
     const result = await login(email, password);
     setLoading(false);
@@ -29,6 +43,7 @@ export default function LoginPage() {
       const next = new URLSearchParams(window.location.search).get("next") ?? "";
       router.push(next.startsWith("/") && !next.startsWith("//") ? next : "/");
     } else {
+      setUnverified(/verif/i.test(result.error ?? ""));
       setError(zh
         ? (/verif/i.test(result.error ?? "") ? "請先點開驗證信，完成電子郵件驗證。" : "電子郵件或密碼不正確，請再試一次。")
         : (result.error ?? "Login failed."));
@@ -70,6 +85,27 @@ export default function LoginPage() {
           {error && (
             <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm px-4 py-3 rounded-xl">
               {error}
+              {unverified && (
+                <div className="mt-3">
+                  {resent === "sent" ? (
+                    <p className="text-emerald-300">
+                      {zh ? `已寄出新的驗證信到 ${email}，請查看收件匣（和垃圾信件匣）。` : `New link sent to ${email}. Check your inbox (and spam).`}
+                    </p>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={resend}
+                      disabled={resent === "sending" || !email}
+                      className="font-semibold text-[#E7C98A] underline underline-offset-2 disabled:opacity-50"
+                    >
+                      {resent === "sending" ? (zh ? "寄送中…" : "Sending…") : (zh ? "重新寄送驗證信" : "Resend verification email")}
+                    </button>
+                  )}
+                  {resent === "failed" && (
+                    <p className="mt-1 text-red-300">{zh ? "寄送失敗，請稍後再試。" : "Couldn't send it. Please try again in a minute."}</p>
+                  )}
+                </div>
+              )}
             </div>
           )}
 

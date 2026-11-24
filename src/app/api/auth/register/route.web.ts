@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const res = await fetch(`${BACKEND}/api/auth/register/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ ...body, source: "academy" }),
       cache: "no-store",
     });
     const data = await res.json();
