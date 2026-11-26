@@ -27,8 +27,8 @@ export default function CoachesClient({ coaches }: { coaches: Omit<Coach, "line_
           <h1 className="mt-1 font-serif-tc text-3xl sm:text-4xl font-black text-[#13223F]">{zh ? "教練與課程" : "Coaches & programs"}</h1>
           <p className="mt-2 max-w-2xl text-sm text-[#5B6478]">
             {zh
-              ? "全英語授課的西洋棋課。每堂 60 分鐘，可選一對一、一對二或小班。我們會依孩子的程度與地點安排最適合的教練。"
-              : "Chess lessons taught fully in English. 60-minute lessons, 1-on-1, paired or small group. We match each child with the coach who fits their level and location best."}
+              ? "全英語授課的西洋棋與英文寫作課。每堂 60 分鐘，可選一對一、一對二或小班。我們會依孩子的程度與地點安排最適合的老師。"
+              : "Chess and English writing lessons, taught fully in English. 60-minute lessons, 1-on-1, paired or small group. We match each child with the teacher who fits their level and location best."}
           </p>
         </header>
 
