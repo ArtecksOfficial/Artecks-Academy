@@ -15,6 +15,7 @@ import { useLanguage, LanguageToggle } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/platform";
 import CoachAvatar from "./CoachAvatar";
+import Link from "next/link";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -121,7 +122,11 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
           style={{ background: "linear-gradient(135deg,#34497A,#1C3157)" }} />
         <div>
           <p className="font-black text-gray-900 text-base">
-            {locale === "zh" && coach.name_zh ? coach.name_zh : coach.name}
+            {routes.coach(coach.id) ? (
+              <Link href={routes.coach(coach.id)!} className="hover:underline">
+                {locale === "zh" && coach.name_zh ? coach.name_zh : coach.name}
+              </Link>
+            ) : locale === "zh" && coach.name_zh ? coach.name_zh : coach.name}
           </p>
           {coach.name_zh && locale === "en" && (
             <p className="text-xs text-gray-400 font-medium">{coach.name_zh}</p>

@@ -7,6 +7,8 @@ import SiteHeader from "@/app/components/SiteHeader";
 import BookingSection from "./BookingSection";
 import type { AcademySession } from "@/lib/types";
 import CoachAvatar from "../../components/CoachAvatar";
+import Link from "next/link";
+import { routes } from "@/lib/platform";
 
 export default function SessionView({ session }: { session: AcademySession }) {
 
@@ -106,7 +108,11 @@ export default function SessionView({ session }: { session: AcademySession }) {
             <div className="flex items-start gap-4 px-5 py-4">
               <CoachAvatar coach={session.coach} className="w-14 h-14 rounded-full" initialsClassName="bg-[#FBF5E8] text-lg font-black text-[#A07C34]" />
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-gray-900">{session.coach.name}</p>
+                <p className="font-bold text-gray-900">
+                  {routes.coach(session.coach.id)
+                    ? <Link href={routes.coach(session.coach.id)!} className="hover:underline">{session.coach.name}</Link>
+                    : session.coach.name}
+                </p>
                 {session.coach.name_zh && <p className="text-xs text-gray-400">{session.coach.name_zh}</p>}
                 <p className="text-xs text-[#A07C34] font-medium mb-1">{session.coach.title}</p>
                 {session.coach.bio && <p className="text-sm text-gray-500 leading-relaxed">{session.coach.bio}</p>}
