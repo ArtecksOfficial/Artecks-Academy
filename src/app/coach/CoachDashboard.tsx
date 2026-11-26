@@ -18,6 +18,7 @@ import ProfilePanel from "./ProfilePanel";
 import CreateClassForm from "./CreateClassForm";
 import { PRICE_REVIEWED_KEY } from "./PriceCard";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
+import { LINGO_URL, parseWords } from "@/lib/lingo";
 
 interface Student {
   id: number;
@@ -32,6 +33,7 @@ interface Student {
   parent_name?: string;
   contact_method?: string;
   contact_value?: string;
+  student_id?: number | null;
 }
 
 interface CoachSession {
@@ -400,7 +402,27 @@ function StudentRow({
   const [skills, setSkills] = useState(st.skill_tags.join(", "));
   const [notes, setNotes] = useState(st.coach_notes);
   const [saved, setSaved] = useState(false);
+  const [words, setWords] = useState("");
+  const [wordNote, setWordNote] = useState<string | null>(null);
   const attended = st.status === "attended";
+  const { locale } = useLanguage();
+  const zh = locale === "zh";
+
+  async function addWords(): Promise<void> {
+    const list = parseWords(words);
+    if (!st.student_id || !list.length) return;
+    const r = await fetch(`/api/lingo/students/${st.student_id}/words`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...authHeaders() },
+      body: JSON.stringify({ language: "en", words: list }),
+    }).catch(() => null);
+    const d = r?.ok ? await r.json().catch(() => ({})) : null;
+    if (!d) { setWordNote(zh ? "單字沒有加入，請再試一次。" : "Couldn't add the words. Please try again."); return; }
+    const added = d.added?.length ?? 0, skipped = d.skipped?.length ?? 0;
+    setWordNote(zh ? `已加入 ${added} 個單字${skipped ? `，${skipped} 個已存在` : ""}。`
+                   : `Added ${added} word${added === 1 ? "" : "s"} to Lingo${skipped ? `, ${skipped} already there` : ""}.`);
+    if (added) setWords("");
+  }
 
   return (
     <li className="rounded-2xl bg-gray-50 px-4 py-3">
@@ -444,8 +466,9 @@ function StudentRow({
           className="mt-3 flex flex-col gap-2"
           onSubmit={async (e) => {
             e.preventDefault();
-            setSaved(false);
+            setSaved(false); setWordNote(null);
             if (await onSaveReport(st.id, skills, notes)) setSaved(true);
+            await addWords();
           }}
         >
           <label className="text-xs font-semibold text-gray-600">
@@ -458,9 +481,30 @@ function StudentRow({
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3}
               className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm" />
           </label>
-          <div className="flex items-center gap-3">
+          {st.student_id ? (
+            <label className="text-xs font-semibold text-gray-600">
+              {zh ? "今天的英文單字（會加入孩子的 Lingo 單字庫）" : "Today's English words (added to the child's Lingo word bank)"}
+              <textarea value={words} onChange={(e) => setWords(e.target.value)} rows={3}
+                placeholder={"brave = 勇敢的 | The knight is brave.\ndiagonal = 對角線"}
+                className="mt-1 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-sm" />
+              <span className="mt-1 block font-normal text-gray-500">
+                {zh ? "每行一個：單字 = 中文意思 | 例句（意思和例句可省略）。任何科目都可以。" : "One per line: word = Chinese meaning | example (both optional). Any subject."}
+              </span>
+            </label>
+          ) : (
+            <p className="text-xs text-gray-500">
+              {zh ? "這位孩子還沒有 Artecks 帳號，所以還不能加入 Lingo 單字。" : "This child has no Artecks profile yet, so Lingo words can't be added."}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center gap-3">
             <button type="submit" className="rounded-xl bg-[#13223F] text-white text-sm font-bold px-4 py-2">{t("coachSave")}</button>
             {saved && <span className="text-xs font-semibold text-emerald-600">✓ {t("coachSaved")}</span>}
+            {wordNote && <span role="status" className="text-xs font-semibold text-emerald-700">{wordNote}</span>}
+            {st.student_id && (
+              <a href={`${LINGO_URL}/coach`} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-[#A07C34]">
+                {zh ? "在 Lingo 勾選用出的單字 →" : "Tick used words on Lingo →"}
+              </a>
+            )}
           </div>
         </form>
       )}
