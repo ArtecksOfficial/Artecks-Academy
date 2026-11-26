@@ -14,6 +14,7 @@ import HomeSubscribeButton from "./HomeSubscribeButton";
 import { useLanguage, LanguageToggle } from "@/lib/i18n/LanguageContext";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/platform";
+import CoachAvatar from "./CoachAvatar";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -116,12 +117,8 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-4 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-4">
-        <div
-          className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-black"
-          style={{ background: "linear-gradient(135deg,#34497A,#1C3157)" }}
-        >
-          {coach.avatar_initials || coach.name.slice(0, 2).toUpperCase()}
-        </div>
+        <CoachAvatar coach={coach} className="w-16 h-16 rounded-full" initialsClassName="text-white text-xl font-black"
+          style={{ background: "linear-gradient(135deg,#34497A,#1C3157)" }} />
         <div>
           <p className="font-black text-gray-900 text-base">
             {locale === "zh" && coach.name_zh ? coach.name_zh : coach.name}

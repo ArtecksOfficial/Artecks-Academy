@@ -10,6 +10,7 @@ import BrochureBanner from "@/app/components/BrochureBanner";
 import TeachWithUs from "@/app/components/TeachWithUs";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import type { Coach } from "@/lib/types";
+import CoachAvatar from "../components/CoachAvatar";
 
 const LINE_URL = "https://line.me/R/ti/p/@843yqhoa";
 
@@ -36,11 +37,10 @@ export default function CoachesClient({ coaches }: { coaches: Omit<Coach, "line_
             <h2 id="team" className="font-serif-tc text-2xl font-black text-[#13223F]">{zh ? "我們的教練" : "Our coaches"}</h2>
             <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {coaches.map((c) => {
-                const initials = c.avatar_initials || c.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
                 return (
                   <li key={c.id} className="rounded-3xl border border-[#E2DDD2] bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#13223F] text-sm font-black text-[#E7C98A]">{initials}</span>
+                      <CoachAvatar coach={c} className="h-12 w-12 rounded-full" initialsClassName="bg-[#13223F] text-sm font-black text-[#E7C98A]" />
                       <div className="min-w-0">
                         <p className="font-black text-[#13223F] truncate">{c.name}{c.name_zh && <span className="ml-1.5 font-semibold text-[#5B6478]">{c.name_zh}</span>}</p>
                         {c.title && <p className="text-xs font-semibold text-[#A07C34]">{c.title}</p>}

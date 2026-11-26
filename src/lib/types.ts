@@ -9,6 +9,7 @@ export interface Coach {
   title: string;
   bio: string;
   avatar_initials: string;
+  photo_url?: string;
   line_id: string;
   subjects?: string;
 }

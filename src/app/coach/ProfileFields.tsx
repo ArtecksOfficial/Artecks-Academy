@@ -4,7 +4,7 @@
 export interface CoachProfile {
   id?: number; name: string; name_zh: string; title: string; bio: string; subjects: string;
   avatar_initials: string; line_id: string; bank_name: string; bank_code: string; bank_account: string;
-  line_alerts_on?: boolean; payout_ready?: boolean; approval_status?: "approved" | "pending" | "rejected"; is_active?: boolean;
+  photo_url?: string; line_alerts_on?: boolean; payout_ready?: boolean; approval_status?: "approved" | "pending" | "rejected"; is_active?: boolean;
 }
 
 export const EMPTY_PROFILE: CoachProfile = { name: "", name_zh: "", title: "", bio: "", subjects: "", avatar_initials: "", line_id: "", bank_name: "", bank_code: "", bank_account: "" };

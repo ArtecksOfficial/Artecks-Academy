@@ -8,6 +8,7 @@ const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
 
 const ALLOWED = [
   /^me$/,
+  /^me\/photo$/,
   /^apply$/,
   /^sessions$/,
   /^classes$/,
@@ -42,13 +43,16 @@ async function proxy(req: NextRequest, ctx: Ctx) {
 
   const search = req.nextUrl.search || "";
   const url = `${BACKEND}/api/academy/coach/${joined}/${search}`;
+  // Photo uploads are multipart: pass the body and its boundary through as-is.
+  const reqType = req.headers.get("content-type") ?? "";
+  const multipart = reqType.startsWith("multipart/form-data");
   const init: RequestInit = {
     method: req.method,
-    headers: { Authorization: auth, "Content-Type": "application/json" },
+    headers: { Authorization: auth, "Content-Type": multipart ? reqType : "application/json" },
     cache: "no-store",
   };
   if (req.method !== "GET" && req.method !== "DELETE") {
-    init.body = await req.text();
+    init.body = multipart ? await req.arrayBuffer() : await req.text();
   }
 
   try {
