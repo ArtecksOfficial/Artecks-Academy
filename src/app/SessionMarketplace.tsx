@@ -19,6 +19,7 @@ import MemberBanner from "./components/MemberBanner";
 import { createSubscriptionCheckoutAction } from "@/lib/academy-client";
 import { publicOrigin, routes, webUrl } from "@/lib/platform";
 import AuthButton from "./components/AuthButton";
+import CoachAvatar from "./components/CoachAvatar";
 
 // ── Coaches (static — mirrors admin data) ─────────────────────────────────────
 
@@ -553,10 +554,8 @@ function InfoPanel({
       </div>
       {session?.coach && (
         <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-black flex-shrink-0"
-               style={{ backgroundColor: "#1C3157" }}>
-            {session.coach.avatar_initials || session.coach.name.slice(0, 2).toUpperCase()}
-          </div>
+          <CoachAvatar coach={session.coach} className="w-10 h-10 rounded-xl" initialsClassName="text-white text-sm font-black"
+            style={{ backgroundColor: "#1C3157" }} />
           <div>
             <p className="text-sm font-bold text-gray-900">{session.coach.name}</p>
             <p className="text-xs text-gray-400">{session.coach.title}</p>

@@ -5,6 +5,7 @@ import { useEffect, useState, FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { authHeaders } from "@/lib/auth-client";
 import LineAlertsCard from "./LineAlertsCard";
+import PhotoCard from "./PhotoCard";
 import PriceCard from "./PriceCard";
 import ProfileFields, { EMPTY_PROFILE, bankComplete, type CoachProfile } from "./ProfileFields";
 
@@ -38,6 +39,8 @@ export default function ProfilePanel({ zh, onSaved }: { zh: boolean; onSaved: (n
   if (!profile) return <Loader2 className="animate-spin text-gray-300" />;
   return (
     <div className="flex flex-col gap-4">
+    <PhotoCard zh={zh} name={profile.name} initials={profile.avatar_initials} photoUrl={profile.photo_url || ""}
+      onChange={(url) => setProfile((p) => (p ? { ...p, photo_url: url } : p))} />
     <LineAlertsCard zh={zh} />
     <PriceCard zh={zh} />
     {!bankComplete(profile) && (

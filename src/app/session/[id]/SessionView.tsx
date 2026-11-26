@@ -6,6 +6,7 @@ import L, { LDate } from "@/app/components/L";
 import SiteHeader from "@/app/components/SiteHeader";
 import BookingSection from "./BookingSection";
 import type { AcademySession } from "@/lib/types";
+import CoachAvatar from "../../components/CoachAvatar";
 
 export default function SessionView({ session }: { session: AcademySession }) {
 
@@ -103,11 +104,7 @@ export default function SessionView({ session }: { session: AcademySession }) {
               <p className="text-xs font-bold uppercase tracking-widest text-gray-400"><L en="Your Coach" zh="您的教練" /></p>
             </div>
             <div className="flex items-start gap-4 px-5 py-4">
-              <div className="w-14 h-14 rounded-full bg-[#FBF5E8] flex items-center justify-center shrink-0">
-                <span className="text-lg font-black text-[#A07C34]">
-                  {session.coach.avatar_initials || session.coach.name.slice(0, 2).toUpperCase()}
-                </span>
-              </div>
+              <CoachAvatar coach={session.coach} className="w-14 h-14 rounded-full" initialsClassName="bg-[#FBF5E8] text-lg font-black text-[#A07C34]" />
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-gray-900">{session.coach.name}</p>
                 {session.coach.name_zh && <p className="text-xs text-gray-400">{session.coach.name_zh}</p>}
