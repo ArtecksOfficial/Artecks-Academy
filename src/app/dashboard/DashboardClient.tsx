@@ -16,6 +16,7 @@ import { getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { GEMS_ENABLED } from "@/lib/gems";
 import { routes } from "@/lib/platform";
+import { LINGO_URL, type LingoCounts } from "@/lib/lingo";
 import { ReferralShare } from "@/app/components/Referral";
 import { myReferral, type MyReferral } from "@/lib/referral";
 
@@ -24,7 +25,7 @@ interface Kid {
   id: number; first_name: string; display_name: string; age: number;
   xp_total: number; xp_month: number;
   xp_weeks: { week_start: string; xp: number }[];
-  xp_by_source: { lesson: number; bonus: number; chess: number; arena: number; homework?: number };
+  xp_by_source: { lesson: number; bonus: number; chess: number; arena: number; homework?: number; lingo?: number };
   lessons_attended: number; lessons_this_month: number;
   last_lesson: Lesson | null; next_lesson: Lesson | null;
   skills: { tag: string; count: number }[];
@@ -48,6 +49,8 @@ export default function DashboardClient() {
   const [referral, setReferral] = useState<MyReferral | null>(null);
   // Open homework per child (from the kids list), keyed by child id.
   const [homework, setHomework] = useState<Record<number, Homework[]>>({});
+  // Each child's English word counts on Artecks Lingo, keyed by child id.
+  const [words, setWords] = useState<Record<number, LingoCounts>>({});
 
   useEffect(() => {
     if (!user) return;
@@ -61,6 +64,13 @@ export default function DashboardClient() {
         const map: Record<number, Homework[]> = {};
         for (const k of d) if (Array.isArray(k.homework)) map[k.id] = k.homework;
         setHomework(map);
+      }).catch(() => {});
+    fetch("/api/lingo/me", h).then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d || !Array.isArray(d.students)) return;
+        const map: Record<number, LingoCounts> = {};
+        for (const s of d.students) if (s?.words) map[s.id] = s.words;
+        setWords(map);
       }).catch(() => {});
     fetch("/api/packages/tracker", h).then((r) => (r.ok ? r.json() : null))
       .then((d) => setTracker(d && Array.isArray(d.packages) ? d.packages : [])).catch(() => {});
@@ -113,7 +123,7 @@ export default function DashboardClient() {
                 <Link href="/leaderboard" className="mt-3 inline-block text-sm font-bold text-[#A07C34]">{zh ? "新增孩子 →" : "Add a child →"}</Link>
               </section>
             ) : (
-              data.kids.map((k) => <KidCard key={k.id} kid={k} zh={zh} fmtDay={fmtDay} fmtTime={fmtTime} homework={homework[k.id] ?? []} coupon={data.family.xp_coupon} />)
+              data.kids.map((k) => <KidCard key={k.id} kid={k} zh={zh} fmtDay={fmtDay} fmtTime={fmtTime} homework={homework[k.id] ?? []} words={words[k.id]} coupon={data.family.xp_coupon} />)
             )}
 
             {tracker.length > 0 && (
@@ -149,12 +159,13 @@ function Tile({ icon, label, value, hint, href }: { icon: React.ReactNode; label
     : <Link href={href} className={`${cls} hover:border-[#C49A4A] transition-colors`}>{body}</Link>;
 }
 
-function KidCard({ kid, zh, fmtDay, fmtTime, homework, coupon }: { kid: Kid; zh: boolean; fmtDay: (s: string) => string; fmtTime: (s: string) => string; homework: Homework[]; coupon?: { step: number; percent: number } }) {
+function KidCard({ kid, zh, fmtDay, fmtTime, homework, words, coupon }: { kid: Kid; zh: boolean; fmtDay: (s: string) => string; fmtTime: (s: string) => string; homework: Homework[]; words?: LingoCounts; coupon?: { step: number; percent: number } }) {
   const sources = [
     { key: "lesson", label: zh ? "上課" : "Lessons", xp: kid.xp_by_source.lesson },
     { key: "chess", label: zh ? "線上下棋" : "Chess site", xp: kid.xp_by_source.chess },
     { key: "arena", label: "Arena", xp: kid.xp_by_source.arena },
     { key: "homework", label: zh ? "作業" : "Homework", xp: kid.xp_by_source.homework ?? 0 },
+    { key: "lingo", label: zh ? "英文單字" : "English words", xp: kid.xp_by_source.lingo ?? 0 },
     { key: "bonus", label: zh ? "教練加分" : "Coach bonus", xp: kid.xp_by_source.bonus },
   ].filter((s) => s.xp > 0);
   const games = kid.chess ? kid.chess.wins + kid.chess.losses + kid.chess.draws : 0;
@@ -183,6 +194,8 @@ function KidCard({ kid, zh, fmtDay, fmtTime, homework, coupon }: { kid: Kid; zh:
         <Stat label={zh ? "棋力分數" : "Chess rating"} value={kid.chess ? String(kid.chess.elo) : "—"}
           sub={kid.chess ? (games ? (zh ? `${kid.chess.wins} 勝 ${kid.chess.losses} 敗 ${kid.chess.draws} 和` : `${kid.chess.wins}W ${kid.chess.losses}L ${kid.chess.draws}D`) : (zh ? "還沒下過棋" : "No games yet")) : (zh ? "開始兒童模式後顯示" : "Shown after Kid Mode play")} />
       </dl>
+
+      <EnglishWords kidId={kid.id} name={kid.first_name} words={words} zh={zh} />
 
       {coupon && coupon.step > 0 && <CouponProgress name={kid.first_name} total={kid.xp_total} step={coupon.step} percent={coupon.percent} zh={zh} />}
 
@@ -260,6 +273,30 @@ function KidCard({ kid, zh, fmtDay, fmtTime, homework, coupon }: { kid: Kid; zh:
         </div>
       </div>
     </section>
+  );
+}
+
+function EnglishWords({ kidId, name, words, zh }: { kidId: number; name: string; words?: LingoCounts; zh: boolean }) {
+  const w = words ?? { total: 0, learning: 0, remembered: 0, used: 0, due: 0 };
+  return (
+    <div className="mt-4 rounded-2xl border border-[#E7C98A] bg-[#FBF5E8] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h3 className="text-xs font-bold text-[#5B6478]">{zh ? "英文單字（Lingo）" : "English words (Lingo)"}</h3>
+        {w.total ? (
+          <p className="mt-1 text-sm text-[#13223F]">
+            <b>{w.total}</b> {zh ? "個單字" : "words"} · <b>{w.remembered + w.used}</b> {zh ? "已記住" : "remembered"} · <b>{w.used}</b> {zh ? "已用在生活中" : "used for real"}
+          </p>
+        ) : (
+          <p className="mt-1 text-sm text-gray-600">
+            {zh ? `老師每堂課後會加入新學到的英文單字，${name} 可以在家練習。` : `After each lesson the teacher adds the new English words, and ${name} practises them at home.`}
+          </p>
+        )}
+      </div>
+      <a href={`${LINGO_URL}/kid/${kidId}`} target="_blank" rel="noopener noreferrer"
+        className="rounded-xl bg-[#13223F] px-4 py-2 text-xs font-bold text-white">
+        {w.due ? (zh ? `練習 ${w.due} 個單字 →` : `Practise ${w.due} word${w.due === 1 ? "" : "s"} →`) : (zh ? "打開單字庫 →" : "Open word bank →")}
+      </a>
+    </div>
   );
 }
 
