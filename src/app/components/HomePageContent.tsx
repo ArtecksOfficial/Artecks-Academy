@@ -122,11 +122,9 @@ function CoachCard({ coach, locale, t }: { coach: Coach; locale: string; t: (k: 
           style={{ background: "linear-gradient(135deg,#34497A,#1C3157)" }} />
         <div>
           <p className="font-black text-gray-900 text-base">
-            {routes.coach(coach.id) ? (
-              <Link href={routes.coach(coach.id)!} className="hover:underline">
-                {locale === "zh" && coach.name_zh ? coach.name_zh : coach.name}
-              </Link>
-            ) : locale === "zh" && coach.name_zh ? coach.name_zh : coach.name}
+            <Link href={routes.coach(coach)} className="hover:underline">
+              {locale === "zh" && coach.name_zh ? coach.name_zh : coach.name}
+            </Link>
           </p>
           {coach.name_zh && locale === "en" && (
             <p className="text-xs text-gray-400 font-medium">{coach.name_zh}</p>

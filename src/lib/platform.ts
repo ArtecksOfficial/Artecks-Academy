@@ -34,8 +34,10 @@ export const routes = {
       ? `/feedback/?id=${q(bookingId)}&t=${q(token)}`
       : `/feedback/${bookingId}?t=${q(token)}`,
   // A coach's own page (iOS: coach-profile/page.ios.tsx).
-  coach: (id: string | number): string | null =>
-    IS_NATIVE_BUILD ? `/coach-profile/?id=${q(id)}` : `/coaches/${id}`,
+  coach: (c: { id: number; slug?: string | null }): string => {
+    const key = c.slug || String(c.id);
+    return IS_NATIVE_BUILD ? `/coach-profile/?id=${q(key)}` : `/coaches/${key}`;
+  },
   join: (token: string) =>
     IS_NATIVE_BUILD ? `/join/?token=${q(token)}` : `/join/${token}`,
 };

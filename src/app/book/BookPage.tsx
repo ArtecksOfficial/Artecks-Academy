@@ -149,7 +149,11 @@ export default function BookPage() {
     setAreas(null); setArea(""); setData(null); setSlot("");
     fetch(`/api/slots?subject=${subject}`).then((r) => r.json()).then((a: string[]) => {
       setAreas(Array.isArray(a) ? a : []);
-      if (Array.isArray(a) && a.length === 1) setArea(a[0]);
+      // /book?area=Linkou (from a coach's page) opens on that area.
+      const wantArea = (new URLSearchParams(window.location.search).get("area") ?? "").toLowerCase();
+      const match = Array.isArray(a) ? a.find((x) => x.toLowerCase() === wantArea) : undefined;
+      if (match) setArea(match);
+      else if (Array.isArray(a) && a.length === 1) setArea(a[0]);
     }).catch(() => setAreas([]));
   }, [subject]);
 
@@ -175,8 +179,12 @@ export default function BookPage() {
     const p = new URLSearchParams({ area, days: "14", subject, coach: String(coach) });
     fetch(`/api/slots?${p.toString()}`, { headers: authHeaders() }).then((r) => r.json()).then((d: SlotResp) => {
       setData(d);
-      const first = d.slots?.[0];
+      // /book?start=<iso> (a time tapped on a coach's page) picks that time.
+      const wantStart = new URLSearchParams(window.location.search).get("start");
+      const picked = wantStart ? d.slots?.find((s) => new Date(s.start).getTime() === new Date(wantStart).getTime()) : undefined;
+      const first = picked ?? d.slots?.[0];
       setDay(first ? tpeDayKey(first.start) : "");
+      if (picked) setSlot(picked.start);
     }).catch(() => setData(null)).finally(() => setLoading(false));
   }, [area, subject, user, coach]);
 
