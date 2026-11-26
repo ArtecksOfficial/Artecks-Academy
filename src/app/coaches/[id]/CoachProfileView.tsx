@@ -11,11 +11,12 @@ import type { AcademySession, Coach } from "@/lib/types";
 
 const LINE_URL = "https://line.me/R/ti/p/@843yqhoa";
 
-export default function CoachProfileView({ coach, sessions }: { coach: Omit<Coach, "line_id">; sessions: AcademySession[] }) {
+export default function CoachProfileView({ coach, sessions, bookSubject }: {
+  coach: Omit<Coach, "line_id">; sessions: AcademySession[]; bookSubject: string | null;
+}) {
   const { locale } = useLanguage();
   const zh = locale === "zh";
   const subjects = (coach.subjects || "").split(/[,，、]/).map((x) => x.trim()).filter(Boolean);
-  const teachesChess = !coach.subjects || /chess|西洋棋|棋/i.test(coach.subjects);
   const first = coach.name.split(" ")[0];
   const fmt = new Intl.DateTimeFormat(zh ? "zh-TW" : "en-US", {
     weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Taipei",
@@ -74,9 +75,9 @@ export default function CoachProfileView({ coach, sessions }: { coach: Omit<Coac
         )}
 
         <section className="rounded-3xl border border-[#E2DDD2] bg-white p-6 shadow-sm flex flex-col sm:flex-row gap-3">
-          {teachesChess && (
-            <Link href="/book?subject=chess" className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#C49A4A] px-4 py-3.5 text-sm font-black text-[#0E1E3A] hover:bg-[#D4AE63]">
-              <CalendarPlus size={17} aria-hidden /> {zh ? "預約課程" : "Book a lesson"}
+          {bookSubject && (
+            <Link href={`/book?subject=${bookSubject}&coach=${coach.id}`} className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#C49A4A] px-4 py-3.5 text-sm font-black text-[#0E1E3A] hover:bg-[#D4AE63]">
+              <CalendarPlus size={17} aria-hidden /> {zh ? `預約 ${first} 的課` : `Book a lesson with ${first}`}
             </Link>
           )}
           <a href={LINE_URL} target="_blank" rel="noopener noreferrer"

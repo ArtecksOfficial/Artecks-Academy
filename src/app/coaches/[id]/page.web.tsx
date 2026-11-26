@@ -1,14 +1,28 @@
 // ─── /coaches/[id] — a teacher's own page ────────────────────────────────────
 // Server Component: the public coach list and upcoming classes come from Django
-// (cached 60 s). Web only; the iOS build keeps coach cards unlinked.
+// (cached 60 s). The iOS build uses coach-profile/page.ios.tsx instead.
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchCoaches, fetchSessions } from "@/lib/api";
+import { bookableSubjectFor } from "@/lib/subjects";
 import CoachProfileView from "./CoachProfileView";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+const BACKEND = process.env.ARTECKS_CORE_API_URL ?? "http://localhost:8000";
+
+/** Subjects parents can book right now (a coach with open hours teaches them). */
+async function fetchBookableSubjects(): Promise<string[]> {
+  try {
+    const r = await fetch(`${BACKEND}/api/academy/slots/subjects/`, { next: { revalidate: 60 } } as RequestInit);
+    const d = r.ok ? await r.json() : [];
+    return Array.isArray(d) ? d.map((x: { key: string }) => x.key) : [];
+  } catch {
+    return [];
+  }
 }
 
 async function findCoach(id: string) {
@@ -36,5 +50,6 @@ export default async function Page({ params }: PageProps) {
     .filter((s) => s.coach?.id === coach.id && new Date(s.start_time).getTime() > now)
     .sort((a, b) => a.start_time.localeCompare(b.start_time))
     .slice(0, 6);
-  return <CoachProfileView coach={coach} sessions={sessions} />;
+  const bookable = await fetchBookableSubjects();
+  return <CoachProfileView coach={coach} sessions={sessions} bookSubject={bookableSubjectFor(coach.subjects, bookable)} />;
 }
