@@ -33,6 +33,8 @@ export const routes = {
     IS_NATIVE_BUILD
       ? `/feedback/?id=${q(bookingId)}&t=${q(token)}`
       : `/feedback/${bookingId}?t=${q(token)}`,
+  // A coach's own page. Web only for now: the iOS build has no /coaches/[id] page.
+  coach: (id: string | number): string | null => (IS_NATIVE_BUILD ? null : `/coaches/${id}`),
   join: (token: string) =>
     IS_NATIVE_BUILD ? `/join/?token=${q(token)}` : `/join/${token}`,
 };

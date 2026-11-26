@@ -11,6 +11,7 @@ import TeachWithUs from "@/app/components/TeachWithUs";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import type { Coach } from "@/lib/types";
 import CoachAvatar from "../components/CoachAvatar";
+import { routes } from "@/lib/platform";
 
 const LINE_URL = "https://line.me/R/ti/p/@843yqhoa";
 
@@ -38,11 +39,17 @@ export default function CoachesClient({ coaches }: { coaches: Omit<Coach, "line_
             <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {coaches.map((c) => {
                 return (
-                  <li key={c.id} className="rounded-3xl border border-[#E2DDD2] bg-white p-5 shadow-sm">
+                  <li key={c.id} className="relative rounded-3xl border border-[#E2DDD2] bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3">
                       <CoachAvatar coach={c} className="h-12 w-12 rounded-full" initialsClassName="bg-[#13223F] text-sm font-black text-[#E7C98A]" />
                       <div className="min-w-0">
-                        <p className="font-black text-[#13223F] truncate">{c.name}{c.name_zh && <span className="ml-1.5 font-semibold text-[#5B6478]">{c.name_zh}</span>}</p>
+                        <p className="font-black text-[#13223F] truncate">
+                          {routes.coach(c.id) ? (
+                            // The link's ::after covers the whole card, so the card is clickable.
+                            <Link href={routes.coach(c.id)!} className="after:absolute after:inset-0 after:rounded-3xl hover:underline">{c.name}</Link>
+                          ) : c.name}
+                          {c.name_zh && <span className="ml-1.5 font-semibold text-[#5B6478]">{c.name_zh}</span>}
+                        </p>
                         {c.title && <p className="text-xs font-semibold text-[#A07C34]">{c.title}</p>}
                       </div>
                     </div>
