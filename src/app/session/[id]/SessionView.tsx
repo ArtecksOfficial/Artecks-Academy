@@ -109,9 +109,7 @@ export default function SessionView({ session }: { session: AcademySession }) {
               <CoachAvatar coach={session.coach} className="w-14 h-14 rounded-full" initialsClassName="bg-[#FBF5E8] text-lg font-black text-[#A07C34]" />
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-gray-900">
-                  {routes.coach(session.coach.id)
-                    ? <Link href={routes.coach(session.coach.id)!} className="hover:underline">{session.coach.name}</Link>
-                    : session.coach.name}
+                  <Link href={routes.coach(session.coach)} className="hover:underline">{session.coach.name}</Link>
                 </p>
                 {session.coach.name_zh && <p className="text-xs text-gray-400">{session.coach.name_zh}</p>}
                 <p className="text-xs text-[#A07C34] font-medium mb-1">{session.coach.title}</p>

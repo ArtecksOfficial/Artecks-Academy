@@ -44,10 +44,8 @@ export default function CoachesClient({ coaches }: { coaches: Omit<Coach, "line_
                       <CoachAvatar coach={c} className="h-12 w-12 rounded-full" initialsClassName="bg-[#13223F] text-sm font-black text-[#E7C98A]" />
                       <div className="min-w-0">
                         <p className="font-black text-[#13223F] truncate">
-                          {routes.coach(c.id) ? (
-                            // The link's ::after covers the whole card, so the card is clickable.
-                            <Link href={routes.coach(c.id)!} className="after:absolute after:inset-0 after:rounded-3xl hover:underline">{c.name}</Link>
-                          ) : c.name}
+                          {/* The link's ::after covers the whole card, so the card is clickable. */}
+                          <Link href={routes.coach(c)} className="after:absolute after:inset-0 after:rounded-3xl hover:underline">{c.name}</Link>
                           {c.name_zh && <span className="ml-1.5 font-semibold text-[#5B6478]">{c.name_zh}</span>}
                         </p>
                         {c.title && <p className="text-xs font-semibold text-[#A07C34]">{c.title}</p>}
