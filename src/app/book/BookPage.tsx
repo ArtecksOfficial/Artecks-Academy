@@ -161,7 +161,10 @@ export default function BookPage() {
     fetch(`/api/slots?${p.toString()}`, { headers: authHeaders() }).then((r) => r.json()).then((d: SlotResp) => {
       const list = d?.coaches ?? [];
       setCoachList(list);
-      if (list.length === 1) setCoach(list[0].id);
+      // /book?coach=4 (from a coach's page) picks that coach when they teach here.
+      const want = Number(new URLSearchParams(window.location.search).get("coach"));
+      if (want && list.some((c) => c.id === want)) setCoach(want);
+      else if (list.length === 1) setCoach(list[0].id);
     }).catch(() => setCoachList([]));
   }, [area, subject, user]);
 
