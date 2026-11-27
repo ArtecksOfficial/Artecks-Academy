@@ -18,7 +18,7 @@ import ProfilePanel from "./ProfilePanel";
 import CreateClassForm from "./CreateClassForm";
 import { PRICE_REVIEWED_KEY } from "./PriceCard";
 import PackageTracker, { TrackerPackage } from "@/app/components/PackageTracker";
-import { LINGO_URL, parseWords } from "@/lib/lingo";
+import { parseWords } from "@/lib/lingo";
 
 interface Student {
   id: number;
@@ -501,9 +501,9 @@ function StudentRow({
             {saved && <span className="text-xs font-semibold text-emerald-600">✓ {t("coachSaved")}</span>}
             {wordNote && <span role="status" className="text-xs font-semibold text-emerald-700">{wordNote}</span>}
             {st.student_id && (
-              <a href={`${LINGO_URL}/coach`} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-[#A07C34]">
-                {zh ? "在 Lingo 勾選用出的單字 →" : "Tick used words on Lingo →"}
-              </a>
+              <Link href={`/words?kid=${st.student_id}`} className="text-xs font-semibold text-[#A07C34]">
+                {zh ? "勾選用出的單字 →" : "Tick used words →"}
+              </Link>
             )}
           </div>
         </form>

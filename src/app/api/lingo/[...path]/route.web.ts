@@ -1,11 +1,17 @@
 // /api/lingo/* → Django /api/lingo/* (Artecks Lingo word banks), for the routes Academy uses:
-// the family's word counts on the dashboard and coaches adding a lesson's words.
+// the family's word counts on the dashboard, coaches adding a lesson's words, and the
+// /words page (a child's word bank, practice and answers; coaches ticking used words).
 import { NextRequest, NextResponse } from "next/server";
 import { BACKEND, forward } from "@/lib/proxy";
 
 const ALLOWED: { re: RegExp; methods: string[] }[] = [
   { re: /^me$/, methods: ["GET"] },
+  { re: /^students\/\d+$/, methods: ["GET"] },
   { re: /^students\/\d+\/words$/, methods: ["POST"] },
+  { re: /^students\/\d+\/practice$/, methods: ["GET"] },
+  { re: /^practice\/\d+$/, methods: ["POST"] },
+  { re: /^coach$/, methods: ["GET"] },
+  { re: /^coach\/words\/\d+\/used$/, methods: ["POST"] },
 ];
 
 type Ctx = { params: Promise<{ path: string[] }> };
@@ -17,7 +23,7 @@ async function proxy(req: NextRequest, ctx: Ctx) {
   }
   const auth = req.headers.get("authorization");
   if (!auth) return NextResponse.json({ detail: "Not logged in." }, { status: 401 });
-  return forward(`${BACKEND}/api/lingo/${joined}/`, {
+  return forward(`${BACKEND}/api/lingo/${joined}/${req.nextUrl.search}`, {
     method: req.method,
     headers: { Authorization: auth, "Content-Type": "application/json" },
     body: req.method === "GET" ? undefined : await req.text(),
