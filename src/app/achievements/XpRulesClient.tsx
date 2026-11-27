@@ -119,9 +119,9 @@ export default function XpRulesClient() {
                 <li>{zh ? "累積總 XP 會一直保留，不會因每月重新開始而消失。" : "Total XP is kept forever. The monthly restart only affects the monthly board."}</li>
                 <li>{zh ? "每位學生都會出現在排行榜上，只顯示名字，不會顯示照片或姓氏。" : "Every student is on the leaderboard by first name only: no photo, no surname."}</li>
               </ul>
-              {rules.prize && (
-                <p className="mt-4 inline-block rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5">🏆 {rules.prize}</p>
-              )}
+              <p className="mt-4 inline-block rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5">
+                🎁 {zh ? "每累積 1,000 XP，家長可獲得 Artecks 商店 9 折優惠券" : "Every 1,000 XP earns your family a 10% Artecks Store coupon"}
+              </p>
             </section>
 
             <div className="flex flex-wrap gap-3">

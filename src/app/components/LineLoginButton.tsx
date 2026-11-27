@@ -4,7 +4,7 @@ import { useState } from "react";
 import { startLineLogin } from "@/lib/line-login";
 import { IS_NATIVE_BUILD } from "@/lib/platform";
 
-export default function LineLoginButton({ next, label, className = "" }: { next?: string; label: string; className?: string }) {
+export default function LineLoginButton({ next, label, className = "", large = false }: { next?: string; label: string; className?: string; large?: boolean }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   // Hidden in the iOS app for now: LINE's OAuth redirect lands in Safari, not
@@ -21,9 +21,9 @@ export default function LineLoginButton({ next, label, className = "" }: { next?
           setErr(await startLineLogin(next ?? new URLSearchParams(window.location.search).get("next") ?? "/"));
           setBusy(false);
         }}
-        className="w-full rounded-xl bg-[#06C755] hover:bg-[#05b34c] disabled:opacity-60 text-white font-bold py-3 text-sm transition-colors flex items-center justify-center gap-2"
+        className={`w-full rounded-xl bg-[#06C755] hover:bg-[#05b34c] disabled:opacity-60 text-white font-bold transition-colors flex items-center justify-center gap-2 ${large ? "py-4 text-base shadow-lg" : "py-3 text-sm"}`}
       >
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor">
+        <svg viewBox="0 0 24 24" width={large ? 22 : 18} height={large ? 22 : 18} aria-hidden="true" fill="currentColor">
           <path d="M12 3C6.48 3 2 6.58 2 11c0 3.95 3.55 7.26 8.35 7.89.33.07.77.22.88.5.1.25.07.65.03.9l-.14.86c-.04.25-.2 1 .87.55 1.08-.46 5.8-3.42 7.92-5.85C21.37 14.23 22 12.68 22 11c0-4.42-4.48-8-10-8Z" />
         </svg>
         {busy ? "…" : label}
