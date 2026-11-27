@@ -7,6 +7,7 @@ import LegalLinks from "@/app/components/LegalLinks";
 import LineLoginButton from "@/app/components/LineLoginButton";
 import GoogleLoginButton, { GoogleProvider } from "@/app/components/GoogleLoginButton";
 import { saveAuth } from "@/lib/auth-client";
+import { IS_NATIVE_BUILD } from "@/lib/platform";
 
 type Step = "form" | "check-email";
 
@@ -34,6 +35,9 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  // LINE is the main way in; the email form stays tucked away until asked for.
+  // The iOS app hides LINE, so there the form starts open.
+  const [showEmail, setShowEmail] = useState(IS_NATIVE_BUILD);
   const [registeredEmail, setRegisteredEmail] = useState("");
   // Age gate: everyone is asked their birth year, with no hint about which
   // answers are allowed. Under 13 cannot make an account (a parent adds them
@@ -173,12 +177,35 @@ export default function SignupPage() {
           <p className="text-white/50 text-sm mt-1">{zh ? "今天就加入 Artecks 學院" : "Join Artecks Academy today"}</p>
         </div>
 
+        {error.detail && (
+          <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm px-4 py-3 rounded-xl mb-4">
+            {error.detail}
+          </div>
+        )}
+
+        <div className="space-y-3">
+          <LineLoginButton large label={zh ? "使用 LINE 註冊" : "Sign up with LINE"} />
+          <GoogleProvider>
+            <GoogleLoginButton onToken={handleGoogle} onError={(m) => setError({ detail: m })} />
+          </GoogleProvider>
+        </div>
+        <p className="text-center text-xs text-white/40 mt-3">{zh ? "適用於家長與成人學員。孩子的登入帳號由家長在「設定」中建立。" : "For parents and adult learners. Kids get their login from a parent in Settings."}</p>
+
+        <div className="flex items-center gap-3 my-5 text-xs text-white/30">
+          <span className="flex-1 h-px bg-white/10" /> {zh ? "或" : "or"} <span className="flex-1 h-px bg-white/10" />
+        </div>
+
+        {!showEmail ? (
+          <button
+            type="button"
+            onClick={() => setShowEmail(true)}
+            aria-expanded={false}
+            className="w-full border border-white/15 hover:border-white/30 text-white/80 font-semibold py-3 rounded-xl transition-colors text-sm"
+          >
+            {zh ? "使用電子郵件註冊" : "Sign up with email"}
+          </button>
+        ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error.detail && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm px-4 py-3 rounded-xl">
-              {error.detail}
-            </div>
-          )}
 
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -286,17 +313,7 @@ export default function SignupPage() {
             {loading ? (zh ? "建立中…" : "Creating account…") : (zh ? "建立帳號" : "Create account")}
           </button>
         </form>
-
-        <div className="flex items-center gap-3 my-5 text-xs text-white/30">
-          <span className="flex-1 h-px bg-white/10" /> {zh ? "或" : "or"} <span className="flex-1 h-px bg-white/10" />
-        </div>
-        <div className="space-y-3">
-          <GoogleProvider>
-            <GoogleLoginButton onToken={handleGoogle} onError={(m) => setError({ detail: m })} />
-          </GoogleProvider>
-          <LineLoginButton label={zh ? "使用 LINE 註冊" : "Sign up with LINE"} />
-        </div>
-        <p className="text-center text-xs text-white/40 mt-3">{zh ? "適用於家長與成人學員。孩子的登入帳號由家長在「設定」中建立。" : "For parents and adult learners. Kids get their login from a parent in Settings."}</p>
+        )}
 
         <p className="text-center mt-4"><LegalLinks className="justify-center text-xs text-white/40" /></p>
 

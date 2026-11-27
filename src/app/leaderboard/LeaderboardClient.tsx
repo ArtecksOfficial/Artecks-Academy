@@ -13,7 +13,7 @@ import { authHeaders } from "@/lib/auth-client";
 import LineLoginButton from "@/app/components/LineLoginButton";
 
 interface Row { rank: number; name: string; xp: number; mine: boolean }
-interface Board { period: string; prize: string; lesson_xp: number; arena_xp?: { participation: number; win: number; podium: number[] }; groups: { key: string; label: string; rows: Row[] }[] }
+interface Board { period: string; prize: string; lesson_xp: number; arena_xp?: { participation: number; win: number; podium: number[] }; homework_xp?: number; groups: { key: string; label: string; rows: Row[] }[] }
 interface Kid {
   id: number; first_name: string; nickname: string; leaderboard_opt_in: boolean;
   age: number; age_group: string; display_name: string; xp_month: number; xp_total: number;
@@ -57,7 +57,7 @@ export default function LeaderboardClient() {
             <Trophy className="text-amber-500" size={32} /> {t("lbTitle")}
           </h1>
           <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">{t("lbSub")}</p>
-          {board?.prize && <p className="mt-3 inline-block rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5">🏆 {board.prize}</p>}
+          <p className="mt-3 inline-block rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5">🎁 {t("lbPrize")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-5 items-start">
@@ -113,8 +113,10 @@ export default function LeaderboardClient() {
                 )}
               </>
             )}
+            <li className="flex justify-between"><span>{t("lbHowHomework")}</span><b className="text-[#A07C34]">{board?.homework_xp ? `+${board.homework_xp} XP` : "+XP"}</b></li>
             <li className="flex justify-between"><span>{t("lbHow2")}</span><b className="text-[#A07C34]">+XP</b></li>
           </ul>
+          <p className="mt-3 rounded-xl bg-amber-50 text-amber-800 text-xs font-bold px-3 py-2">🎁 {t("lbHowCoupon")}</p>
         </section>
 
         <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm flex flex-col gap-3">
