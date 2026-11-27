@@ -16,7 +16,7 @@ import { getKidSession } from "@/lib/kid-mode";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { GEMS_ENABLED } from "@/lib/gems";
 import { routes } from "@/lib/platform";
-import { LINGO_URL, type LingoCounts } from "@/lib/lingo";
+import { type LingoCounts } from "@/lib/lingo";
 import { ReferralShare } from "@/app/components/Referral";
 import { myReferral, type MyReferral } from "@/lib/referral";
 
@@ -281,7 +281,7 @@ function EnglishWords({ kidId, name, words, zh }: { kidId: number; name: string;
   return (
     <div className="mt-4 rounded-2xl border border-[#E7C98A] bg-[#FBF5E8] p-4 flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h3 className="text-xs font-bold text-[#5B6478]">{zh ? "英文單字（Lingo）" : "English words (Lingo)"}</h3>
+        <h3 className="text-xs font-bold text-[#5B6478]">{zh ? "英文單字" : "English words"}</h3>
         {w.total ? (
           <p className="mt-1 text-sm text-[#13223F]">
             <b>{w.total}</b> {zh ? "個單字" : "words"} · <b>{w.remembered + w.used}</b> {zh ? "已記住" : "remembered"} · <b>{w.used}</b> {zh ? "已用在生活中" : "used for real"}
@@ -292,10 +292,10 @@ function EnglishWords({ kidId, name, words, zh }: { kidId: number; name: string;
           </p>
         )}
       </div>
-      <a href={`${LINGO_URL}/kid/${kidId}`} target="_blank" rel="noopener noreferrer"
+      <Link href={`/words?kid=${kidId}`}
         className="rounded-xl bg-[#13223F] px-4 py-2 text-xs font-bold text-white">
         {w.due ? (zh ? `練習 ${w.due} 個單字 →` : `Practise ${w.due} word${w.due === 1 ? "" : "s"} →`) : (zh ? "打開單字庫 →" : "Open word bank →")}
-      </a>
+      </Link>
     </div>
   );
 }

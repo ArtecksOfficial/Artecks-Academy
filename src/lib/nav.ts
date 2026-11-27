@@ -2,7 +2,7 @@
 import {
   BookOpenCheck, CalendarDays, ClipboardList, MessageSquareHeart, UserCog,
   Award, BookOpen, CalendarPlus, GraduationCap, HelpCircle, Home, LayoutDashboard, MessageCircle,
-  Languages, Package, Settings, ShoppingBag, Sparkles, Trophy, Users, type LucideIcon,
+  Languages, Package, SpellCheck, Settings, ShoppingBag, Sparkles, Trophy, Users, type LucideIcon,
 } from "lucide-react";
 import { STORE_URL } from "@/lib/store";
 import { TEACH_URL } from "@/lib/teach";
@@ -18,6 +18,8 @@ export const GROUPS: Group[] = [
     items: [
       { href: "/dashboard", en: "Dashboard", zh: "學習總覽", icon: LayoutDashboard, guardianOnly: true },
       { href: "/bookings/mine", en: "My kids' lessons", zh: "孩子的課程", icon: BookOpen, guardianOnly: true },
+      // Not guardianOnly: a kid login practises its own words here.
+      { href: "/words", en: "English words", zh: "英文單字", icon: SpellCheck },
     ],
   },
   {

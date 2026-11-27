@@ -11,6 +11,7 @@ import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
 import LineLoginButton from "@/app/components/LineLoginButton";
+import { DEFAULT_RULES, type LingoRules } from "@/lib/lingo";
 
 interface Row { rank: number; name: string; xp: number; mine: boolean }
 interface Board { period: string; prize: string; lesson_xp: number; arena_xp?: { participation: number; win: number; podium: number[] }; homework_xp?: number; groups: { key: string; label: string; rows: Row[] }[] }
@@ -29,6 +30,13 @@ export default function LeaderboardClient() {
   const [board, setBoard] = useState<Board | null>(null);
   const [group, setGroup] = useState("8-10");
   const [kids, setKids] = useState<Kid[] | null>(null);
+  // English-word XP: the backend's Lingo rules when signed in, else the defaults.
+  const [wordXp, setWordXp] = useState<LingoRules>(DEFAULT_RULES);
+  useEffect(() => {
+    if (!user) return;
+    fetch("/api/lingo/me", { headers: authHeaders() }).then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d?.rules && typeof d.rules.remembered_xp === "number") setWordXp(d.rules); }).catch(() => {});
+  }, [user]);
 
   const loadBoard = useCallback(() => {
     fetch(`/api/leaderboard?period=${period}`, { headers: authHeaders() })
@@ -113,6 +121,8 @@ export default function LeaderboardClient() {
                 )}
               </>
             )}
+            <li className="flex justify-between"><span>{t("lbHowWordRemembered")}</span><b className="text-[#A07C34]">+{wordXp.remembered_xp} XP</b></li>
+            <li className="flex justify-between"><span>{t("lbHowWordUsed")}</span><b className="text-[#A07C34]">+{wordXp.used_xp} XP</b></li>
             <li className="flex justify-between"><span>{t("lbHowHomework")}</span><b className="text-[#A07C34]">{board?.homework_xp ? `+${board.homework_xp} XP` : "+XP"}</b></li>
             <li className="flex justify-between"><span>{t("lbHow2")}</span><b className="text-[#A07C34]">+XP</b></li>
           </ul>
