@@ -1,10 +1,10 @@
 "use client";
-// ─── Kids' XP leaderboard — by age group, this month / all time ──────────────
+// ─── Kids' XP leaderboard — every age on one board, this month / all time ─────
 // Every kid, by first name only (Nov 2026). Parents manage their kids below.
 
 import SiteHeader from "@/app/components/SiteHeader";
 import AuthButton from "@/app/components/AuthButton";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Loader2, Trophy } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
@@ -28,7 +28,6 @@ export default function LeaderboardClient() {
   const { user, isLoading } = useAuth();
   const [period, setPeriod] = useState<"month" | "all">("all");
   const [board, setBoard] = useState<Board | null>(null);
-  const [group, setGroup] = useState("8-10");
   const [kids, setKids] = useState<Kid[] | null>(null);
   // English-word XP: the backend's Lingo rules when signed in, else the defaults.
   const [wordXp, setWordXp] = useState<LingoRules>(DEFAULT_RULES);
@@ -50,10 +49,17 @@ export default function LeaderboardClient() {
   }, []);
   useEffect(() => { if (user) loadKids(); }, [user, loadKids]);
 
-  // Open on my child's age group the first time kids load
-  useEffect(() => { if (kids?.length) setGroup(kids[0].age_group); }, [kids?.length]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const rows = board?.groups?.find((g) => g.key === group)?.rows ?? [];
+  // One board for every age (Nov 28 2026). Older backends only send age groups: merge them.
+  const rows = useMemo(() => {
+    const all = board?.groups?.find((g) => g.key === "all")?.rows;
+    if (all) return all;
+    const merged = (board?.groups ?? []).flatMap((g) => g.rows).sort((a, b) => b.xp - a.xp);
+    let rank = 0;
+    return merged.map((r, i) => {
+      if (i === 0 || merged[i - 1].xp !== r.xp) rank = i + 1;
+      return { ...r, rank };
+    });
+  }, [board]);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
@@ -70,16 +76,7 @@ export default function LeaderboardClient() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-5 items-start">
         <section className="rounded-3xl bg-white border border-gray-200 p-5 shadow-sm">
-          <div className="flex items-center justify-between gap-3 mb-4">
-            <div className="flex gap-2 overflow-x-auto" role="tablist">
-              {(board?.groups ?? []).map((g) => (
-                <button key={g.key} type="button" role="tab" aria-selected={group === g.key} onClick={() => setGroup(g.key)}
-                  className={`flex-shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
-                    group === g.key ? "bg-[#13223F] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
-                  {g.label} {t("lbGroup")}
-                </button>
-              ))}
-            </div>
+          <div className="flex items-center justify-end gap-3 mb-4">
             <div className="flex rounded-full bg-gray-100 p-0.5 flex-shrink-0">
               {(["month", "all"] as const).map((p) => (
                 <button key={p} type="button" onClick={() => setPeriod(p)} aria-pressed={period === p}
