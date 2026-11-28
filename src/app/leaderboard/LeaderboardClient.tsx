@@ -205,7 +205,7 @@ export function KidCard({ kid, onChange }: { kid: Kid; onChange?: () => void }) 
   return (
     <div className="rounded-2xl bg-gray-50 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-bold text-gray-900">{kid.display_name || kid.first_name} · {kid.age}</span>
+        <span className="text-sm font-bold text-gray-900">{kid.display_name || kid.first_name}</span>
         <span className="text-xs text-gray-600 text-right">
           {t("lbThisMonth")} <b className="text-[#A07C34]">{kid.xp_month}</b> · {t("lbTotal")} <b>{kid.xp_total}</b>
         </span>
