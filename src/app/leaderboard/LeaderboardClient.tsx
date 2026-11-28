@@ -6,7 +6,7 @@ import SiteHeader from "@/app/components/SiteHeader";
 import AuthButton from "@/app/components/AuthButton";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Loader2, Trophy } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Trophy } from "lucide-react";
 import { LanguageToggle, useLanguage } from "@/lib/i18n/LanguageContext";
 import { useAuth } from "@/app/components/AuthContext";
 import { authHeaders } from "@/lib/auth-client";
@@ -61,6 +61,16 @@ export default function LeaderboardClient() {
     });
   }, [board]);
 
+  // 10 kids per page; open on the page with my child the first time the board loads.
+  const PAGE = 10;
+  const pages = Math.max(1, Math.ceil(rows.length / PAGE));
+  const [page, setPage] = useState(0);
+  useEffect(() => {
+    const mine = rows.findIndex((r) => r.mine);
+    setPage(mine >= 0 ? Math.floor(mine / PAGE) : 0);
+  }, [rows]);
+  const shown = rows.slice(page * PAGE, page * PAGE + PAGE);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F6F4EF" }}>
       <SiteHeader />
@@ -90,9 +100,9 @@ export default function LeaderboardClient() {
           {board === null && <Loader2 className="animate-spin text-gray-300" size={20} />}
           {board && rows.length === 0 && <p className="text-sm text-gray-500 py-6 text-center">{t("lbEmpty")}</p>}
           <ol className="flex flex-col gap-1.5">
-            {rows.map((r, i) => (
-              <li key={`${r.rank}-${r.name}-${i}`}
-                className={`flex items-center gap-3 rounded-2xl px-4 py-3 ${r.mine ? "bg-[#FBF5E8] ring-2 ring-[#E7C98A]" : i < 3 ? "bg-amber-50/60" : "bg-gray-50"}`}>
+            {shown.map((r, i) => (
+              <li key={`${r.rank}-${r.name}-${page}-${i}`}
+                className={`flex items-center gap-3 rounded-2xl px-4 py-3 ${r.mine ? "bg-[#FBF5E8] ring-2 ring-[#E7C98A]" : r.rank <= 3 ? "bg-amber-50/60" : "bg-gray-50"}`}>
                 <span className="w-8 text-center text-lg font-black text-gray-700">{r.rank <= 3 ? MEDAL[r.rank - 1] : r.rank}</span>
                 <span className="flex-1 text-sm font-bold text-gray-900 truncate">
                   {r.name}
@@ -102,6 +112,23 @@ export default function LeaderboardClient() {
               </li>
             ))}
           </ol>
+          {pages > 1 && (
+            <div className="mt-4 flex items-center justify-center gap-4">
+              <button type="button" onClick={() => setPage((n) => Math.max(0, n - 1))} disabled={page === 0}
+                aria-label={locale === "zh" ? "上一頁" : "Previous"}
+                className="rounded-full p-2 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-gray-100">
+                <ChevronLeft size={18} />
+              </button>
+              <span className="text-xs font-bold text-gray-500 tabular-nums">
+                {page * PAGE + 1}–{Math.min(rows.length, page * PAGE + PAGE)} / {rows.length}
+              </span>
+              <button type="button" onClick={() => setPage((n) => Math.min(pages - 1, n + 1))} disabled={page >= pages - 1}
+                aria-label={locale === "zh" ? "下一頁" : "Next"}
+                className="rounded-full p-2 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-gray-100">
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
         </section>
 
         <div className="flex flex-col gap-5">
