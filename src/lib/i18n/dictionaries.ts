@@ -539,6 +539,8 @@ const zh = {
   lbKidsLogin: "登入後即可加入孩子並參加排行榜。",
   lbAddKid: "新增孩子",
   lbFirstName: "名字",
+  lbLastName: "姓氏",
+  lbAddLastName: "加上姓氏",
   lbAge: "年齡",
   lbNickname: "排行榜暱稱（選填）",
   lbNickHint: "不填就顯示名字。請勿使用全名。",
@@ -548,8 +550,8 @@ const zh = {
   lbTotal: "總 XP",
   lbError: "出了點問題，請再試一次。",
   lbDuplicate: "已經有同名的孩子了。",
-  lbBadName: "這個名字不能用在排行榜上，請填孩子的真實名字。",
-  lbNameHint: "排行榜會顯示這個名字。只填名字，不要填姓氏。",
+  lbBadName: "這個名字不能用在排行榜上，請填孩子的真實姓名。",
+  lbNameHint: "排行榜會顯示孩子的名字和姓氏。",
 };
 
 const en: typeof zh = {
@@ -1087,6 +1089,8 @@ const en: typeof zh = {
   lbKidsLogin: "Log in to add your kids and join the leaderboard.",
   lbAddKid: "Add a child",
   lbFirstName: "First name",
+  lbLastName: "Last name",
+  lbAddLastName: "Add last name",
   lbAge: "Age",
   lbNickname: "Leaderboard nickname (optional)",
   lbNickHint: "Leave empty to show the first name. Please don't use a full name.",
@@ -1096,8 +1100,8 @@ const en: typeof zh = {
   lbTotal: "Total XP",
   lbError: "Something went wrong. Please try again.",
   lbDuplicate: "You already added a child with that name.",
-  lbBadName: "That name isn't allowed on the leaderboard. Please use your child's real first name.",
-  lbNameHint: "This name shows on the leaderboard. First name only, no surname.",
+  lbBadName: "That name isn't allowed on the leaderboard. Please use your child's real name.",
+  lbNameHint: "Your child's first and last name show on the leaderboard.",
 };
 
 export const dictionaries = { zh, en } satisfies Record<Locale, Record<string, string>>;
