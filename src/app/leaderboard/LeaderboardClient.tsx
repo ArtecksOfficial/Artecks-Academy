@@ -16,7 +16,7 @@ import { DEFAULT_RULES, type LingoRules } from "@/lib/lingo";
 interface Row { rank: number; name: string; xp: number; mine: boolean }
 interface Board { period: string; prize: string; lesson_xp: number; arena_xp?: { participation: number; win: number; podium: number[] }; homework_xp?: number; groups: { key: string; label: string; rows: Row[] }[] }
 interface Kid {
-  id: number; first_name: string; nickname: string; leaderboard_opt_in: boolean;
+  id: number; first_name: string; last_name?: string; nickname: string; leaderboard_opt_in: boolean;
   age: number; age_group: string; display_name: string; xp_month: number; xp_total: number;
 }
 
@@ -183,16 +183,43 @@ async function send(path: string, method: string, body?: object) {
   }).catch(() => null);
 }
 
-export function KidCard({ kid }: { kid: Kid; onChange?: () => void }) {
+export function KidCard({ kid, onChange }: { kid: Kid; onChange?: () => void }) {
   const { t } = useLanguage();
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(false);
+  // Kids added before Nov 28 2026 may have no last name yet: ask for it here.
+  const needsLast = !(kid.last_name || "").trim() && !kid.first_name.trim().includes(" ");
+
+  async function saveLast(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const last = String(new FormData(e.currentTarget).get("last_name") || "").trim();
+    if (!last) return;
+    setBusy(true);
+    setErr(false);
+    const r = await send(`/${kid.id}`, "PATCH", { last_name: last });
+    setBusy(false);
+    if (r?.ok) onChange?.();
+    else setErr(true);
+  }
+
   return (
     <div className="rounded-2xl bg-gray-50 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-bold text-gray-900">{kid.first_name} · {kid.age}</span>
+        <span className="text-sm font-bold text-gray-900">{kid.display_name || kid.first_name}</span>
         <span className="text-xs text-gray-600 text-right">
           {t("lbThisMonth")} <b className="text-[#A07C34]">{kid.xp_month}</b> · {t("lbTotal")} <b>{kid.xp_total}</b>
         </span>
       </div>
+      {needsLast && (
+        <form onSubmit={saveLast} className="flex gap-2">
+          <input name="last_name" required maxLength={50} placeholder={t("lbLastName")} aria-label={t("lbLastName")}
+            className="flex-1 rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm" />
+          <button type="submit" disabled={busy} className="rounded-xl bg-[#13223F] disabled:opacity-60 text-white text-xs font-bold px-3">
+            {busy ? "…" : t("lbAddLastName")}
+          </button>
+        </form>
+      )}
+      {err && <p role="alert" className="text-xs text-red-600">{t("lbError")}</p>}
     </div>
   );
 }
@@ -210,6 +237,7 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
     setErr(null);
     const r = await send("", "POST", {
       first_name: String(f.get("first_name") || "").trim(),
+      last_name: String(f.get("last_name") || "").trim(),
       age: Number(f.get("age") || 0),
       leaderboard_opt_in: true, // every child is on the leaderboard; kept so the field stays consistent
     });
@@ -220,7 +248,7 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
       return;
     }
     const d = await r?.json().catch(() => ({}));
-    const badName = JSON.stringify(d?.first_name ?? "").includes("isn't allowed");
+    const badName = JSON.stringify([d?.first_name, d?.last_name]).includes("isn't allowed");
     setErr(d?.detail === "duplicate" ? t("lbDuplicate") : badName ? t("lbBadName") : t("lbError"));
   }
 
@@ -233,8 +261,9 @@ export function AddKid({ onAdded }: { onAdded: () => void }) {
   }
   return (
     <form onSubmit={submit} className="rounded-2xl border border-[#E7C98A] p-4 flex flex-col gap-3">
-      <div className="grid grid-cols-[1fr_80px] gap-3">
+      <div className="grid grid-cols-[1fr_1fr_80px] gap-3">
         <input name="first_name" required maxLength={50} placeholder={t("lbFirstName")} aria-label={t("lbFirstName")} className={input} />
+        <input name="last_name" required maxLength={50} placeholder={t("lbLastName")} aria-label={t("lbLastName")} className={input} />
         <input name="age" required type="number" min={3} max={99} placeholder={t("lbAge")} aria-label={t("lbAge")} className={input} />
       </div>
       <p className="text-[11px] text-gray-500 -mt-1">{t("lbNameHint")}</p>
